@@ -2,7 +2,7 @@
 export default defineNuxtConfig({
   app: {
     head: {
-      title: "Grupo Embalarte | Sistema",
+      title: "Grupo Embalarte",
       link: [
         // Bootstrap
         {
