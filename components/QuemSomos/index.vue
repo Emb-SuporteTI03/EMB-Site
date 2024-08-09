@@ -23,9 +23,29 @@
           </p>
         </div>
         <div v-motion-fade-visible-once class="about-us-image">
-          <img src="../../assets/images/funcionario-interacao-2.png" v-motion-fade-visible-once alt="Imagem de Quem Somos" class="about-us-image-img">
+          <img src="../../assets/images/funcionario-interacao-2.png" v-motion-fade-visible-once alt="Imagem de Quem Somos" class="about-us-image-txt-img">
         </div>
       </div>
+      <hr class="custom-hr" id="História">
+      <hr class="custom-hr">
+      <hr class="custom-hr">
+      <hr class="custom-hr">
+      <hr class="custom-hr">
+      <h1 class="about-us-title" v-motion-slide-visible-once-bottom>NOSSA HISTÓRIA</h1>
+      <hr class="custom-hr">
+      <div v-motion-fade-visible-once class="about-us-image">
+        <img draggable="false" src="../../assets/images/1999.png" v-motion-fade-visible-once alt="Imagem de Quem Somos" class="about-us-image-img">
+        <img draggable="false" src="../../assets/images/2004.png" v-motion-fade-visible-once alt="Imagem de Quem Somos" class="about-us-image-img">
+        <img draggable="false" src="../../assets/images/2007.png" v-motion-fade-visible-once alt="Imagem de Quem Somos" class="about-us-image-img">
+        <img draggable="false" src="../../assets/images/2010.png" v-motion-fade-visible-once alt="Imagem de Quem Somos" class="about-us-image-img">
+      </div>  
+      <div v-motion-fade-visible-once class="about-us-image">
+        <img draggable="false" src="../../assets/images/2012.png" v-motion-fade-visible-once alt="Imagem de Quem Somos" class="about-us-image-img">
+        <img draggable="false" src="../../assets/images/2017.png" v-motion-fade-visible-once alt="Imagem de Quem Somos" class="about-us-image-img">
+        <img draggable="false" src="../../assets/images/2019.png" v-motion-fade-visible-once alt="Imagem de Quem Somos" class="about-us-image-img">
+        <img draggable="false" src="../../assets/images/2021.png" v-motion-fade-visible-once alt="Imagem de Quem Somos" class="about-us-image-img">
+      </div> 
+
     </div>
 
     <hr class="custom-hr">
@@ -65,7 +85,6 @@
     <hr class="custom-hr">
     <hr class="custom-hr">
     <hr class="custom-hr">
-    <hr class="custom-hr1">
     </div>
 
 
@@ -80,6 +99,35 @@
 
 .mapa-cel {
   display: none;
+}
+
+
+
+.about-us-image-txt-img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 10px; /* Apenas o canto inferior direito arredondado */
+}
+
+.about-us-title {
+  font-size: 4rem;
+}
+
+.about-us-image {
+  display: flex; /* Alinha as imagens lado a lado */
+  justify-content: space-between; /* Espaço igual entre as imagens */
+  flex-wrap: wrap; /* Permite que as imagens quebrem linha se não couberem */
+}
+
+.about-us-image-img {
+  width: 300px; /* Ajuste a largura conforme necessário */
+  height: auto; /* Mantém a proporção da imagem */
+  margin: 10px; /* Espaçamento entre as imagens */
+}
+
+.about-us-image-cont {
+  width: 800px; /* Ajuste para o tamanho desejado */
+  flex-shrink: 0; /* Garante que a imagem não encolha */
 }
 
 @media (max-width: 300px) {
@@ -116,13 +164,14 @@
   }
 
   .about-us-container {
-    flex-direction: column; /* Altera para coluna em dispositivos menores */
-    align-items: center; /* Centraliza os itens verticalmente */
+    display: flex; /* Usa flexbox para o layout */
+    align-items: center; /* Alinha verticalmente o texto e a imagem ao centro */
+    justify-content: space-between; /* Espaça o texto e a imagem igualmente */
   }
 
   .about-us-text {
-    text-align: center; /* Centraliza o texto */
-    padding: 0 20px; /* Espaçamento interno */
+    flex: 1; /* Faz o texto ocupar o máximo de espaço disponível */
+    margin-right: 0px; /* Espaçamento entre o texto e a imagem */
   }
 
   .lista-cidades {
@@ -174,18 +223,25 @@
 }
 
 .about-us-section {
-  background-color: #ffffff;
-  padding: 20px;
-  margin-bottom: 20px;
-  border-top-left-radius: 10px; /* Apenas o canto superior esquerdo arredondado */
-  border-bottom-left-radius: 10px; /* Apenas o canto inferior esquerdo arredondado */
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centraliza o conteúdo horizontalmente */
+  text-align: center; /* Centraliza o texto dentro do contêiner */
+  padding: 20px; /* Espaçamento interno opcional */
 }
+
 
 .custom-hr {
   margin: 20px 0px 5px 0px;
   border: 0;
   height: 3px;
   background-color: rgba(255, 255, 255, 0);
+}
+
+.custom-hr-blue {
+  margin: 20px 20px 5px 5px;
+  height: 30px;
+  color: rgb(2, 40, 253);
 }
 
 .estamos {
@@ -199,21 +255,12 @@
   justify-content: space-between;
   align-items: flex-start;
   flex-wrap: wrap;
-}
+  }
 
-.about-us-text {
-  flex: 1;
-  padding: 20px;
-  border-radius: 0 10px 10px 0; /* Apenas a borda direita arredondada */
-  font-family: "Outfit", sans-serif;
-  margin-right: 20px; /* Espaçamento à direita */
-}
-
-.lista-cidades {
-  list-style-type: none;
-  padding-left: 0;
-  font-size: 1.4em;
-  margin-bottom: 30px;
+  .about-us-image-txt-img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 10px; /* Apenas o canto inferior direito arredondado */
 }
 
 .about-us-image {
@@ -223,15 +270,21 @@
   justify-content: center;
   align-items: center;
 }
+  .about-us-text {
+    text-align: center; /* Centraliza o texto */
+    padding: 0 20px; /* Espaçamento interno */
+    flex: 1;
+  padding: 20px;
+  border-radius: 0 10px 10px 0; /* Apenas a borda direita arredondada */
+  font-family: "Outfit", sans-serif;
+  margin-right: 20px; /* Espaçamento à direita */
+  }
 
-.about-us-image-img {
-  max-width: 100%;
-  height: auto;
-  border-radius: 10px; /* Apenas o canto inferior direito arredondado */
-}
-
-.about-us-title {
-  font-size: 4rem;
+.lista-cidades {
+  list-style-type: none;
+  padding-left: 0;
+  font-size: 1.4em;
+  margin-bottom: 30px;
 }
 
 .about-us-divider {
@@ -278,3 +331,40 @@
   display: block; /* Garante que a imagem se comporte corretamente */
 }
 </style>
+
+<script>
+export default {
+  data() {
+    return {
+      isDropdownActive: false,
+      isSubDropdownActive: false,
+      contato: {
+        nome: '',
+        email: '',
+        mensagem: ''
+      },
+      login: {
+        usuario: '',
+        senha: ''
+      }
+    };
+  },
+  mounted() {
+    window.addEventListener('scroll', this.handleScroll);
+  },
+  methods: {
+    scrollToSection(id) {
+      const headerOffset = 150; // Substitua pelo valor da altura do cabeçalho em pixels
+      const element = document.getElementById(id);
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth"
+      });
+    }    
+    // --------------------/
+  }
+};
+</script>
