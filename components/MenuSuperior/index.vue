@@ -252,7 +252,7 @@ export default {
 }
 .header-scrolled {
   background-color: rgba(224, 224, 224, 0.8); /* Fundo opaco após scroll */
-  backdrop-filter: blur(9px); /* Aplica o desfoque após o scroll */
+  backdrop-filter: blur(6px); /* Aplica o desfoque após o scroll */
 }
 /* --------------------------------------------------------------------------------------/ */
 
