@@ -114,6 +114,7 @@ export default {
   }
   .titulo-nossos-servicos2 {
   font-size: 4rem;
+  
   }
   .texto-explicacao {
   display: flex; /* Torna o contêiner flexível */
@@ -121,6 +122,8 @@ export default {
   align-items: center; /* Alinha verticalmente os parágrafos no centro */
   gap: 20px; /* Adiciona espaço entre os parágrafos */
   flex-wrap: wrap; /* Permite que os parágrafos quebrem para a próxima linha em telas menores */
+  margin: 20px 80px; /* Ajuste o espaçamento vertical */
+
 }
 
 .texto-intro {
@@ -145,20 +148,34 @@ export default {
   color: rgba(255, 255, 255, 0);
   }
   /* Contêiner de imagens individuais */
-  .imagem-nossos-servicos {
-  display: flex;
-  gap: 10px; /* Espaço entre as imagens */
-  justify-content: center; /* Centraliza as imagens horizontalmente */
-  flex-wrap: wrap; /* Permite que as imagens quebrem para a linha seguinte se necessário */
-  
-  }
-  
-  /* Estilo das imagens */
-  .imagem-nossos-servicos-img {
-  width: 20%; /* Define a largura desejada */
-  height: 20%; /* Define a altura desejada */
+.imagem-nossos-servicos-img {
+  width: 100%; /* Ajuste para a largura desejada */
+  height: auto; /* Mantém a proporção da imagem */
   object-fit: contain; /* Ajusta a imagem para caber no contêiner sem cortar */
   border-radius: 10px; 
-  }
+}
+
+/* Contêiner para centralizar imagens e texto */
+.imagem-nossos-servicos {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 20px 0; /* Ajuste o espaçamento vertical */
+}
+/* Estilo das imagens */
+.imagem-nossos-servicos-img {
+  width: 20%; /* Ajuste para a largura desejada */
+  height: auto; /* Mantém a proporção da imagem */
+  object-fit: contain; /* Ajusta a imagem para caber no contêiner sem cortar */
+  border-radius: 10px; 
+}
+
+/* Contêiner para centralizar imagens e texto */
+.imagem-nossos-servicos {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 20px 80px; /* Ajuste o espaçamento vertical */
+}
   
   </style>

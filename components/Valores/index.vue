@@ -7,9 +7,35 @@
         NOSSOS VALORES
       </h1>
       <p class="about-us-paragraph" style="font-family: 'Outfit', sans-serif;" v-motion-slide-visible-once-bottom>
-        Na Embalarte, prezamos pelo ....................................... <br>
-        ................................................................... <br>
-        .......................................................----------.. 
+        Valores da Empresa
+Ética e Transparência:
+<br>
+Agir com honestidade em todas as interações e manter uma comunicação aberta sobre práticas e decisões.
+Compromisso com o Cliente:
+<br>
+
+Priorizar as necessidades dos clientes e buscar sempre superar suas expectativas.
+Responsabilidade Social e Ambiental:
+<br>
+
+Adotar práticas sustentáveis e contribuir positivamente para a comunidade.
+Inovação e Criatividade:
+<br>
+
+Encorajar e implementar ideias novas e criativas para resolver problemas e melhorar produtos/serviços.
+Qualidade e Excelência:
+<br>
+
+Manter altos padrões de qualidade em todos os aspectos do trabalho e buscar a excelência contínua.
+Trabalho em Equipe:
+<br>
+
+Valorizar a colaboração e a sinergia entre os membros da equipe para alcançar objetivos comuns.
+Desenvolvimento e Crescimento:
+<br>
+
+Investir no desenvolvimento profissional dos colaboradores e apoiar seu crescimento pessoal.
+
         
       </p>
       <div v-motion-fade-visible-once class="about-us-image">
