@@ -7,7 +7,7 @@
 
     
     <div class="conteudo-quem-somos">
-      
+      <hr class="custom-hr" id="aaaaa">
       <!-- Caixa de texto -->
       <div class="texto-quem-somos">
         <h1 class="titulo">QUEM SOMOS</h1>

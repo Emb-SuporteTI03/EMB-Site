@@ -35,15 +35,17 @@
                       <i class="bi" :class="{'bi-caret-right-fill': !isSubDropdownActive, 'bi-caret-down-fill': isSubDropdownActive}"></i>
                     </a>
                     <div class="sub-drop" v-show="isSubDropdownActive">
-                      <a style="color: black; text-decoration: none;" href="#História">História</a>
+                      <router-link :to="{ path: '/Nossa-Historia' }" style="color: black; text-decoration: none;">História</router-link>
                       <hr class="custom-hr2">
-                      <a style="color: black; text-decoration: none;" href="#subItem2">Cultura</a>
+                      <router-link :to="{ path: '/Nossa-Cultura' }" style="color: black; text-decoration: none;">Cultura</router-link>
                       <hr class="custom-hr2">
-                      <a style="color: black; text-decoration: none;" href="#subItem3">Valores</a>
+                      <router-link :to="{ path: '/Nossos-Valores' }" style="color: black; text-decoration: none;">Valores</router-link>
+
                     </div>
                   </div>
                   <hr class="custom-hr2">
-                  <a style="color: black; text-decoration: none;" href="#linhaQmSomos">NOSSOS SERVIÇOS</a>
+                  <router-link :to="{ path: '/Nossos-Servicos' }" style="color: black; text-decoration: none;">NOSSES SERVIÇOS</router-link>
+
                 </div>
               </li>
 
@@ -157,6 +159,9 @@ export default {
   },
   mounted() {
     window.addEventListener('scroll', this.handleScroll);
+  },
+  unmounted() {
+    window.removeEventListener('scroll', this.handleScroll);
   },
   methods: {
     // Operação do dropdown -------------------------------------------\

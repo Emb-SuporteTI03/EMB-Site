@@ -16,7 +16,11 @@ export default {
     };
   },
   mounted() {
+    window.scrollTo(0, 0);
     window.addEventListener('scroll', this.handleScroll);
+  },
+  unmounted() {
+    window.removeEventListener('scroll', this.handleScroll);
   },
   methods: {
     scrollToSection(id) {
@@ -37,11 +41,6 @@ export default {
 
 <template>
   <main>
-    <hr class="custom-hr" id="tracinho-final" >
-    <hr class="custom-hr">
-    <hr class="custom-hr">
-    <hr class="custom-hr">
-    <hr class="custom-hr">
     <div class="about-us-section" id="aboutUs">
       <div class="about-us-container">
         <div class="about-us-text">
@@ -62,36 +61,8 @@ export default {
           <img src="../../assets/images/funcionario-interacao-2.png" v-motion-fade-visible-once alt="Imagem de Quem Somos" id="ImgTexto">
         </div>
       </div>
-      <hr class="custom-hr" id="História">
-      <hr class="custom-hr">
-      <hr class="custom-hr">  
-      <hr class="custom-hr">
-      <hr class="custom-hr">
-      <h1 class="about-us-title" style="font-family: 'Outfit', sans-serif;" v-motion-slide-visible-once-bottom>NOSSA HISTÓRIA</h1>
-      <hr class="custom-hr">
-      <div class="container-history">
-        <div v-motion-fade-visible-once class="about-us-image">
-        <img draggable="false" src="../../assets/images/1999.png" v-motion-fade-visible-once  class="about-us-image-img">
-        <img draggable="false" src="../../assets/images/2004.png" v-motion-fade-visible-once  class="about-us-image-img">
-        <img draggable="false" src="../../assets/images/2007.png" v-motion-fade-visible-once  class="about-us-image-img">
-        <img draggable="false" src="../../assets/images/2010.png" v-motion-fade-visible-once  class="about-us-image-img">
-      </div>  
-      <div v-motion-fade-visible-once class="about-us-image">
-        <img draggable="false" src="../../assets/images/2012.png" v-motion-fade-visible-once class="about-us-image-img">
-        <img draggable="false" src="../../assets/images/2017.png" v-motion-fade-visible-once class="about-us-image-img">
-        <img draggable="false" src="../../assets/images/2019.png" v-motion-fade-visible-once class="about-us-image-img">
-        <img draggable="false" src="../../assets/images/2021.png" v-motion-fade-visible-once class="about-us-image-img">
-      </div> 
-      </div>
-
-
     </div>
-
-    <hr class="custom-hr">
-    <hr class="custom-hr">
-    <hr class="custom-hr">
-    <hr class="custom-hr">
-    <div v-motion-fade-visible-once class="local-section">
+    <div  class="local-section">
       <div class="caixa-mapa">
         <div class="map-box">
           <iframe class="mapa"
@@ -108,8 +79,9 @@ export default {
             referrerpolicy="no-referrer-when-downgrade"
       ></iframe>
       <div class="text-overlay">
-        <strong class="about-us-text" id="localTexto">NÓS, DO GRUPO</strong>
-        <img draggable="false" src="../../assets/images/logo-embalarte-sem-fundo.jpg" v-motion-fade-visible-once class="about-us-image-img">
+        <div class="embalarte-txt">
+        <strong class="about-us-text" id="about-us-nos">NÓS, DO GRUPO EMBALARTE</strong>
+        </div>
         <strong class="about-us-text" id="localTexto">ESTAMOS EM 4 CIDADES<br>NO ESTADO DE SÃO PAULO!</strong>
 
         <ul class="lista-cidades">
@@ -118,14 +90,32 @@ export default {
           <li>São José dos Campos</li>
           <li>Cajamar</li>
         </ul>
-      </div>
+    <hr class="custom-hr">
+    <hr class="custom-hr">
+    <hr class="custom-hr">
+    <hr class="custom-hr">
+    <hr class="custom-hr">
+    <hr class="custom-hr">
+      </div>    
+    </div>
+    <div class="full-height">
+    <strong class="call-servicos">
+      CONHEÇA MAIS SOBRE NOSSOS SERVIÇOS, ENTRE NO GALPÃO
+    </strong>
+    <br>
+    <br>
+    <div class="imagem-link">
+      <router-link :to="{ path: '/Nossos-Servicos' }" style="color: black; text-decoration: none;">
+        <img src="../../assets/images/galpao.jpg" v-motion-fade-visible-once class="services-img">
+      </router-link>
     </div>
 
-    <hr class="custom-hr" id="linhaQmSomos">
+
+  </div>
+
+
 
     <div class="espaco-cell">
-    <hr class="custom-hr">
-    <hr class="custom-hr">
     <hr class="custom-hr">
     <hr class="custom-hr">
     </div>
@@ -152,12 +142,40 @@ export default {
   align-items: flex-start;
   flex-wrap: wrap;
 }
+.services-img {
+  border-radius: 15px; /* Arredonda as bordas da imagem */
+  width: 100%; /* Ajusta a largura da imagem conforme o contêiner */
+  max-width: 500px; /* Define um tamanho máximo para a imagem */
+  transition: transform 0.3s ease; /* Adiciona uma transição suave para o efeito de crescimento */
+}
+
+/* Efeito de crescimento ao passar o mouse */
+.services-img:hover {
+  transform: scale(1.2); /* Aumenta o tamanho da imagem em 10% */
+}
+
+
+.full-height {
+  display: grid;
+  place-items: center;     /* Centraliza horizontal e verticalmente */  
+}
+
+.call-servicos {
+  font-size: 2rem;         /* Ajuste o tamanho da fonte conforme necessário */
+  color: #000;             /* Ajuste a cor do texto conforme necessário */
+}
 .about-us-section {
   display: flex;
   flex-direction: column;
   align-items: center; /* Centraliza o conteúdo horizontalmente */
   text-align: center; /* Centraliza o texto dentro do contêiner */
   padding: 20px; /* Espaçamento interno */
+  background: linear-gradient(
+    to bottom,
+    #ffffff 5%, /* Azul claro de 30% a 70% */
+    #adc7dd 70% /* Branco no fundo */
+  );
+  position: relative;
 }
 .about-us-text {
   font-family: "Outfit", sans-serif; /* Fonte */ 
@@ -166,16 +184,24 @@ export default {
   flex: 1;
   margin-right: 20px; /* Espaçamento à direita */
 }
+.embalarte-txt #about-us-nos {
+  font-size: 2.5em;
+  position: relative;
+  top: 10px; /* Valor positivo para mover o texto para baixo */
+}
+
 .about-us-divider {
   border: 0;
 }
 .about-us-title {
   font-size: 4rem;
-  
+  color: black;
 }
 .about-us-paragraph {
   padding: 0px 10px 0px 10px;
+  font-size: 1.2rem;
 }
+
 .about-us-image-cont {
   flex-shrink: 0; /* Garante que a imagem não encolha */
 }
@@ -199,6 +225,9 @@ export default {
   width: 300px; /* Ajuste a largura conforme necessário */
   height: auto; /* Mantém a proporção da imagem */
   margin: 10px; /* Espaçamento entre as imagens */
+  position: relative;
+  top: -15px; /* Valor positivo para mover o texto para baixo */
+  
 }
 /* --------------------------------------------------------------------------/ */
 
@@ -208,19 +237,26 @@ export default {
   display: flex;
   align-items: flex-start; /* Alinha os itens no topo */
   padding-left: 2%;
-  margin: 20px; /* Ajuste o margin conforme necessário */
-  margin-top: 5%;
+  background: linear-gradient(
+    to bottom,
+    #adc7dd 0%,  /* Azul claro no topo */
+    #adc7dd 85%, /* Azul claro até 90% da altura */
+    #ffffff 97%  /* Branco começando a partir de 90% até o fundo */
+  );
+
 }
 #localTexto {
   font-size: 1.8em;
   margin-bottom: 50px;
-  margin-top: 30px;
+  margin-top: 25px;
 }
 .caixa-mapa {
   background: rgb(58, 106, 141);
   border-radius: 10px;
   padding: 15px;
   width: 40%; /* Aumenta a largura da caixa do mapa */
+  margin-top: 0.5%;
+  margin-left: 5%;
 }
 .map-box {
   background: #ffffff;
@@ -249,7 +285,6 @@ export default {
   align-items: center;
   padding: 10px;
   text-align: center;
-  margin-top: 2.5%;
   margin-left: 10%;
 }
 /* --------------------------------------------------------------------------/ */
@@ -322,7 +357,8 @@ export default {
     padding: 10px;
     text-align: center;
     font-family: 'Mulish', sans-serif; /* Aplica a fonte 'Mulish' */
-    margin-top: 2.5%;
+    position: relative;
+    margin-top: -20px; /* Valor negativo para subir o texto */
   }
 
   .text-overlay h2, .text-overlay p {

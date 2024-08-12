@@ -1,19 +1,16 @@
 <template>
   <main>
     <!-- Título e espaço invisível -->
-    <div style="color: black; background-color: #f2f2f2;">
-      <hr class="custom-hr">
-      <hr class="custom-hr">
-      <hr class="custom-hr">
+
       <div class="section-title">
         <strong class="title" v-motion-slide-visible-once-bottom>CONHEÇA NOSSOS SERVIÇOS</strong>
         <hr class="custom-hr">
         <hr class="custom-hr">
       </div>
-    </div>
+
 
     <!-- Container para as imagens e textos -->
-    <div class="container-fluid" style="background-color: #f2f2f2;">
+    <div class="container-fluid">
       <div class="row">
         <div class="col-md-6 col-lg-4 mb-3"> <!-- Ajuste para col-md-6 col-lg-4 para cards menores -->
           <div class="image-container">
@@ -53,6 +50,9 @@
         </div>
       </div>
     </div>
+    <div class="final-part">
+      <br>
+    </div>
   </main>
 </template>
 
@@ -61,13 +61,21 @@
   margin: 20px 0px 5px 0px;
   border: 0;
   height: 3px;
-  color: #f2f2f2;
-  background-color: #f2f2f2;
+  color: #f2f2f200;
+  background-color: #f2f2f200;
+}
+
+.container-fluid {
+  background: linear-gradient(to bottom, rgb(156, 185, 204), #c0c0c0); /* Degradê de branco para cinza claro */
+}
+
+.final-part {
+  background: linear-gradient(to bottom, #c0c0c0, #ffffff); /* Degradê de branco para cinza claro */
 }
 
 .section-title {
   text-align: center;
-  background-color: #f2f2f2;
+  background: linear-gradient(to bottom, rgb(170, 193, 209), rgb(156, 185, 204)); /* Degradê de branco para cinza claro */
   padding: 20px;
 }
 
@@ -85,7 +93,7 @@
 .card-body {
   background-color: rgba(0, 0, 0, 0.829);
   padding: 15px;
-  border-radius: 0 0 5px 5px;
+  border-radius: 10px;
   margin-top: -50px;
   position: relative;
   z-index: 1;
@@ -100,6 +108,8 @@
 .image-container {
   position: relative;
   overflow: hidden;
+  border-radius: 10px;
+
 }
 
 .btn-nuxt-link {
@@ -115,16 +125,22 @@
   background-color: rgba(0, 0, 0, 0.3);
   opacity: 0;
   transition: opacity 0.3s ease;
+  border-radius: 10px;
+
 }
 
 .image-container:hover .overlay {
   opacity: 1;
+  border-radius: 10px;
+
 }
 
 .card-title {
   font-size: 1.5rem;
   font-weight: bold;
   color: #fff;
+  border-radius: 10px;
+
 }
 
 .card-text {
