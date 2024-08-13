@@ -1,7 +1,46 @@
 <script>
 export default {
+  data() {
+    return {
+      initial: {
+        scale: 0.5, // Começa pequeno
+        x: 100, // Começa da direita
+        opacity: 0,
+      },
+      enter: {
+        scale: 1, // Fica no tamanho normal
+        x: 0, // Move para a posição final
+        opacity: 1,
+        transition: {
+          scale: {
+            duration: 5000, // Duração da animação de escala
+            ease: 'ease-out', // Tipo de easing
+          },
+          x: {
+            duration: 7000, // Duração da animação de movimento
+            ease: 'ease-out', // Tipo de easing
+          },
+          opacity: {
+            duration: 1000, // Duração da animação de opacidade
+          },
+        },
+      },
+    };
+  },
   mounted() {
     window.scrollTo(0, 0);
+  },
+  methods: {
+    handleScroll() {
+      const scrollTop = window.scrollY;
+      const scaleFactor = 1 + (scrollTop / 1000); // Adjust the divisor to control the scaling rate
+
+      // Select the image element
+      const image = this.$el.querySelector('#caminhao');
+
+      // Apply scaling transformation based on scroll position
+      image.style.transform = `scale(${scaleFactor})`;
+    }
   }
 }
 </script>
@@ -15,16 +54,43 @@ export default {
         <h1 class="titulo-nossos-servicos" style="font-family: 'Outfit', sans-serif;" v-motion-slide-visible-once-bottom>
           NOSSOS SERVIÇOS
         </h1>
-        <div class="textos">
-        <div class="texto-intro">
-        <p class="paragrafo-nossos-servicos-intro" style="font-family: 'Outfit', sans-serif;" v-motion-slide-visible-once-bottom>
-          Bem-vindo à Embalarte, uma empresa inovadora e versátil 
-          no setor de embalagens. Com um portfólio diversificado de produtos, 
-          nos dedicamos a fornecer soluções de embalagem de alta qualidade 
-          que atendem às necessidades específicas de cada cliente. <br>
-        </p>
-      </div>      
+          <div class="texto-intro">
+              <img draggable="false" src="../../assets/images/deposito_sf.png" class="imagem-intro"/>
+              <p class="paragrafo-nossos-servicos-intro" style="font-family: 'Outfit', sans-serif;" v-motion-slide-visible-once-bottom>
+                  Bem-vindo à Embalarte, uma empresa inovadora e versátil 
+                  no setor de embalagens. Com um portfólio diversificado de produtos, 
+                  nos dedicamos a fornecer soluções de embalagem de alta qualidade 
+                  que atendem às necessidades específicas de cada cliente. <br>
+              </p>
+              <img draggable="false" id="galpao_direita" src="../../assets/images/deposito_sf.png" class="imagem-intro"/>
+          </div> 
+      <div class="textos">
+
     </div>
+
+    <div v-motion-fade-visible-once class="imagem-nossos-servicos">
+          <p class="paragrafo-nossos-servicos" id="texto_cm" style="font-family: 'Outfit', sans-serif;" v-motion-slide-visible-once-bottom>
+            Recebimento e Armazenagem <br>
+            Na Embalarte, reconhecemos o papel crucial que a logística de distribuição e o 
+            atendimento eficiente desempenham no sucesso das operações de e-commerce. 
+            Oferecemos soluções personalizadas para garantir que seus produtos cheguem 
+            ao cliente final de forma rápida e segura.
+            Aqui, nosso compromisso é oferecer soluções inovadoras e completas 
+            que apoiem o crescimento do seu negócio, especialmente no dinâmico 
+            mundo do e-commerce. Confie em nós para ser seu parceiro de confiança 
+            em todas as etapas do processo, desde a embalagem até a entrega final.
+          </p>
+
+          <div class="separador"></div> <!-- Separador adicionado aqui -->
+          <div class="separador"></div> <!-- Separador adicionado aqui -->
+
+      <img draggable="false" id="caminhao" src="../../assets/images/Novo Projeto (1).png" 
+       v-motion
+       :initial="initial"
+       :enter="enter"
+       class="animado">
+
+        </div>   
       <div class="texto-explicacao">
       <img draggable="false" src="../../assets/images/2.4-Stores-EMBALARTE.png" v-motion-fade-visible-once class="imagem-nossos-servicos-img">
       <p class="paragrafo-nossos-servicos" style="font-family: 'Outfit', sans-serif;" v-motion-slide-visible-once-bottom>
@@ -57,28 +123,47 @@ export default {
             aos padrões estéticos e funcionais desejados por nossos clientes.
           </p>
         </div> 
-        <div v-motion-fade-visible-once class="imagem-nossos-servicos">
-          <p class="paragrafo-nossos-servicos" style="font-family: 'Outfit', sans-serif;" v-motion-slide-visible-once-bottom>
-            Recebimento e Armazenagem <br>
-            Na Embalarte, reconhecemos o papel crucial que a logística de distribuição e o 
-            atendimento eficiente desempenham no sucesso das operações de e-commerce. 
-            Oferecemos soluções personalizadas para garantir que seus produtos cheguem 
-            ao cliente final de forma rápida e segura.
-            Aqui, nosso compromisso é oferecer soluções inovadoras e completas 
-            que apoiem o crescimento do seu negócio, especialmente no dinâmico 
-            mundo do e-commerce. Confie em nós para ser seu parceiro de confiança 
-            em todas as etapas do processo, desde a embalagem até a entrega final.
+        <div class="separador"></div> <!-- Separador adicionado aqui -->
 
-
-          </p>
-          <img draggable="false" src="../../assets/images/2.5-Stores-EMBALARTE.png" v-motion-fade-visible-once class="imagem-nossos-servicos-img">  
-        </div>   
       </div>
 
       </div>
   </template>
   
   <style>
+
+#galpao_direita {
+    transform: scaleX(-1); /* Reverte a imagem horizontalmente */
+}
+
+.texto-intro {
+    display: flex; /* Flexbox for images and text layout */
+    align-items: center; /* Center items vertically */
+    width: 100%; /* Full width of the parent container */
+    overflow: hidden; /* Hide overflow if images are too large */
+    background-color: rgb(154, 191, 207);
+}
+
+.imagem-intro {
+    flex: 1; /* Allow images to grow and shrink */
+    height: auto; /* Maintain aspect ratio */
+    max-width: 100%; /* Ensure images do not exceed viewport width */
+    object-fit: cover; /* Ensure images cover the allocated space */
+    margin: -60px; /* Remove margin to ensure images touch edges */
+}
+
+.paragrafo-nossos-servicos-intro {
+    font-size: 1.4rem;
+    flex: 2; /* Allow text to take up more space */
+    text-align: center; /* Center text if needed */
+    margin: 0 10px; /* Space between text and images */
+}
+
+
+.separador {
+    width: 100px; /* Make it full-width or adjust as needed */
+  }
+
   /* Contêiner de imagens */
   .texto-anterior {
     background-size: cover;
@@ -91,6 +176,24 @@ export default {
     rgb(228, 228, 228) 100% /* Branco na base */
   );
   }
+
+  .animado {
+  display: inline-block; /* Para permitir o efeito de transformação */
+  animation: pulsar 2s infinite; /* Adiciona a animação de pulsação */
+}
+
+/* Define a animação de pulsação */
+@keyframes pulsar {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1); /* Aumenta um pouco */
+  }
+  100% {
+    transform: scale(1);
+  }
+}
   .textos {
     background: linear-gradient(
     to bottom, /* Direção do gradiente */
@@ -106,6 +209,17 @@ export default {
   align-items: center; /* Alinha verticalmente */
   text-align: center; /* Centraliza o texto dentro do contêiner */
 }
+
+/* CSS for positioning the image */
+#caminhao {
+  position: fixed; /* Fix the image to the viewport */
+  right: -120px; /* Align to the right side of the viewport */
+  margin-top: -150px;
+  width: 40%; /* Set the initial width of the image */
+  transition: transform 0.3s ease-in-out; /* Smooth scaling transition */
+  z-index: 1000; /* Ensure the image is above other content */
+}
+
   .titulo-nossos-servicos {
   font-size: 6rem;
   color:rgb(7, 7, 100);
@@ -125,16 +239,14 @@ export default {
   margin: 20px 80px; /* Ajuste o espaçamento vertical */
 
 }
-
-.texto-intro {
-  font-size: 1.7rem;
-  padding: 0 30%; /* Mantém o padding lateral */
-  display: flex; /* Torna o contêiner flexível */
-  justify-content: center; /* Centraliza os parágrafos dentro do contêiner */
-  align-items: center; /* Alinha verticalmente os parágrafos no centro */
-  gap: 20px; /* Adiciona espaço entre os parágrafos */
-  flex-wrap: wrap; /* Permite que os parágrafos quebrem para a próxima linha em telas menores */
+html {
+  overflow-x: hidden;
 }
+
+body {
+  overflow-x: hidden;
+}
+
 
 .paragrafo-nossos-servicos {
   padding: 0 25%; /* Mantém o padding lateral */
@@ -142,6 +254,10 @@ export default {
   text-align: center; /* Centraliza o texto dentro dos parágrafos */
   flex: 1; /* Permite que cada parágrafo ocupe o mesmo espaço */
   min-width: 250px; /* Define uma largura mínima para os parágrafos */
+  margin-top: 50px;
+  margin-left: -250px;
+  margin-right: 150px;
+  margin-bottom: 150px;
 }
   .custom-hr {
   background-color: rgba(255, 255, 255, 0);
