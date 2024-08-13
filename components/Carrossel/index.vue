@@ -4,9 +4,8 @@
     <div class="boas-vindas-texto">
       <div class="div-cima">
         <hr class="custom-hr2">
-        <hr class="custom-hr2">
-        <h1 class="text-center text-uppercase justify-content-end align-items-center flex-grow-1 pe-3" style="color:rgb(58, 106, 141)">Bem Vindo!</h1>
         <img id="imagemNadiv" src="../../assets/images/logo-embalarte-sem-fundo.jpg" class="logo">
+        <hr class="custom-hr2">
       </div>
       <p class="text-justify texto-justificado" style="padding: 0px 10px;">O <strong>Grupo EMBALARTE</strong> oferece as mais diversas soluções logísticas de acordo com cada necessidade. Atendimento personalizado, suporte e gestão são nossos maiores diferenciais. Solicite um orçamento para o seu projeto sem compromisso.</p>
     </div>

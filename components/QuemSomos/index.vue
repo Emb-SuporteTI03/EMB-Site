@@ -4,6 +4,7 @@ export default {
     return {
       isDropdownActive: false,
       isSubDropdownActive: false,
+      mapAtual: '1',
       contato: {
         nome: '',
         email: '',
@@ -23,6 +24,20 @@ export default {
     window.removeEventListener('scroll', this.handleScroll);
   },
   methods: {
+    updateMapValue(value, event) {
+      // Update the global variable
+      this.mapAtual = value;
+      const allLinks = document.querySelectorAll('.lista-cidades a');
+      allLinks.forEach(link => link.classList.remove('selected'));
+      
+      const clickedLink = event.target;
+      clickedLink.classList.add('selected');
+      // Optionally log the new value to the console
+      console.log('Updated mapAtual:', this.mapAtual);
+
+      // You can add additional logic here if needed
+    },
+
     scrollToSection(id) {
       const headerOffset = 150; // Substitua pelo valor da altura do cabeçalho em pixels
       const element = document.getElementById(id);
@@ -66,11 +81,36 @@ export default {
       <div class="caixa-mapa">
         <div class="map-box">
           <iframe class="mapa"
+            v-if="mapAtual == 1"
             src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d14646.357919884578!2d-46.8853484!3d-23.4030639!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94cf1c60570bde1f%3A0x5aa53ca281712703!2sGRUPO%20EMBALARTE!5e0!3m2!1spt-BR!2sbr!4v1720455342886!5m2!1spt-BR!2sbr"
             allowfullscreen loading="lazy"
             referrerpolicy="no-referrer-when-downgrade"
             draggable="false"
-          ></iframe>
+          ></iframe>  
+
+          <iframe class="mapa"
+            v-if="mapAtual == 2"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d117054.02054255405!2d-46.86697533846492!3d-23.534727157648103!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ceff085b9ef207%3A0xf21e27d4c824c4e!2sOsasco%2C%20State%20of%20S%C3%A3o%20Paulo!5e0!3m2!1sen!2sbr!4v1723552982838!5m2!1sen!2sbr"
+            allowfullscreen loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            draggable="false"
+          ></iframe>  
+
+          <iframe class="mapa"
+            v-if="mapAtual == 3"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d234719.22569669844!2d-46.17486207856379!3d-23.188883367975105!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94cc4bb3858cc2e7%3A0xba25a33168f8c1!2sS%C3%A3o%20Jos%C3%A9%20dos%20Campos%2C%20Sao%20Jose%20dos%20Campos%20-%20State%20of%20S%C3%A3o%20Paulo!5e0!3m2!1sen!2sbr!4v1723553613909!5m2!1sen!2sbr"
+            allowfullscreen loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            draggable="false"
+          ></iframe>  
+          <iframe class="mapa"
+            v-if="mapAtual == 4"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d117214.19914789771!2d-46.96267711347425!3d-23.35405332990589!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94cf1e958732e083%3A0xef1224749a327978!2sCajamar%2C%20State%20of%20S%C3%A3o%20Paulo!5e0!3m2!1sen!2sbr!4v1723553685528!5m2!1sen!2sbr"
+            allowfullscreen loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            draggable="false"
+          ></iframe>  
+
         </div>
       </div>
       <iframe class="mapa-cel"
@@ -82,14 +122,18 @@ export default {
         <div class="embalarte-txt">
         <strong class="about-us-text" id="about-us-nos">NÓS, DO GRUPO EMBALARTE</strong>
         </div>
-        <strong class="about-us-text" id="localTexto">ESTAMOS EM 4 CIDADES<br>NO ESTADO DE SÃO PAULO!</strong>
-
+        <strong class="about-us-text" id="localTexto">TEMOS NOSSA SEDE EM<br> </strong>
+          <ul class="lista-cidades">
+            <li><a @click.prevent="updateMapValue('1', $event)">📌 Santana de Parnaíba</a></li>
+          </ul>
+           <strong class="about-us-text" id="localTexto">
+          E ESTAMOS PRESENTES EM OUTRAS 3 CIDADES NO ESTADO DE SÃO PAULO!</strong>
         <ul class="lista-cidades">
-          <li>Santana de Parnaíba</li>
-          <li>Osasco</li>
-          <li>São José dos Campos</li>
-          <li>Cajamar</li>
+          <li><a @click.prevent="updateMapValue('2', $event)">📌 Osasco</a></li>
+          <li><a @click.prevent="updateMapValue('3', $event)">📌 São José dos Campos</a></li>
+          <li><a @click.prevent="updateMapValue('4', $event)">📌 Cajamar</a></li>
         </ul>
+
     <hr class="custom-hr">
     <hr class="custom-hr">
     <hr class="custom-hr">
@@ -149,15 +193,46 @@ export default {
   transition: transform 0.3s ease; /* Adiciona uma transição suave para o efeito de crescimento */
 }
 
-/* Efeito de crescimento ao passar o mouse */
-.services-img:hover {
-  transform: scale(1.2); /* Aumenta o tamanho da imagem em 10% */
+.imagem-link:hover .services-img {
+  transform: scale(1.1); /* Increase the size to 110% when hovered */
 }
-
 
 .full-height {
   display: grid;
   place-items: center;     /* Centraliza horizontal e verticalmente */  
+}
+
+.lista-cidades {
+  list-style-type: none; /* Remove default list styling */
+  padding: 0;
+}
+
+.lista-cidades li {
+  margin: 15px 0; /* Add space between items */
+}
+
+.lista-cidades a {
+  text-decoration: none; /* Remove underline from links */
+  color: #007bff; /* Blue color for links */
+  font-weight: bold; /* Bold text */
+  display: inline-block; /* Make the entire list item clickable */
+  padding: 10px 15px; /* Add padding to clickable area */
+  border-radius: 5px; /* Rounded corners */
+  transition: transform 0.3s ease-in-out, background-color 0.3s, color 0.3s; /* Smooth transition effects */
+  border: 2px solid #86acca; /* Black border */
+  user-select: none; /* Prevent text selection */
+  cursor: pointer; /* Change cursor to pointer on hover */
+}
+
+.lista-cidades a:hover {
+  background-color: #f0f0f0; /* Change background on hover */
+  color: #0056b3; /* Darker blue on hover */
+  transform: scale(1.1); /* Scale the link by 110% when hovered */
+}
+
+.selected {
+  transform: scale(1.1); /* Scale the link by 120% to indicate selection */
+  background-color: #e0e0e0; /* Optional: Change background color for selected state */
 }
 
 .call-servicos {
@@ -173,7 +248,7 @@ export default {
   background: linear-gradient(
     to bottom,
     #ffffff 5%, /* Azul claro de 30% a 70% */
-    #adc7dd 70% /* Branco no fundo */
+    #c7c7c7 70% /* Branco no fundo */
   );
   position: relative;
 }
@@ -185,7 +260,7 @@ export default {
   margin-right: 20px; /* Espaçamento à direita */
 }
 .embalarte-txt #about-us-nos {
-  font-size: 2.5em;
+  font-size: 2.2em;
   position: relative;
   top: 10px; /* Valor positivo para mover o texto para baixo */
 }
@@ -239,14 +314,13 @@ export default {
   padding-left: 2%;
   background: linear-gradient(
     to bottom,
-    #adc7dd 0%,  /* Azul claro no topo */
-    #adc7dd 85%, /* Azul claro até 90% da altura */
+    #c7c7c7 0%, /* Azul claro até 90% da altura */
     #ffffff 97%  /* Branco começando a partir de 90% até o fundo */
   );
 
 }
 #localTexto {
-  font-size: 1.8em;
+  font-size: 1.5em;
   margin-bottom: 50px;
   margin-top: 25px;
 }
@@ -255,7 +329,7 @@ export default {
   border-radius: 10px;
   padding: 15px;
   width: 40%; /* Aumenta a largura da caixa do mapa */
-  margin-top: 0.5%;
+  margin-top: 5%;
   margin-left: 5%;
 }
 .map-box {
@@ -273,8 +347,9 @@ export default {
 .lista-cidades {
   list-style-type: none;
   padding-left: 0;
-  font-size: 1.4em;
-  margin-bottom: 30px;
+  font-size: 1.2em;
+  margin-bottom: -20px;
+  margin-top: -50px;
 }
 .text-overlay {
   font-family: 'Mulish', sans-serif; /* Aplica a fonte 'Mulish' */
@@ -344,7 +419,6 @@ export default {
     list-style-type: none;
     padding-left: 0;
     font-size: 1.4em;
-    margin-bottom: 30px;
     text-align: center; /* Centraliza a lista de cidades */
   }
 
