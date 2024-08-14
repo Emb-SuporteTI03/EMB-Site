@@ -175,17 +175,14 @@ export default {
 
   /* Contêiner de imagens */
   .texto-anterior {
-    margin-left: 12%; /* Espaço à esquerda */
-    margin-right: 12%; /* Espaço à direita */  
+    margin-left: 10%; /* Espaço à esquerda */
+    margin-right: 10%; /* Espaço à direita */  
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    background: 
-        /* Gradiente horizontal: Branco nas laterais e cinza no centro */
-        linear-gradient(to right, white 0%, white 25%, rgb(226, 226, 226) 50%, white 75%, white 100%),
-        /* Gradiente vertical: Branco no topo e cinza no centro */
-        linear-gradient(to bottom, white 0%, rgb(226, 226, 226) 50%, rgb(228, 228, 228) 100%);
-
+    background-color: rgb(223, 223, 223);
+    border-radius: 80px; 
+    border: 3px solid #01385C;
 }
 
   .animado {
