@@ -24,23 +24,17 @@ export default {
             duration: 1000, // Duração da animação de opacidade
           },
         },
+        mounted() {
+          window.addEventListener('scroll', this.handleScroll);
+        },
+        unmounted() {
+          window.removeEventListener('scroll', this.handleScroll);
+        },
       },
     };
-  },
-  mounted() {
-    window.scrollTo(0, 0);
+    
   },
   methods: {
-    handleScroll() {
-      const scrollTop = window.scrollY;
-      const scaleFactor = 1 + (scrollTop / 1000); // Adjust the divisor to control the scaling rate
-
-      // Select the image element
-      const image = this.$el.querySelector('#caminhao');
-
-      // Apply scaling transformation based on scroll position
-      image.style.transform = `scale(${scaleFactor})`;
-    }
   }
 }
 </script>
@@ -49,12 +43,10 @@ export default {
       <div class="container-history">
         <hr class="custom-hr">    
         <hr class="custom-hr">   
-        <hr class="custom-hr">   
-        <div class="texto-anterior">
         <h1 class="titulo-nossos-servicos" style="font-family: 'Outfit', sans-serif;" v-motion-slide-visible-once-bottom>
           NOSSOS SERVIÇOS
-        </h1>
-          <div class="texto-intro">
+        </h1>  
+        <div class="texto-intro">
               <img draggable="false" src="../../assets/images/deposito_sf.png" class="imagem-intro"/>
               <p class="paragrafo-nossos-servicos-intro" style="font-family: 'Outfit', sans-serif;" v-motion-slide-visible-once-bottom>
                   Bem-vindo à Embalarte, uma empresa inovadora e versátil 
@@ -64,11 +56,12 @@ export default {
               </p>
               <img draggable="false" id="galpao_direita" src="../../assets/images/deposito_sf.png" class="imagem-intro"/>
           </div> 
-      <div class="textos">
+        <div class="texto-anterior">
 
-    </div>
-
-    <div v-motion-fade-visible-once class="imagem-nossos-servicos">
+    <div 
+    id="recebimento"
+    v-motion-fade-visible-once 
+    class="imagem-nossos-servicos">
           <p class="paragrafo-nossos-servicos" id="texto_cm" style="font-family: 'Outfit', sans-serif;" v-motion-slide-visible-once-bottom>
             Recebimento e Armazenagem <br>
             Na Embalarte, reconhecemos o papel crucial que a logística de distribuição e o 
@@ -92,8 +85,16 @@ export default {
 
         </div>   
       <div class="texto-explicacao">
-      <img draggable="false" src="../../assets/images/2.4-Stores-EMBALARTE.png" v-motion-fade-visible-once class="imagem-nossos-servicos-img">
-      <p class="paragrafo-nossos-servicos" style="font-family: 'Outfit', sans-serif;" v-motion-slide-visible-once-bottom>
+      <img 
+      draggable="false" 
+      id="blister" 
+      src="../../assets/images/lipstick-blister-001-beauty_(1)-transformed.png" 
+      v-motion-slide-visible-once-left>
+      <p 
+      class="paragrafo-nossos-servicos" 
+      id="blisters"
+      style="font-family: 'Outfit', sans-serif;"
+      v-motion-slide-visible-once-bottom>
           Entre nossos produtos, destacamos a fabricação de blisters, uma solução 
           ideal para proteger e exibir produtos de maneira eficaz. Os blisters são 
           amplamente utilizados em diversos setores, incluindo farmacêutico, 
@@ -102,7 +103,11 @@ export default {
         </p>
       </div>
         <div v-motion-fade-visible-once class="imagem-nossos-servicos">
-          <p class="paragrafo-nossos-servicos" style="font-family: 'Outfit', sans-serif;" v-motion-slide-visible-once-bottom>
+          <p 
+          class="paragrafo-nossos-servicos" 
+          id="armazenagem"
+          style="font-family: 'Outfit', sans-serif;" 
+          v-motion-slide-visible-once-bottom>
             Recebimento e Armazenagem <br>
             Na Embalarte, compreendemos a importância do processo de 
             recebimento e armazenagem para garantir a integridade dos 
@@ -110,11 +115,15 @@ export default {
             é projetado para otimizar cada etapa, desde a chegada de materiais 
             até o armazenamento eficiente em nosso depósito.
           </p>
-          <img draggable="false" src="../../assets/images/2.1-Stores-EMBALARTE.png" v-motion-fade-visible-once class="imagem-nossos-servicos-img">  
+          <img draggable="false" src="../../assets/images/3789695.png" v-motion-fade-visible-once class="imagem-nossos-servicos-img">  
         </div>
         <div v-motion-fade-visible-once class="imagem-nossos-servicos">
-          <img draggable="false" src="../../assets/images/2.2-Stores-EMBALARTE.png  " v-motion-fade-visible-once class="imagem-nossos-servicos-img">  
-          <p class="paragrafo-nossos-servicos" style="font-family: 'Outfit', sans-serif;" v-motion-slide-visible-once-bottom>
+          <img draggable="false" src="../../assets/images/notebook-icon-free-png.webp" v-motion-fade-visible-once class="imagem-nossos-servicos-img">  
+          <p 
+          class="paragrafo-nossos-servicos" 
+          id="encadernacao"
+          style="font-family: 'Outfit', sans-serif;" 
+          v-motion-slide-visible-once-bottom>
             Além de nossas soluções de embalagem, a Embalarte também 
             oferece serviços especializados em encadernação, atendendo 
             a diversas necessidades de apresentação de documentos.
@@ -166,16 +175,18 @@ export default {
 
   /* Contêiner de imagens */
   .texto-anterior {
+    margin-left: 12%; /* Espaço à esquerda */
+    margin-right: 12%; /* Espaço à direita */  
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    background: linear-gradient(
-    to bottom, /* Direção do gradiente */
-    white 0%, /* Branco no topo */
-    rgb(226, 226, 226) 20%, /* Cinza no meio */
-    rgb(228, 228, 228) 100% /* Branco na base */
-  );
-  }
+    background: 
+        /* Gradiente horizontal: Branco nas laterais e cinza no centro */
+        linear-gradient(to right, white 0%, white 25%, rgb(226, 226, 226) 50%, white 75%, white 100%),
+        /* Gradiente vertical: Branco no topo e cinza no centro */
+        linear-gradient(to bottom, white 0%, rgb(226, 226, 226) 50%, rgb(228, 228, 228) 100%);
+
+}
 
   .animado {
   display: inline-block; /* Para permitir o efeito de transformação */
@@ -220,6 +231,13 @@ export default {
   z-index: 1000; /* Ensure the image is above other content */
 }
 
+#blister {
+  width: 30%; /* Set the initial width of the image */
+  transition: transform 0.3s ease-in-out; /* Smooth scaling transition */
+  z-index: 100; /* Ensure the image is above other content */
+}
+
+
   .titulo-nossos-servicos {
   font-size: 6rem;
   color:rgb(7, 7, 100);
@@ -250,15 +268,38 @@ body {
 
 .paragrafo-nossos-servicos {
   padding: 0 25%; /* Mantém o padding lateral */
-  font-size: 1.4rem;
+  font-size: 1.1rem;
   text-align: center; /* Centraliza o texto dentro dos parágrafos */
   flex: 1; /* Permite que cada parágrafo ocupe o mesmo espaço */
   min-width: 250px; /* Define uma largura mínima para os parágrafos */
   margin-top: 50px;
-  margin-left: -250px;
-  margin-right: 150px;
+  margin-left: -270px;
+  margin-right: -75px;
   margin-bottom: 150px;
 }
+#recebimento {
+  margin-left: 10px;
+  margin-right: 10%;  
+}
+
+#blisters {
+  margin-left: -15%;
+  margin-right: -25%;
+  margin-top: 12%; 
+}
+
+#armazenagem {
+  margin-left: -30%;
+  margin-right: -5%;
+  margin-top: 15%; 
+}
+
+#encadernacao {
+  margin-left: -10%;
+  margin-right: -25%;
+  margin-top: 15%; 
+}
+
   .custom-hr {
   background-color: rgba(255, 255, 255, 0);
   color: rgba(255, 255, 255, 0);
@@ -271,13 +312,6 @@ body {
   border-radius: 10px; 
 }
 
-/* Contêiner para centralizar imagens e texto */
-.imagem-nossos-servicos {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 20px 0; /* Ajuste o espaçamento vertical */
-}
 /* Estilo das imagens */
 .imagem-nossos-servicos-img {
   width: 20%; /* Ajuste para a largura desejada */

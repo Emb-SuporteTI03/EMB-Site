@@ -44,7 +44,7 @@
                     </div>
                   </div>
                   <hr class="custom-hr2">
-                  <router-link :to="{ path: '/Nossos-Servicos' }" style="color: black; text-decoration: none;">NOSSES SERVIÇOS</router-link>
+                  <router-link :to="{ path: '/Nossos-Servicos' }" style="color: black; text-decoration: none;">NOSSOS SERVIÇOS</router-link>
 
                 </div>
               </li>
