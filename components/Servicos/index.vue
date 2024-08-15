@@ -40,6 +40,7 @@ export default {
 </script>
 
 <template>
+  <div class="for-pc-servicos">
       <div class="container-history">
         <hr class="custom-hr">    
         <hr class="custom-hr">   
@@ -137,14 +138,68 @@ export default {
       </div>
 
       </div>
+  </div>
+
+  <div class="for-cllr-servicos">
+    <hr class="custom-hr">    
+    <hr class="custom-hr">    
+    <hr class="custom-hr">    
+    <hr class="custom-hr">    
+    <hr class="custom-hr">    
+    <hr class="custom-hr">    
+    <hr class="custom-hr">    
+
+    <div class="intro-container-cllr">
+      <h1 class="titulo-nossos-servicos" style="font-family: 'Outfit', sans-serif;" v-motion-slide-visible-once-bottom>
+        NOSSOS SERVIÇOS
+      </h1>  
+    </div>
+
+    <div class="texto-intro">
+              <p class="paragrafo-nossos-servicos-intro" style="font-family: 'Outfit', sans-serif;" v-motion-slide-visible-once-bottom>
+                  Bem-vindo à Embalarte, uma empresa inovadora e versátil 
+                  no setor de embalagens. Com um portfólio diversificado de produtos, 
+                  nos dedicamos a fornecer soluções de embalagem de alta qualidade 
+                  que atendem às necessidades específicas de cada cliente. <br>
+              </p>
+          </div> 
+          <div 
+    id="recebimento"
+    v-motion-fade-visible-once 
+    class="imagem-nossos-servicos">
+    
+    <img draggable="false" id="caminhao" src="../../assets/images/Novo Projeto (1).png" 
+       v-motion
+       :initial="initial"
+       :enter="enter"
+       class="animado">
+
+          <p class="paragrafo-nossos-servicos" id="texto_cm" style="font-family: 'Outfit', sans-serif;" v-motion-slide-visible-once-bottom>
+            Recebimento e Armazenagem <br>
+            Na Embalarte, reconhecemos o papel crucial que a logística de distribuição e o 
+            atendimento eficiente desempenham no sucesso das operações de e-commerce. 
+            Oferecemos soluções personalizadas para garantir que seus produtos cheguem 
+            ao cliente final de forma rápida e segura.
+            Aqui, nosso compromisso é oferecer soluções inovadoras e completas 
+            que apoiem o crescimento do seu negócio, especialmente no dinâmico 
+            mundo do e-commerce. Confie em nós para ser seu parceiro de confiança 
+            em todas as etapas do processo, desde a embalagem até a entrega final.
+          </p>
+
+          <div class="separador"></div> <!-- Separador adicionado aqui -->
+          <div class="separador"></div> <!-- Separador adicionado aqui -->
+        </div> 
+  </div>
   </template>
   
-  <style>
+<style>
 
+.for-cllr-servicos {
+  display: none; 
+}
 #galpao_direita {
     transform: scaleX(-1); /* Reverte a imagem horizontalmente */
 }
-
 .texto-intro {
     display: flex; /* Flexbox for images and text layout */
     align-items: center; /* Center items vertically */
@@ -152,7 +207,6 @@ export default {
     overflow: hidden; /* Hide overflow if images are too large */
     background-color: rgb(154, 191, 207);
 }
-
 .imagem-intro {
     flex: 1; /* Allow images to grow and shrink */
     height: auto; /* Maintain aspect ratio */
@@ -160,21 +214,17 @@ export default {
     object-fit: cover; /* Ensure images cover the allocated space */
     margin: -60px; /* Remove margin to ensure images touch edges */
 }
-
 .paragrafo-nossos-servicos-intro {
     font-size: 1.4rem;
     flex: 2; /* Allow text to take up more space */
     text-align: center; /* Center text if needed */
     margin: 0 10px; /* Space between text and images */
 }
-
-
 .separador {
     width: 100px; /* Make it full-width or adjust as needed */
-  }
-
-  /* Contêiner de imagens */
-  .texto-anterior {
+}
+/* Contêiner de imagens */
+.texto-anterior {
     margin-left: 10%; /* Espaço à esquerda */
     margin-right: 10%; /* Espaço à direita */  
     background-size: cover;
@@ -184,12 +234,10 @@ export default {
     border-radius: 80px; 
     border: 3px solid #01385C;
 }
-
-  .animado {
+.animado {
   display: inline-block; /* Para permitir o efeito de transformação */
   animation: pulsar 2s infinite; /* Adiciona a animação de pulsação */
 }
-
 /* Define a animação de pulsação */
 @keyframes pulsar {
   0% {
@@ -202,14 +250,14 @@ export default {
     transform: scale(1);
   }
 }
-  .textos {
+.textos {
     background: linear-gradient(
     to bottom, /* Direção do gradiente */
     rgb(228, 228, 228) 0% /* Branco na base */
     rgb(114, 114, 114) 50%, /* Cinza no meio */
     rgb(255, 255, 255) 100%, /* Cinza no meio */
   );
-  }
+}
 .container-history {
   display: flex;
   flex-direction: column; /* Alinha os elementos em coluna */
@@ -217,7 +265,6 @@ export default {
   align-items: center; /* Alinha verticalmente */
   text-align: center; /* Centraliza o texto dentro do contêiner */
 }
-
 /* CSS for positioning the image */
 #caminhao {
   position: fixed; /* Fix the image to the viewport */
@@ -227,25 +274,22 @@ export default {
   transition: transform 0.3s ease-in-out; /* Smooth scaling transition */
   z-index: 1000; /* Ensure the image is above other content */
 }
-
 #blister {
   width: 30%; /* Set the initial width of the image */
   transition: transform 0.3s ease-in-out; /* Smooth scaling transition */
   z-index: 100; /* Ensure the image is above other content */
 }
-
-
-  .titulo-nossos-servicos {
+.titulo-nossos-servicos {
   font-size: 6rem;
   color:rgb(7, 7, 100);
   justify-content: center; /* Centraliza os parágrafos dentro do contêiner */
   align-items: center; /* Alinha verticalmente os parágrafos no centro */
-  }
-  .titulo-nossos-servicos2 {
+}
+.titulo-nossos-servicos2 {
   font-size: 4rem;
   
-  }
-  .texto-explicacao {
+}
+.texto-explicacao {
   display: flex; /* Torna o contêiner flexível */
   justify-content: center; /* Centraliza os parágrafos dentro do contêiner */
   align-items: center; /* Alinha verticalmente os parágrafos no centro */
@@ -257,12 +301,9 @@ export default {
 html {
   overflow-x: hidden;
 }
-
 body {
   overflow-x: hidden;
 }
-
-
 .paragrafo-nossos-servicos {
   padding: 0 25%; /* Mantém o padding lateral */
   font-size: 1.1rem;
@@ -278,29 +319,25 @@ body {
   margin-left: 10px;
   margin-right: 10%;  
 }
-
 #blisters {
   margin-left: -15%;
   margin-right: -25%;
   margin-top: 12%; 
 }
-
 #armazenagem {
   margin-left: -30%;
   margin-right: -5%;
   margin-top: 15%; 
 }
-
 #encadernacao {
   margin-left: -10%;
   margin-right: -25%;
   margin-top: 15%; 
 }
-
-  .custom-hr {
+.custom-hr {
   background-color: rgba(255, 255, 255, 0);
   color: rgba(255, 255, 255, 0);
-  }
+}
   /* Contêiner de imagens individuais */
 .imagem-nossos-servicos-img {
   width: 100%; /* Ajuste para a largura desejada */
@@ -308,7 +345,6 @@ body {
   object-fit: contain; /* Ajusta a imagem para caber no contêiner sem cortar */
   border-radius: 10px; 
 }
-
 /* Estilo das imagens */
 .imagem-nossos-servicos-img {
   width: 20%; /* Ajuste para a largura desejada */
@@ -316,7 +352,6 @@ body {
   object-fit: contain; /* Ajusta a imagem para caber no contêiner sem cortar */
   border-radius: 10px; 
 }
-
 /* Contêiner para centralizar imagens e texto */
 .imagem-nossos-servicos {
   display: flex;
@@ -325,4 +360,49 @@ body {
   margin: 20px 80px; /* Ajuste o espaçamento vertical */
 }
   
+@media (max-width: 768px){
+  .for-pc-servicos{
+    display: none;
+  }
+  .for-cllr-servicos{
+    display: block;
+  }
+  .intro-container-cllr {
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    width: 100%; /* Ensure full width of parent container */
+    height: 10vh; /* Optional: Full viewport height if needed */
+  }
+  .texto-intro {
+    padding-top: 10%;
+    padding-bottom: 10%;
+    margin-top: 20%;
+  }
+  .paragrafo-nossos-servicos-intro {
+    margin-left: -10%;
+  }
+  #recebimento {
+    display: block;
+    top: 100%
+  }
+  #caminhao {
+    left: 32%;
+    top:  5%;
+  }
+  #texto_cm {
+    margin-top: 40%;
+    margin-left: -20%;
+    margin-right: -25%;
+  }
+  .titulo-nossos-servicos {
+    font-size: 3rem;
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    text-align: center; /* Ensure text inside is centered */
+    margin: 0; /* Remove default margins */
+  }
+}
+
   </style>

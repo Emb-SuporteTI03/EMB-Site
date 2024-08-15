@@ -501,6 +501,7 @@ export default {
     display: none;
   }
   .header-cllr {
+    top: -0.001%;
     display: flex;
     position: fixed;
     width: 100%;

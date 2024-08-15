@@ -78,11 +78,7 @@ export default {
           <div class="separador"></div> <!-- Separador adicionado aqui -->
           <div class="separador"></div> <!-- Separador adicionado aqui -->
 
-      <img draggable="false" id="caminhao" src="../../assets/images/Novo Projeto (1).png" 
-       v-motion
-       :initial="initial"
-       :enter="enter"
-       class="animado">
+
 
         </div>   
       <div class="texto-explicacao">
@@ -227,16 +223,6 @@ export default {
   justify-content: center; /* Centraliza horizontalmente */
   align-items: center; /* Alinha verticalmente */
   text-align: center; /* Centraliza o texto dentro do contêiner */
-}
-
-/* CSS for positioning the image */
-#caminhao {
-  position: fixed; /* Fix the image to the viewport */
-  right: -120px; /* Align to the right side of the viewport */
-  margin-top: -150px;
-  width: 40%; /* Set the initial width of the image */
-  transition: transform 0.3s ease-in-out; /* Smooth scaling transition */
-  z-index: 1000; /* Ensure the image is above other content */
 }
 
 #blister {

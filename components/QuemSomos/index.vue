@@ -162,7 +162,7 @@ export default {
     <div class="espaco-cell">
     <img src="../../assets/images/landing.jpg" v-motion-fade-visible-once alt="Imagem de Quem Somos" id="ImgTexto">
 
-    <p class="about-us-paragraph" v-motion-slide-visible-once-bottom>
+    <p id="paragrafo" class="about-us-paragraph" v-motion-slide-visible-once-bottom>
             A EMBALARTE nasceu do sonho de Fernando Alves Vieira em criar uma empresa forte e sólida, para oferecer 
             ao mercado soluções completas e personalizadas. Fundada em 1999 e com 16 anos de experiência, vem conquistado 
             seu espaço como uma das melhores empresas no segmento. Situada na Cidade de Santana de Paranaíba no Estado de 
@@ -536,6 +536,11 @@ export default {
   height: 3px;
   background-color: rgba(255, 255, 255, 0);
 }
+}
+@media (max-width: 750px){
+  #paragrafo {
+    margin-top: 50px;
+  }
 }
 /* --------------------------------------------------------------------------/ */
 
