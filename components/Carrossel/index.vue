@@ -15,13 +15,6 @@
     <hr class="custom-hr2">
     <hr class="custom-hr2">       
     <hr class="custom-hr2">
-    <hr class="custom-hr2">
-    <hr class="custom-hr2">
-    <hr class="custom-hr2">
-    <hr class="custom-hr2">
-    <hr class="custom-hr2">
-    <hr class="custom-hr2">
-    <hr class="custom-hr2">
 
     </div>
     </div>

@@ -43,7 +43,6 @@ export default {
       <div class="container-history">
         <hr class="custom-hr">    
         <hr class="custom-hr">   
-        <hr class="custom-hr">   
         <h1 class="titulo-nossos-servicos" style="font-family: 'Outfit', sans-serif;" v-motion-slide-visible-once-bottom>
           NOSSOS SERVIÇOS
         </h1>  
@@ -57,8 +56,6 @@ export default {
               </p>
               <img draggable="false" id="galpao_direita" src="../../assets/images/deposito_sf.png" class="imagem-intro"/>
           </div> 
-        <hr class="custom-hr">    
-
         <div class="texto-anterior">
 
     <div 
@@ -183,7 +180,7 @@ export default {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    background-color: rgb(218, 218, 218);
+    background-color: rgb(223, 223, 223);
     border-radius: 80px; 
     border: 3px solid #01385C;
 }

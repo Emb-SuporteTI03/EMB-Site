@@ -22,13 +22,13 @@
             <!-- Textos -->
             <div class="textos">
               <li class="drop-hover" ref="dropdownToggle" @mouseenter="mouseMainDrop" @mouseleave="handleMouseLeave">
-                <a style="color: black; text-decoration: none;">
+                <a id="sobre-nos-txt" style="color: black; text-decoration: none;">
                   SOBRE NÓS
                   <i class="bi" :class="{'bi-caret-right-fill': !isDropdownActive, 'bi-caret-down-fill': isDropdownActive}"></i>
                 </a>
                 <div class="drop" v-show="isDropdownActive">
                   <div class="drop-hover" ref="subDropdownToggle" @mouseenter="mouseSubDrop" @mouseleave="mouseSubLeave">
-                    <a style="color: black; text-decoration: none;">
+                    <a id="qmSomos-sub" style="color: black; text-decoration: none;">
                       QUEM SOMOS
                       <i class="bi" :class="{'bi-caret-right-fill': !isSubDropdownActive, 'bi-caret-down-fill': isSubDropdownActive}"></i>
                     </a>
@@ -42,7 +42,7 @@
                   </div>
                   <hr class="custom-hr2">
                   <div class="drop-hover" ref="subDropdownToggle" @mouseenter="mouseSub2Drop" @mouseleave="mouseSub2Leave">
-                    <a style="color: black; text-decoration: none;">
+                    <a id="servicos-sub" style="color: black; text-decoration: none;">
                       NOSSOS SERVIÇOS
                       <i class="bi" :class="{'bi-caret-right-fill': !isSubDropdown2Active, 'bi-caret-down-fill': isSubDropdown2Active}"></i>
                     </a>
@@ -56,10 +56,10 @@
               </li>
 
               <!-- Login Cliente -->
-              <li><a data-bs-toggle="modal" data-bs-target="#acessoClienteModal" href="" style="color: black; text-decoration: none;">LOGIN CLIENTE</a></li>
+              <li><a id="cliente-txt" data-bs-toggle="modal" data-bs-target="#acessoClienteModal" href="" style="color: black; text-decoration: none;">LOGIN CLIENTE</a></li>
 
               <!-- Contato -->
-              <li><a data-bs-toggle="modal" data-bs-target="#contatoModal" href="" style="color: black; text-decoration: none;">CONTATO</a></li>
+              <li><a id="contato-txt" data-bs-toggle="modal" data-bs-target="#contatoModal" href="" style="color: black; text-decoration: none;">CONTATO</a></li>
             </div>
 
             <!-- Íxones -->
@@ -98,12 +98,12 @@
               </a>
             </NuxtLink>
           </div>   
-          <img src="../../assets/images/menu-hamburger.png" alt="menu" @click="toggleMenu">
+          <img src="../../assets/images/menu-hamburger.png" alt="menu" @click="toggleMenu" ref="toggleButton">
         </div>
-        <div v-if="isMenuVisible" class="hamburger">
+        <div v-if="isMenuVisible" class="hamburger" ref="menu">
           <ul>
-            <div  @click="toggleSubDropCllr1" class="opcao">
-              <li><a href="#" style="color: black; text-decoration: none;">SOBRE NÓS</a></li>
+            <div @click="toggleSubDropCllr1" class="opcao">
+              <li><a style="color: black; text-decoration: none;">SOBRE NÓS</a></li>
               <i class="bi" :class="{'bi-caret-right-fill': !isSubDrop1Cllr, 'bi-caret-down-fill': isSubDrop1Cllr}"></i>
             </div>
             <div class="subdrop-cllr" v-if="isSubDrop1Cllr">
@@ -113,23 +113,23 @@
               <hr class="custom-hr2">
               <router-link :to="{ path: '/Nossos-Valores' }" style="color: black; text-decoration: none;">Valores</router-link>
               <hr class="custom-hr2">
-
             </div>
             <div @click="toggleSubDropCllr2" class="opcao">
-              <li><a href="#" style="color: black; text-decoration: none;">NOSSOS SERVIÇOS</a></li>
+              <li><a style="color: black; text-decoration: none;">NOSSOS SERVIÇOS</a></li>
               <i class="bi" :class="{'bi-caret-right-fill': !isSubDrop2Cllr, 'bi-caret-down-fill': isSubDrop2Cllr}"></i>
             </div>
             <div class="subdrop-cllr" v-if="isSubDrop2Cllr">
-                <router-link :to="{ path: '/Nossos-Servicos' }" style="color: black; text-decoration: none;">Soluções em Logística</router-link>
-                <hr class="custom-hr2">
-                <router-link :to="{ path: '/Tecnologias' }" style="color: black; text-decoration: none;">Soluções em Tecnologia</router-link>
+              <router-link :to="{ path: '/Nossos-Servicos' }" style="color: black; text-decoration: none;">Soluções em Logística</router-link>
+              <hr class="custom-hr2">
+              <router-link :to="{ path: '/Tecnologias' }" style="color: black; text-decoration: none;">Soluções em Tecnologia</router-link>
             </div>
-
           </ul>
         </div>
       </div>
+    </header>
 
-  </header>
+
+
 
 
 
@@ -217,11 +217,32 @@ export default {
   },
   mounted() {
     window.addEventListener('scroll', this.handleScroll);
+    document.addEventListener('click', this.handleClickOutside);
+    document.addEventListener('mousemove', this.handleMouseMove);
+    window.addEventListener('touchmove', this.handleTouchMove); 
   },
   unmounted() {
-    window.removeEventListener('scroll', this.handleScroll);
+    document.removeEventListener('click', this.handleClickOutside);
+    document.removeEventListener('scroll', this.handleScroll);
+    document.removeEventListener('mousemove', this.handleMouseMove);
+    window.addEventListener('touchmove', this.handleTouchMove);
   },
   methods: {
+    handleTouchMove() {
+      console.log('Tela está sendo deslizada!');
+      // Adicione aqui a lógica para ocultar o menu ou qualquer outra ação
+      if (this.isMenuVisible) {
+        this.isMenuVisible = false; // Fecha o menu ao deslizar a tela
+      }
+    },
+    handleClickOutside(event) {
+    const menu = this.$refs.menu;
+    const toggleButton = this.$refs.toggleButton;
+
+    if (menu && !menu.contains(event.target) && toggleButton && !toggleButton.contains(event.target)) {
+      this.closeMenu();
+    }
+  },
     // Operação do dropdown -------------------------------------------\
     // Dropdown principal
     mouseMainDrop() {
@@ -261,6 +282,9 @@ export default {
       this.isSubDrop2Cllr = false;
       this.isMenuVisible = !this.isMenuVisible;
       console.log('agora o menu está: ', this.isMenuVisible)
+    },
+    closeMenu() {
+      this.isMenuVisible = false;
     },
     toggleSubDropCllr1 () {
       console.log('clicou o submenu 1')
@@ -383,8 +407,21 @@ export default {
 /* Engloba o sobre nós, o login cliente e o contato e o dropdown */
 .textos {
   display: flex; /* Organiza lateralmente */
-  gap: 10%; /* Espaço entre os itens */
+  gap: 20px; /* Espaço entre os itens */
 }
+
+#sobre-nos-txt {
+  font-size: 100%; /* Tamanho da fonte */
+  margin-left: -20%;
+  margin-right: -20%;
+}
+
+#cliente-txt {
+  font-size: 100%; /* Tamanho da fonte */
+  margin-left: -10%;
+  margin-right: 10%;
+}
+
 .textos a {
   font-size: 100%; /* Tamanho da fonte */
   display: block; /* Faz com que a margem seja aplicada corretamente */
@@ -459,7 +496,7 @@ export default {
 
 /* PORTABILIDADES -----------------------------------------------------------------------\ */
 /* PARA O CELULAR */
-@media (max-width: 768px) {
+@media only screen and (max-width: 768px) and (orientation: portrait) {
   .header {
     display: none;
   }
@@ -474,6 +511,13 @@ export default {
   .menu-cllr {
     display: flex;
   }
+  .opcao {  
+    margin-top: 1%;
+  }
+  .opcao a {  
+    font-size: 1.2rem;
+  }
+
   .container-header-cllr {
     display: column;
   }
@@ -503,6 +547,9 @@ export default {
 .subdrop-cllr {
   background-color: #bbbbbb;
 }
+.subdrop-cllr a {
+  font-size: 1.3rem;
+}
 }
 
 
@@ -528,8 +575,20 @@ export default {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Cria uma pequena sombra embaixo do cabeçalho */
   transition: background-color 0.3s ease, backdrop-filter 0.3s ease; /* Suaviza a transição quando scrolla a página */
 }
+.imagem img {
+  /* max-width: 10px; */
+  width: 20%; /* Faz a imagem ocupar a largura disponível do contêiner, respeitando max-width */
+  height: auto; /* Mantém a proporção da imagem */
+  margin-top: -2%; /* Ajusta a posição vertical da imagem */
 }
-@media (max-width: 1250px) {
+.drop {
+  margin-top: -0.10%;
+  width: 14.2%; /* Defina uma largura para o dropdown */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  background-color: #ececec;
+  display: block;
+  position: absolute;
+}
   .icones {
   display: flex; /* Se estiver agrupando textos, use flex também */
   gap: 20px  ; /* Espaço entre os itens */
@@ -538,21 +597,121 @@ export default {
   width: 70%; /* Ajusta a largura do ícone */
   height: 70%; /* Ajusta a altura do ícone */
 }
-}
-@media (max-width: 1250px) {
   .textos a {
   font-size: 70%; /* Tamanho da fonte */
   display: block; /* Faz com que a margem seja aplicada corretamente */
   margin-top: 7%; /* Adiciona um espaço acima do texto */
 }
-}
-@media (max-width: 1000px) {
-  .textos a {
+#sobre-nos-txt {
   font-size: 70%; /* Tamanho da fonte */
   display: block; /* Faz com que a margem seja aplicada corretamente */
-  margin-top: 150%; /* Adiciona um espaço acima do texto */
+  margin-left: -10%;
+  margin-right: -100%;
+}
+#cliente-txt {
+  font-size: 70%; /* Tamanho da fonte */
+  display: block; /* Faz com que a margem seja aplicada corretamente */
+  margin-left: -10%;
+  margin-right: -100%;
+}
+}
+@media (max-width: 1000px) {
+  #sobre-nos-txt {
+  font-size: 70%; /* Tamanho da fonte */
+  display: block; /* Faz com que a margem seja aplicada corretamente */
+  margin-top: 142%; /* Adiciona um espaço acima do texto */
   margin-bottom: -10%
 }
+#cliente-txt {
+  font-size: 70%; /* Tamanho da fonte */
+  display: block; /* Faz com que a margem seja aplicada corretamente */
+  margin-top: 136%; /* Adiciona um espaço acima do texto */
+  margin-left: -10%;
+  margin-right: -100%;
+}
+
+#contato-txt {
+  font-size: 70%; /* Tamanho da fonte */
+  display: block; /* Faz com que a margem seja aplicada corretamente */
+  margin-top: 160%; /* Adiciona um espaço acima do texto */
+  margin-bottom: -10%;
+}
+ 
+ #qmSomos-sub {
+  margin-top: -10%; /* Adiciona um espaço acima do texto */
+ }
+ #servicos-sub {
+  margin-top: -10%; /* Adiciona um espaço acima do texto */
+ }
+}
+@media (max-width: 950px) {
+  #sobre-nos-txt {
+  font-size: 70%; /* Tamanho da fonte */
+  display: block; /* Faz com que a margem seja aplicada corretamente */
+  margin-top: 142%; /* Adiciona um espaço acima do texto */
+  margin-bottom: -10%;
+  margin-left: -20%;
+}
+#cliente-txt {
+  font-size: 70%; /* Tamanho da fonte */
+  display: block; /* Faz com que a margem seja aplicada corretamente */
+  margin-top: 136%; /* Adiciona um espaço acima do texto */
+  margin-left: -10%;
+  margin-right: -100%;
+}
+
+#contato-txt {
+  font-size: 70%; /* Tamanho da fonte */
+  display: block; /* Faz com que a margem seja aplicada corretamente */
+  margin-top: 160%; /* Adiciona um espaço acima do texto */
+  margin-bottom: -10%;
+}
+ .drop {
+  margin-top: 0.4%;
+ }
+ #qmSomos-sub {
+  margin-top: 2%; /* Adiciona um espaço acima do texto */
+  margin-bottom: 2%; /* Adiciona um espaço acima do texto */
+ }
+ #servicos-sub {
+  margin-top: -10%; /* Adiciona um espaço acima do texto */
+ }
+}
+@media (max-width: 800px) {
+  #sobre-nos-txt {
+  font-size: 60%; /* Tamanho da fonte */
+  display: block; /* Faz com que a margem seja aplicada corretamente */
+  margin-top: 187%; /* Adiciona um espaço acima do texto */
+  margin-left: -100%;
+}
+#cliente-txt {
+  font-size: 60%; /* Tamanho da fonte */
+  display: block; /* Faz com que a margem seja aplicada corretamente */
+  margin-top: 178%; /* Adiciona um espaço acima do texto */
+  margin-left: -50%;
+  margin-right: -100%;
+}
+
+#contato-txt {
+  font-size: 60%; /* Tamanho da fonte */
+  display: block; /* Faz com que a margem seja aplicada corretamente */
+  margin-top: 160%; /* Adiciona um espaço acima do texto */
+  margin-bottom: -10%;
+}
+ 
+ #qmSomos-sub {
+  font-size: 0.5rem;
+  margin-top: 5%;
+  margin-bottom: 10%;
+ }
+ #servicos-sub {
+  font-size: 0.5rem;
+ }
+ .drop {
+  margin-top: 0.5%;
+  margin-left: -5%;
+  width: 12.5%; /* Defina uma largura para o dropdown */
+ }
 }
 @media (max-width: 1000px) {
   .icones {
@@ -563,14 +722,6 @@ export default {
 .icones svg {
   width: 70%; /* Ajusta a largura do ícone */
   height: 70%; /* Ajusta a altura do ícone */
-}
-}
-@media (max-width: 1250px) {
-  .imagem img {
-  /* max-width: 10px; */
-  width: 20%; /* Faz a imagem ocupar a largura disponível do contêiner, respeitando max-width */
-  height: auto; /* Mantém a proporção da imagem */
-  margin-top: -2%; /* Ajusta a posição vertical da imagem */
 }
 }
 @media (max-width: 1000px) {

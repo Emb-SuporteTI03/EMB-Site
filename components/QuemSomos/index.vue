@@ -56,6 +56,7 @@ export default {
 
 <template>
   <main>
+    <div class = "for-pc">
     <div class="about-us-section" id="aboutUs">
       <div class="about-us-container">
         <div class="about-us-text">
@@ -156,12 +157,56 @@ export default {
 
 
   </div>
-
-
+</div>
 
     <div class="espaco-cell">
+    <img src="../../assets/images/landing.jpg" v-motion-fade-visible-once alt="Imagem de Quem Somos" id="ImgTexto">
+
+    <p class="about-us-paragraph" v-motion-slide-visible-once-bottom>
+            A EMBALARTE nasceu do sonho de Fernando Alves Vieira em criar uma empresa forte e sólida, para oferecer 
+            ao mercado soluções completas e personalizadas. Fundada em 1999 e com 16 anos de experiência, vem conquistado 
+            seu espaço como uma das melhores empresas no segmento. Situada na Cidade de Santana de Paranaíba no Estado de 
+            São Paulo, dispõe em sua planta própria, 4.000m2 de área.
+          </p>
+
+          <div class="text-overlay">
+        <div class="embalarte-txt">
+        <strong class="about-us-text" id="about-us-nos">NÓS, DO GRUPO EMBALARTE</strong>
+        </div>
+        <strong class="about-us-text" id="localTexto">TEMOS NOSSA SEDE EM<br> </strong>
+          <ul class="lista-cidades-cllr">
+            <li><a>📌 Santana de Parnaíba</a></li>
+          </ul>
+           <strong class="about-us-text" id="localTexto">
+          E ESTAMOS PRESENTES EM OUTRAS 3 CIDADES NO ESTADO DE SÃO PAULO!</strong>
+        <ul class="lista-cidades-cllr">
+          <li><a>📌 Osasco</a></li>
+          <li><a>📌 São José dos Campos</a></li>
+          <li><a>📌 Cajamar</a></li>
+        </ul>
+
     <hr class="custom-hr">
     <hr class="custom-hr">
+    <hr class="custom-hr">
+    <hr class="custom-hr">
+    <hr class="custom-hr">
+    <hr class="custom-hr">
+      </div>  
+          
+          <div class="full-height">
+    <strong class="call-servicos">
+      CONHEÇA MAIS SOBRE NOSSOS SERVIÇOS, ENTRE NO GALPÃO
+    </strong>
+    <br>
+    <br>
+    <div class="imagem-link">
+      <router-link :to="{ path: '/Nossos-Servicos' }" style="color: black; text-decoration: none;">
+        <img src="../../assets/images/galpao.jpg" v-motion-fade-visible-once class="services-img">
+      </router-link>
+    </div>
+
+
+  </div>
     </div>
 
 
@@ -372,15 +417,39 @@ export default {
 .mapa-cel {
   display: none;
 }
-@media (max-width: 300px) {
-.about-us-image-img{
+
+@media (max-width: 768px) {
+  .for-pc{
   display: none;
 }
+.about-us-paragraph {
+  display: flex;
+  justify-content: center; /* Centraliza horizontalmente */
+  align-items: center; /* Centraliza verticalmente */
+  height: 45vh; /* Faz o contêiner ocupar toda a altura da viewport */
+  text-align: center; /* Alinha o texto no centro do parágrafo */
 }
-@media (max-width: 768px) {
+
+.about-us-paragraph p {
+  max-width: 600px; /* Ajuste o tamanho máximo conforme necessário */
+  margin: 0; /* Remove as margens padrão do parágrafo */
+  padding: 20px; /* Adiciona um pouco de espaço ao redor do texto */
+}
+
+.call-servicos {
+  display: flex;
+  justify-content: center; /* Centraliza horizontalmente */
+  align-items: center; /* Centraliza verticalmente */
+  height: 10vh; /* Faz o contêiner ocupar toda a altura da viewport */
+  text-align: center; /* Alinha o texto no centro do parágrafo */
+}
   /* Estilos para telas menores */
   .local-section {
     flex-direction: column-reverse; 
+  }
+
+  #ImgTexto {
+    border-radius: 0px;
   }
 
   .espaco-cell {
@@ -415,12 +484,35 @@ export default {
     margin-right: 0px; /* Espaçamento entre o texto e a imagem */
   }
 
-  .lista-cidades {
+  .lista-cidades-cllr {
     list-style-type: none;
     padding-left: 0;
-    font-size: 1.4em;
-    text-align: center; /* Centraliza a lista de cidades */
+    font-size: 1.2em;
+    margin-bottom: -20px;
+    margin-top: -50px;
   }
+
+  .lista-cidades-cllr {
+  list-style-type: none; /* Remove default list styling */
+  padding: 0;
+}
+
+.lista-cidades-cllr li {
+  margin: 15px 0; /* Add space between items */
+}
+
+.lista-cidades-cllr a {
+  text-decoration: none; /* Remove underline from links */
+  color: #000000; /* Blue color for links */
+  font-weight: bold; /* Bold text */
+  display: inline-block; /* Make the entire list item clickable */
+  padding: 10px 15px; /* Add padding to clickable area */
+  border-radius: 5px; /* Rounded corners */
+  border: 2px solid #86acca; /* Black border */
+  user-select: none; /* Prevent text selection */
+  cursor: pointer; /* Change cursor to pointer on hover */
+}
+
 
   .text-overlay {
     flex: 1;
@@ -438,6 +530,12 @@ export default {
   .text-overlay h2, .text-overlay p {
     margin: 0; /* Remove margens padrão */
   }
+  .custom-hr {
+  margin: 20px 0px 5px 0px;
+  border: 0;
+  height: 3px;
+  background-color: rgba(255, 255, 255, 0);
+}
 }
 /* --------------------------------------------------------------------------/ */
 
