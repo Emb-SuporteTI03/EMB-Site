@@ -44,22 +44,20 @@ export default {
         <hr class="custom-hr">    
         <hr class="custom-hr">   
         <hr class="custom-hr">   
-        <h1 class="titulo-nossos-servicos" style="font-family: 'Outfit', sans-serif;" v-motion-slide-visible-once-bottom>
-          NOSSOS SERVIÇOS
+        <h1 class="titulo-nassas-tecnologias" style="font-family: 'Outfit', sans-serif;" v-motion-slide-visible-once-bottom>
+          NOSSAS TECNOLOGIAS
         </h1>  
-        <div class="texto-intro">
-              <img draggable="false" src="../../assets/images/deposito_sf.png" class="imagem-intro"/>
+        <div class="texto-intro-tecnologias">
+              <img draggable="false" id="celular" src="../../assets/images/celular.png" class="imagem-intro-tec"/>
               <p class="paragrafo-nossos-servicos-intro" style="font-family: 'Outfit', sans-serif;" v-motion-slide-visible-once-bottom>
                   Bem-vindo à Embalarte, uma empresa inovadora e versátil 
                   no setor de embalagens. Com um portfólio diversificado de produtos, 
                   nos dedicamos a fornecer soluções de embalagem de alta qualidade 
                   que atendem às necessidades específicas de cada cliente. <br>
               </p>
-              <img draggable="false" id="galpao_direita" src="../../assets/images/deposito_sf.png" class="imagem-intro"/>
+              <img draggable="false" id="notebook" src="../../assets/images/notebook.png" class="imagem-intro-tec"/>
           </div> 
-        <hr class="custom-hr">    
-
-        <div class="texto-anterior">
+        <div class="texto-tecnologias">
 
     <div 
     id="recebimento"
@@ -144,11 +142,18 @@ export default {
   
   <style>
 
-#galpao_direita {
-    transform: scaleX(-1); /* Reverte a imagem horizontalmente */
+#notebook {
+  transform: scaleX(-1); /* Reverte a imagem horizontalmente */
+  max-width: 30%; /* Ensure images do not exceed viewport width */
 }
 
-.texto-intro {
+#celular {
+  height: auto; /* Maintain aspect ratio */
+  max-width: 10%; /* Ensure images do not exceed viewport width */
+  margin-left: 5%;
+}
+
+.texto-intro-tecnologias {
     display: flex; /* Flexbox for images and text layout */
     align-items: center; /* Center items vertically */
     width: 100%; /* Full width of the parent container */
@@ -156,7 +161,7 @@ export default {
     background-color: rgb(154, 191, 207);
 }
 
-.imagem-intro {
+.imagem-intro-tec {
     flex: 1; /* Allow images to grow and shrink */
     height: auto; /* Maintain aspect ratio */
     max-width: 100%; /* Ensure images do not exceed viewport width */
@@ -168,7 +173,7 @@ export default {
     font-size: 1.4rem;
     flex: 2; /* Allow text to take up more space */
     text-align: center; /* Center text if needed */
-    margin: 0 10px; /* Space between text and images */
+    margin-left: 10%;
 }
 
 
@@ -177,15 +182,18 @@ export default {
   }
 
   /* Contêiner de imagens */
-  .texto-anterior {
-    margin-left: 10%; /* Espaço à esquerda */
-    margin-right: 10%; /* Espaço à direita */  
+  .texto-tecnologias {
+    margin-left: 12%; /* Espaço à esquerda */
+    margin-right: 12%; /* Espaço à direita */  
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    background-color: rgb(218, 218, 218);
-    border-radius: 80px; 
-    border: 3px solid #01385C;
+    background: 
+        /* Gradiente horizontal: Branco nas laterais e cinza no centro */
+        linear-gradient(to right, white 0%, white 25%, rgb(226, 226, 226) 50%, white 75%, white 100%),
+        /* Gradiente vertical: Branco no topo e cinza no centro */
+        linear-gradient(to bottom, white 0%, rgb(226, 226, 226) 50%, rgb(228, 228, 228) 100%);
+
 }
 
   .animado {
@@ -238,13 +246,13 @@ export default {
 }
 
 
-  .titulo-nossos-servicos {
+  .titulo-nassas-tecnologias {
   font-size: 6rem;
   color:rgb(7, 7, 100);
   justify-content: center; /* Centraliza os parágrafos dentro do contêiner */
   align-items: center; /* Alinha verticalmente os parágrafos no centro */
   }
-  .titulo-nossos-servicos2 {
+  .titulo-nassas-tecnologias2 {
   font-size: 4rem;
   
   }

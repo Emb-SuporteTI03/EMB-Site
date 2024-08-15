@@ -1,6 +1,6 @@
 <template>
     <div> 
-      <div class="container-history">
+      <div class="container-historia">
         <hr class="custom-hr">    
         <hr class="custom-hr">   
         <div class="titulo">
@@ -38,36 +38,34 @@
   
 <style>
 .ligacao {
-  margin-left: 15%;
-  margin-top: -5%;
-  width: 70%; /* Aumenta a largura da imagem para 150% do tamanho original */
+  margin-left: 15%; /* Distancia lateral */
+  margin-top: -5%; /* Distância para a linha de cima */
+  width: 70%; /* Tamanho da imagem */
   height: auto; /* Mantém a proporção da imagem */
 }
+
+/* Relativo às duas linhas de caixa de história */
 .historia {
   margin-left: 2.6%; /* Espaço à esquerda */
   margin-right: 2.6%; /* Espaço à direita */  
 }
   /* Contêiner de imagens */
-  .container-history {
-  display: flex;
-  flex-direction: column;
-  gap: 20px; /* Espaço entre linhas de imagens */
+  .container-historia {
+  display: flex; /* Flexbox */
+  flex-direction: column; /* Deixa os itens (que são o título e as linhas) um em baixo do outro*/
 }
 .titulo_historia {
-  font-size: 6rem;  display: flex;
+  font-size: 6rem; 
+  display: flex; /* Precisa disso para poder centralizar */
   justify-content: center; /* Centraliza horizontalmente */
-  align-items: center; /* Centraliza verticalmente se o contêiner tiver altura */
   color:#01385C;
 }
-.titulo_historia2 {
-  font-size: 4rem;
-  margin-top: 3%;
-  margin-left: 5%;
-}
+
+/* Linha de ligação entre os quadrados de história */
 .Linha {
-  margin-top: 7%;
-  width: 100px; /* Largura da barra horizontal antes da rotação */
-  height: 5px; /* Altura da barra horizontal antes da rotação */
+  margin-top: 7%; 
+  width: 5%; /* Largura da barra */
+  height: 3px; /* Altura da barra horizontal antes da rotação */
   background-color: #01385C; /* Cor da barra */
   border: none; /* Remove a borda padrão */
 }
@@ -88,7 +86,6 @@ color: rgba(255, 255, 255, 0);
   width: 18%; /* Define a largura desejada */
   height: 18%; /* Define a altura desejada */
   object-fit: contain; /* Ajusta a imagem para caber no contêiner sem cortar */
-  border-radius: 5px; /* Adiciona cantos arredondados */
 }
 
 </style>
