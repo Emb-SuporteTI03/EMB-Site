@@ -133,7 +133,7 @@ export default {
     <div class="link-images">
       <div class="imagem-link">
         <strong class="call-servicos">
-          ENTRE NO GALPÃO
+          LOGÍSTICA
         </strong>
         <router-link :to="{ path: '/Nossos-Servicos' }" style="color: black; text-decoration: none;">
           <img src="../../assets/images/galpao.jpg" v-motion-fade-visible-once class="services-img">
@@ -141,7 +141,7 @@ export default {
       </div>
       <div class="imagem-link">
         <strong class="call-servicos">
-          ENTRE NA TI
+          TECNOLOGIA
         </strong>
         <router-link :to="{ path: '/Tecnologias' }" style="color: black; text-decoration: none;">
           <img src="../../assets/images/computer_room.webp" v-motion-fade-visible-once class="services-img">

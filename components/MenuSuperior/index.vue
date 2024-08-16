@@ -129,10 +129,6 @@
     </header>
 
 
-
-
-
-
     <!-- Modal de contato -->
     <div class="modal fade" id="contatoModal" tabindex="-1" aria-labelledby="contatoModalLabel" aria-hidden="true">
       <div class="modal-dialog">
@@ -144,6 +140,15 @@
           <div class="modal-body">
             <p>Conte-nos como podemos ajudar. Nós responderemos em breve!</p>
             <form @submit.prevent="insertContato()">
+              <div class="mb-3">
+                <label for="nome" class="form-label">Com que setor deseja falar?</label>
+                <select class="form-control" id="nome" v-model="contato.nome" required>
+                  <option value="" disabled selected>Selecione uma opção</option>
+                  <option value="opcao1">RH</option>
+                  <option value="opcao2">Financeiro</option>
+                  <option value="opcao3">Outros</option>
+                </select>
+              </div>
               <div class="mb-3">
                 <label for="nome" class="form-label">Nome</label>
                 <input type="text" class="form-control" id="nome" v-model="contato.nome" required>

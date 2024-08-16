@@ -41,7 +41,6 @@ export default {
 
 <template>
       <div class="container-history">
-        <hr class="custom-hr">    
         <hr class="custom-hr">   
         <hr class="custom-hr">   
         <h1 class="titulo-nassas-tecnologias" style="font-family: 'Outfit', sans-serif;" v-motion-slide-visible-once-bottom>
@@ -49,7 +48,7 @@ export default {
         </h1>  
         <div class="texto-intro-tecnologias">
               <img draggable="false" id="celular" src="../../assets/images/celular.png" class="imagem-intro-tec"/>
-              <p class="paragrafo-nossos-servicos-intro" style="font-family: 'Outfit', sans-serif;" v-motion-slide-visible-once-bottom>
+              <p class="paragrafo-tecnologias-intro" style="font-family: 'Outfit', sans-serif;" v-motion-slide-visible-once-bottom>
                   Bem-vindo à Embalarte, uma empresa inovadora e versátil 
                   no setor de embalagens. Com um portfólio diversificado de produtos, 
                   nos dedicamos a fornecer soluções de embalagem de alta qualidade 
@@ -63,7 +62,7 @@ export default {
     id="recebimento"
     v-motion-fade-visible-once 
     class="imagem-nossos-servicos">
-          <p class="paragrafo-nossos-servicos" id="texto_cm" style="font-family: 'Outfit', sans-serif;" v-motion-slide-visible-once-bottom>
+          <p class="paragrafo-nossas-tecnologias" id="texto_cm" style="font-family: 'Outfit', sans-serif;" v-motion-slide-visible-once-bottom>
             Recebimento e Armazenagem <br>
             Na Embalarte, reconhecemos o papel crucial que a logística de distribuição e o 
             atendimento eficiente desempenham no sucesso das operações de e-commerce. 
@@ -74,24 +73,19 @@ export default {
             mundo do e-commerce. Confie em nós para ser seu parceiro de confiança 
             em todas as etapas do processo, desde a embalagem até a entrega final.
           </p>
-
-          <div class="separador"></div> <!-- Separador adicionado aqui -->
-          <div class="separador"></div> <!-- Separador adicionado aqui -->
+          <img draggable="false" src="../../assets/images/tablet.png" v-motion-fade-visible-once class="imagem-nossos-servicos-img">  
 
 
 
         </div>   
       <div class="texto-explicacao">
-      <img 
-      draggable="false" 
-      id="blister" 
-      src="../../assets/images/lipstick-blister-001-beauty_(1)-transformed.png" 
-      v-motion-slide-visible-once-left>
+        <img draggable="false" src="../../assets/images/app.jpeg" id="app-img" v-motion-fade-visible-once class="imagem-nossos-servicos-img">  
       <p 
-      class="paragrafo-nossos-servicos" 
+      class="paragrafo-nossas-tecnologias" 
       id="blisters"
       style="font-family: 'Outfit', sans-serif;"
       v-motion-slide-visible-once-bottom>
+      APLICATIVO PRÓPRIO <br>
           Entre nossos produtos, destacamos a fabricação de blisters, uma solução 
           ideal para proteger e exibir produtos de maneira eficaz. Os blisters são 
           amplamente utilizados em diversos setores, incluindo farmacêutico, 
@@ -101,34 +95,19 @@ export default {
       </div>
         <div v-motion-fade-visible-once class="imagem-nossos-servicos">
           <p 
-          class="paragrafo-nossos-servicos" 
+          class="paragrafo-nossas-tecnologias" 
           id="armazenagem"
           style="font-family: 'Outfit', sans-serif;" 
           v-motion-slide-visible-once-bottom>
-            Recebimento e Armazenagem <br>
+            USO E DESENVOLVIMENTO DE API<br>
             Na Embalarte, compreendemos a importância do processo de 
             recebimento e armazenagem para garantir a integridade dos 
             produtos antes de serem embalados. Nosso sistema de logística 
             é projetado para otimizar cada etapa, desde a chegada de materiais 
             até o armazenamento eficiente em nosso depósito.
           </p>
-          <img draggable="false" src="../../assets/images/3789695.png" v-motion-fade-visible-once class="imagem-nossos-servicos-img">  
+          <img draggable="false" src="../../assets/images/api.png" v-motion-fade-visible-once class="imagem-nossos-servicos-img">  
         </div>
-        <div v-motion-fade-visible-once class="imagem-nossos-servicos">
-          <img draggable="false" src="../../assets/images/notebook-icon-free-png.webp" v-motion-fade-visible-once class="imagem-nossos-servicos-img">  
-          <p 
-          class="paragrafo-nossos-servicos" 
-          id="encadernacao"
-          style="font-family: 'Outfit', sans-serif;" 
-          v-motion-slide-visible-once-bottom>
-            Além de nossas soluções de embalagem, a Embalarte também 
-            oferece serviços especializados em encadernação, atendendo 
-            a diversas necessidades de apresentação de documentos.
-            Nossa equipe é especializada em oferecer acabamentos precisos 
-            e de alta qualidade, assegurando que cada encadernação atenda 
-            aos padrões estéticos e funcionais desejados por nossos clientes.
-          </p>
-        </div> 
         <div class="separador"></div> <!-- Separador adicionado aqui -->
 
       </div>
@@ -140,38 +119,39 @@ export default {
 
 #notebook {
   transform: scaleX(-1); /* Reverte a imagem horizontalmente */
-  max-width: 30%; /* Ensure images do not exceed viewport width */
+  width: 15%; /* Ensure images do not exceed viewport width */
+  margin-right: 6%;
 }
 
 #celular {
-  height: auto; /* Maintain aspect ratio */
-  max-width: 10%; /* Ensure images do not exceed viewport width */
-  margin-left: 5%;
+  height: 32vh; /* Maintain aspect ratio */
+  width: auto; /* Ensure images do not exceed viewport width */
+  margin-left: 6%;
 }
 
 .texto-intro-tecnologias {
-    display: flex; /* Flexbox for images and text layout */
-    align-items: center; /* Center items vertically */
-    width: 100%; /* Full width of the parent container */
-    overflow: hidden; /* Hide overflow if images are too large */
-    background-color: rgb(154, 191, 207);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 35vh;
+  background-color: rgb(154, 191, 207);
+}
+
+.paragrafo-tecnologias-intro {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.texto-intro-tecnologias p {
+  width: 40%; /* Ajuste o valor conforme necessário */
+  text-align: center; /* Opcional: centraliza o texto dentro do parágrafo */
 }
 
 .imagem-intro-tec {
-    flex: 1; /* Allow images to grow and shrink */
-    height: auto; /* Maintain aspect ratio */
-    max-width: 100%; /* Ensure images do not exceed viewport width */
-    object-fit: cover; /* Ensure images cover the allocated space */
-    margin: -60px; /* Remove margin to ensure images touch edges */
+  width: 150px; /* Define uma largura fixa para as imagens, ajuste conforme necessário */
+  height: auto; /* Mantém a proporção da imagem */
 }
-
-.paragrafo-nossos-servicos-intro {
-    font-size: 1.4rem;
-    flex: 2; /* Allow text to take up more space */
-    text-align: center; /* Center text if needed */
-    margin-left: 10%;
-}
-
 
 .separador {
     width: 100px; /* Make it full-width or adjust as needed */
@@ -184,12 +164,6 @@ export default {
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    background: 
-        /* Gradiente horizontal: Branco nas laterais e cinza no centro */
-        linear-gradient(to right, white 0%, white 25%, rgb(226, 226, 226) 50%, white 75%, white 100%),
-        /* Gradiente vertical: Branco no topo e cinza no centro */
-        linear-gradient(to bottom, white 0%, rgb(226, 226, 226) 50%, rgb(228, 228, 228) 100%);
-
 }
 
   .animado {
@@ -225,10 +199,13 @@ export default {
   text-align: center; /* Centraliza o texto dentro do contêiner */
 }
 
-#blister {
-  width: 30%; /* Set the initial width of the image */
-  transition: transform 0.3s ease-in-out; /* Smooth scaling transition */
-  z-index: 100; /* Ensure the image is above other content */
+#app-img {
+  border: 5px solid black; /* Adiciona uma borda preta de 5 pixels ao redor da imagem */
+  width: 25%; /* Ajuste a largura da imagem conforme necessário */
+  height: auto; /* Mantém a proporção da imagem com base na largura */
+  /* Se você quiser definir uma altura específica e manter a proporção, use: */
+  /* height: 200px; */
+  /* width: auto; */
 }
 
 
@@ -260,7 +237,7 @@ body {
 }
 
 
-.paragrafo-nossos-servicos {
+.paragrafo-nossas-tecnologias {
   padding: 0 25%; /* Mantém o padding lateral */
   font-size: 1.1rem;
   text-align: center; /* Centraliza o texto dentro dos parágrafos */
