@@ -1,6 +1,7 @@
 <template>
   <main class="carrossel-main">
     <!-- TEXTO BOAS VINDAS -->
+     <div class="carrosel-pc">
     <div class="boas-vindas-texto">
       <div class="div-cima">
         <hr class="custom-hr2">
@@ -9,14 +10,9 @@
       </div>
       <p class="text-justify texto-justificado" style="padding: 0px 10px;">O <strong>Grupo EMBALARTE</strong> oferece as mais diversas soluções logísticas de acordo com cada necessidade. Atendimento personalizado, suporte e gestão são nossos maiores diferenciais. Solicite um orçamento para o seu projeto sem compromisso.</p>
     </div>
+  </div>
     <div>
-    <div class="boas-vindas-cellr">
-    <hr class="custom-hr2">
-    <hr class="custom-hr2">
-    <hr class="custom-hr2">       
-    <hr class="custom-hr2">
 
-    </div>
     </div>
     <!-- FIM DO TEXTO BOAS VINDAS -->
 
@@ -54,11 +50,17 @@
         <span class="visually-hidden">Next</span>
       </button>
     </div>
+    <div>
+    <hr class="custom-hr2" id="linhaInv">
+    <hr class="custom-hr2" id="linhaInv">
+
+    </div>
     <hr class="custom-hr2" id="linhaInv">
   </main>
 </template>
 
 <style scoped>
+
 .carrossel-main {
   position: relative;
   padding: 0;
@@ -69,62 +71,6 @@
 
 .boas-vindas-cellr {
   display: none; 
-}
-
-@media only screen and (max-width: 500px) {
-  .boas-vindas-cellr {
-    display: block;
-  width: 0%;
-  max-width: 70%;
-  padding: 200px 100px 100px 20px; /* Ajuste o espaçamento conforme necessário */
-  text-align: center; /* Centraliza o texto */
-  margin: 0 auto; /* Centraliza a div horizontalmente */
-}
-}
-
-@media only screen and (max-width: 768px) {
-  .boas-vindas-texto {
-    width: 100%;
-    max-width: 100%;
-    padding: 0 10px; /* Ajuste o espaçamento conforme necessário */
-    text-align: center; /* Centraliza o texto */
-  }
-  .boas-vindas-cellr {
-  display: block;
-  width: 0%;
-  max-width: 70%;
-  padding: 200px 100px 100px 20px; /* Ajuste o espaçamento conforme necessário */
-  text-align: center; /* Centraliza o texto */
-  margin: 0 auto; /* Centraliza a div horizontalmente */
-}
-
-  .div-cima {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .logo {
-    max-width: 100%; /* Ajusta a largura da imagem */
-    height: auto;
-    margin-top: 10px; /* Espaçamento superior */
-  }
-
-  .texto-justificado {
-    font-size: 100%; /* Ajusta o tamanho da fonte conforme necessário */
-  }
-
-  .carousel-item {
-    /* Definindo altura do carrossel */
-    height: 300px; /* Ajuste conforme necessário */
-    opacity: 0.7;
-    overflow: hidden;
-  }
-
-  /* Esconde o carrossel em telas menores */
-  #carouselExample {
-    display: none;
-  }
 }
 
 .text-justify {
@@ -170,11 +116,12 @@
 .carousel-item {
   /* Definindo altura do carrossel */
   height: 80vh;
-  opacity: 0.7;
+  opacity: 0.5;
   overflow: hidden;
 }
 
 .custom-carousel1-control {
+  
   background-color: rgb(172, 172, 172);
   border-radius: 50%;
   width: 40px;
@@ -217,4 +164,14 @@
   width: 100%;
   object-fit: cover;
 }
+
+
+@media (max-width: 768px) {
+  .carrossel-main {
+  display: none;
+  }
+}
+
+
+
 </style>

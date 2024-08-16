@@ -496,7 +496,7 @@ export default {
 
 /* PORTABILIDADES -----------------------------------------------------------------------\ */
 /* PARA O CELULAR */
-@media only screen and (max-width: 768px) and (orientation: portrait) {
+@media only screen and (max-width: 768px){
   .header {
     display: none;
   }

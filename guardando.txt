@@ -1,0 +1,103 @@
+.carrossel-main {
+  position: relative;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  overflow: hidden;
+}
+
+.boas-vindas-cellr {
+  display: none; 
+}
+
+.text-justify {
+  font-size: 120%;
+}
+
+.text-center {
+  font-size: 200%;
+  margin: 0;
+}
+
+.custom-hr1 {
+  margin: 20px 0px 5px 0px;
+  border: 0;
+  height: 3px;
+  background-color: rgb(58, 106, 141);
+}
+
+.custom-hr2 {
+  margin: 20px 0px 5px 0px;
+  border: 0;
+  height: 3px;
+  background-color: rgba(255, 255, 255, 0);
+}
+
+.tracinho-final {
+  margin-top: 10px;
+}
+
+.boas-vindas-texto {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 300;
+  text-align: center;
+  color: rgb(58, 106, 141);
+  background-color: rgba(255, 255, 255, 1);
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.carousel-item {
+  /* Definindo altura do carrossel */
+  height: 80vh;
+  opacity: 0.7;
+  overflow: hidden;
+}
+
+.custom-carousel1-control {
+  background-color: rgb(172, 172, 172);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  border: none;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  color: white;
+}
+
+.custom-carousel1-control.carousel-control-next {
+  right: 10px;
+}
+
+.custom-carousel1-control.carousel-control-prev {
+  left: 10px;
+}
+
+.div-cima {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 5%;
+  padding: 20px;
+}
+
+#imagemNadiv {
+  width: 45%;
+}
+
+.logo {
+  width: 100px;
+  height: auto;
+  margin-left: 20px;
+}
+
+.carrossel-imagem {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+</style>

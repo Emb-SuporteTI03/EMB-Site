@@ -57,7 +57,10 @@ export default {
               </p>
               <img draggable="false" id="galpao_direita" src="../../assets/images/deposito_sf.png" class="imagem-intro"/>
           </div> 
+        <hr class="custom-hr">   
+          
         <div class="texto-anterior">
+          <hr class="custom-hr">   
 
     <div 
     id="recebimento"
