@@ -15,41 +15,47 @@
 
     </div>
     <!-- FIM DO TEXTO BOAS VINDAS -->
-
     <!-- Carrossel de imagens -->
-    <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
-      <div class="carousel-inner">
-        <!-- Slide 1 -->
-        <div class="carousel-item active">
-          <img src="assets/images/carrossel-estantes.png" class="d-block w-100 carrossel-imagem" alt="estantes">
-        </div>
+    <swiper
+      :grabCursor="true"
+      :effect="'creative'"
+      :creativeEffect="{
+        prev: {
+          shadow: true,
+          translate: ['-20%', 0, -1],
+        },
+        next: {
+          translate: ['100%', 0, 0],
+        },
+      }"
+      :simulateTouch="true"
+      :modules="modules"
+      :autoplay="{
+        delay: 2000,           
+        disableOnInteraction: false 
+      }"
+      class="mySwiper3"
+    >
+      <swiper-slide>
+        <img src="assets/images/galpao_car.jpg" alt="estantes" class="swiper-image" />
+      </swiper-slide>
+      <swiper-slide>
+        <img src="assets/images/landing.jpg" alt="fachada" class="swiper-image" />
+      </swiper-slide>
+      <swiper-slide>
+        <img src="assets/images/galpao.jpg" alt="estantes" class="swiper-image" />
+      </swiper-slide>
+      <swiper-slide>
+        <img src="assets/images/containers.jpg" alt="containers" class="swiper-image" />
+      </swiper-slide>
+      <swiper-slide>
+        <img src="assets/images/mais_galpao.jpeg" alt="containers" class="swiper-image" />
+      </swiper-slide>
+      <swiper-slide>
+        <img src="assets/images/galpao_ia.jpg" alt="containers" class="swiper-image" />
+      </swiper-slide>
+    </swiper>
 
-        <!-- Slide 2 -->
-        <div class="carousel-item">
-          <img src="assets/images/carrossel-linha-producao.png" class="d-block w-100 carrossel-imagem" alt="producao">
-        </div>
-
-        <!-- Slide 3 -->
-        <div class="carousel-item">
-          <img src="assets/images/landing.jpg" class="d-block w-100 carrossel-imagem" alt="fachada">
-        </div>
-
-        <!-- Slide 4 -->
-        <div class="carousel-item">
-          <img src="assets/images/containers.jpg" class="d-block w-100 carrossel-imagem" alt="fachada">
-        </div>
-      </div>
-
-      <!-- Controles do carrossel -->
-      <button class="carousel-control-prev custom-carousel1-control" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Previous</span>
-      </button>
-      <button class="carousel-control-next custom-carousel1-control" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Next</span>
-      </button>
-    </div>
     <div>
     <hr class="custom-hr2" id="linhaInv">
     <hr class="custom-hr2" id="linhaInv">
@@ -60,13 +66,34 @@
 </template>
 
 <style scoped>
+body {
+  overflow-x: hidden;
+}
 
-.carrossel-main {
-  position: relative;
-  padding: 0;
-  margin: 0;
+.mySwiper3 {
   width: 100%;
-  overflow: hidden;
+  height: 10%; /* Define uma altura fixa para o carrossel */
+}
+
+
+.swiper-slide {
+  display: flex;
+  height: 60vh;
+  justify-content: center;
+  align-items: center;
+  height: 100%; /* Ajusta a altura do slide para 100% do contêiner do Swiper */
+}
+
+.img {
+  opacity: 0.7; /* Define a opacidade da imagem */
+}
+
+.swiper-image {
+  width: auto;
+  width: 100%;
+  height: 100vh;
+  display: block;
+
 }
 
 .boas-vindas-cellr {
@@ -113,12 +140,6 @@
   border-radius: 10px;
 }
 
-.carousel-item {
-  /* Definindo altura do carrossel */
-  height: 80vh;
-  opacity: 0.5;
-  overflow: hidden;
-}
 
 .custom-carousel1-control {
   
@@ -159,12 +180,6 @@
   margin-left: 20px;
 }
 
-.carrossel-imagem {
-  height: 100%;
-  width: 100%;
-  object-fit: cover;
-}
-
 
 @media (max-width: 768px) {
   .carrossel-main {
@@ -175,3 +190,22 @@
 
 
 </style>
+
+<script>
+import { Swiper, SwiperSlide } from 'swiper/vue';
+import 'swiper/swiper-bundle.css';
+
+import { Navigation, Pagination, EffectFlip, EffectCreative, Autoplay } from 'swiper/modules';
+export default {
+  components: {
+    Swiper,
+    SwiperSlide,
+  },
+  data() {
+    return {
+      modules: [EffectCreative, Navigation, Pagination, Autoplay, EffectFlip],
+    };
+  },
+};
+
+</script>

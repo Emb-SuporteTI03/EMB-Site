@@ -156,6 +156,7 @@ export default {
           <img
           draggable="false" 
           src="../../assets/images/notebook-icon-free-png.webp" 
+          id="caderno"
           v-motion-fade-visible-once 
           class="imagem-nossos-servicos-img">  
           <p 
@@ -290,6 +291,12 @@ export default {
 #blister {
   width: 30%; /* Ajuste para a largura desejada */
   height: auto; /* Mantém a proporção da imagem */
+}
+#caderno {
+  margin-top: 5%;
+  width: 20%; /* Ajuste para a largura desejada */
+  height: auto; /* Mantém a proporção da imagem */
+  margin-left: 10%;
 }
 .animado {
   display: inline-block; /* Para permitir o efeito de transformação */

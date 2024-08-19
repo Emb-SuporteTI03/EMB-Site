@@ -211,7 +211,7 @@ export default {
 
   .titulo-nassas-tecnologias {
   font-size: 6rem;
-  color:rgb(7, 7, 100);
+  color:#01395E;
   justify-content: center; /* Centraliza os parágrafos dentro do contêiner */
   align-items: center; /* Alinha verticalmente os parágrafos no centro */
   }

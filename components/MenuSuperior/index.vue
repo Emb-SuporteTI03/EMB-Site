@@ -142,7 +142,7 @@
             <form @submit.prevent="insertContato()">
               <div class="mb-3">
                 <label for="nome" class="form-label">Com que setor deseja falar?</label>
-                <select class="form-control" id="nome" v-model="contato.nome" required>
+                <select class="form-control" id="nome" v-model="contato.area" required>
                   <option value="" disabled selected>Selecione uma opção</option>
                   <option value="opcao1">RH</option>
                   <option value="opcao2">Financeiro</option>
@@ -362,7 +362,8 @@ export default {
 
 .header {
   position: fixed; /* Faz o cabeçalho descer junto com a página */
-  padding: 0.5%; /*Aumenta a tamanho em altura do header */
+  display: flex;
+  padding: 0.8%; /*Aumenta a tamanho em altura do header */
   width: 100%; /* Faz o cabeçalho ficar da largura certa da página */
   z-index: 1000; /* Dá prioridade para o cabeçalho ficar na frente de todos os outros itens da página */
   background-color: rgb(255, 255, 255); /* Fundo branco inicial */
@@ -388,51 +389,41 @@ export default {
 
 /* propriedades gerais do container */
 .container-header {
+  width: 100%;
   display: flex;  /* Organiza lateralmente o header */
   align-items: center; /* Deixa centralizado no meio da altura */
   justify-content: space-between; /* Faz ter um espaço entre a parte da imagem e a parte dos textos e íconesx */
 }
 
 .ul-header {
-  list-style-type: none;  /* Tira as bolinhas da lista */
-  display: flex; /* Organiza lateralmente a imagem, os textos e os ícones */
- /* VOLTAR AQUI */
-  gap: 20px; /* Dá um espaço entre as divs de imagem, texto e ícone, no caso apenas muda visualmente o texto e os ícones*/
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
 }
 
+.ul-header li {
+  margin: 0 10px;
+}
+
+.textos, .icones {
+  display: flex;
+  align-items: center;
+}
+
+.menu {
+  display: flex;
+  align-items: center;
+}
 
 /* Relativo ao logo */
 .imagem img {
   /* max-width: 10px; */
   width: 40%; /* Faz a imagem ocupar a largura disponível do contêiner, respeitando max-width */
   height: auto; /* Mantém a proporção da imagem */
-  margin-top: -2%; /* Ajusta a posição vertical da imagem */
+  margin-top: -0.5%; /* Ajusta a posição vertical da imagem */
 }
-
-/* Engloba o sobre nós, o login cliente e o contato e o dropdown */
-.textos {
-  display: flex; /* Organiza lateralmente */
-  gap: 20px; /* Espaço entre os itens */
-}
-
-#sobre-nos-txt {
-  font-size: 100%; /* Tamanho da fonte */
-  margin-left: -20%;
-  margin-right: -20%;
-}
-
-#cliente-txt {
-  font-size: 100%; /* Tamanho da fonte */
-  margin-left: -10%;
-  margin-right: 10%;
-}
-
-.textos a {
-  font-size: 100%; /* Tamanho da fonte */
-  display: block; /* Faz com que a margem seja aplicada corretamente */
-  margin-top: 7%; /* Adiciona um espaço acima do texto */
-}
-
 /* Trata do dropdown */
 .drop {
   margin-top: 0.10%;
@@ -608,111 +599,13 @@ export default {
   display: block; /* Faz com que a margem seja aplicada corretamente */
   margin-top: 7%; /* Adiciona um espaço acima do texto */
 }
-#sobre-nos-txt {
-  font-size: 70%; /* Tamanho da fonte */
-  display: block; /* Faz com que a margem seja aplicada corretamente */
-  margin-left: -10%;
-  margin-right: -100%;
-}
-#cliente-txt {
-  font-size: 70%; /* Tamanho da fonte */
-  display: block; /* Faz com que a margem seja aplicada corretamente */
-  margin-left: -10%;
-  margin-right: -100%;
-}
-}
-@media (max-width: 1000px) {
-  #sobre-nos-txt {
-  font-size: 70%; /* Tamanho da fonte */
-  display: block; /* Faz com que a margem seja aplicada corretamente */
-  margin-top: 142%; /* Adiciona um espaço acima do texto */
-  margin-bottom: -10%
-}
-#cliente-txt {
-  font-size: 70%; /* Tamanho da fonte */
-  display: block; /* Faz com que a margem seja aplicada corretamente */
-  margin-top: 136%; /* Adiciona um espaço acima do texto */
-  margin-left: -10%;
-  margin-right: -100%;
-}
-
-#contato-txt {
-  font-size: 70%; /* Tamanho da fonte */
-  display: block; /* Faz com que a margem seja aplicada corretamente */
-  margin-top: 160%; /* Adiciona um espaço acima do texto */
-  margin-bottom: -10%;
-}
- 
- #qmSomos-sub {
-  margin-top: -10%; /* Adiciona um espaço acima do texto */
- }
- #servicos-sub {
-  margin-top: -10%; /* Adiciona um espaço acima do texto */
- }
 }
 @media (max-width: 950px) {
-  #sobre-nos-txt {
-  font-size: 70%; /* Tamanho da fonte */
-  display: block; /* Faz com que a margem seja aplicada corretamente */
-  margin-top: 142%; /* Adiciona um espaço acima do texto */
-  margin-bottom: -10%;
-  margin-left: -20%;
-}
-#cliente-txt {
-  font-size: 70%; /* Tamanho da fonte */
-  display: block; /* Faz com que a margem seja aplicada corretamente */
-  margin-top: 136%; /* Adiciona um espaço acima do texto */
-  margin-left: -10%;
-  margin-right: -100%;
-}
-
-#contato-txt {
-  font-size: 70%; /* Tamanho da fonte */
-  display: block; /* Faz com que a margem seja aplicada corretamente */
-  margin-top: 160%; /* Adiciona um espaço acima do texto */
-  margin-bottom: -10%;
-}
  .drop {
   margin-top: 0.4%;
  }
- #qmSomos-sub {
-  margin-top: 2%; /* Adiciona um espaço acima do texto */
-  margin-bottom: 2%; /* Adiciona um espaço acima do texto */
- }
- #servicos-sub {
-  margin-top: -10%; /* Adiciona um espaço acima do texto */
- }
 }
 @media (max-width: 800px) {
-  #sobre-nos-txt {
-  font-size: 60%; /* Tamanho da fonte */
-  display: block; /* Faz com que a margem seja aplicada corretamente */
-  margin-top: 187%; /* Adiciona um espaço acima do texto */
-  margin-left: -100%;
-}
-#cliente-txt {
-  font-size: 60%; /* Tamanho da fonte */
-  display: block; /* Faz com que a margem seja aplicada corretamente */
-  margin-top: 178%; /* Adiciona um espaço acima do texto */
-  margin-left: -50%;
-  margin-right: -100%;
-}
-
-#contato-txt {
-  font-size: 60%; /* Tamanho da fonte */
-  display: block; /* Faz com que a margem seja aplicada corretamente */
-  margin-top: 160%; /* Adiciona um espaço acima do texto */
-  margin-bottom: -10%;
-}
- 
- #qmSomos-sub {
-  font-size: 0.5rem;
-  margin-top: 5%;
-  margin-bottom: 10%;
- }
- #servicos-sub {
-  font-size: 0.5rem;
- }
  .drop {
   margin-top: 0.5%;
   margin-left: -5%;
