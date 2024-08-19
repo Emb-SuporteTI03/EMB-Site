@@ -144,7 +144,7 @@ export default {
           TECNOLOGIA
         </strong>
         <router-link :to="{ path: '/Tecnologias' }" style="color: black; text-decoration: none;">
-          <img src="../../assets/images/computer_room.webp" v-motion-fade-visible-once class="services-img">
+          <img src="../../assets/images/sala_ti.jpg" v-motion-fade-visible-once class="services-img">
         </router-link>
       </div>
     </div>
