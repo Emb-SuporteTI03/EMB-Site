@@ -16,13 +16,6 @@ export default {
       }
     };
   },
-  mounted() {
-    window.scrollTo(0, 0);
-    window.addEventListener('scroll', this.handleScroll);
-  },
-  unmounted() {
-    window.removeEventListener('scroll', this.handleScroll);
-  },
   methods: {
     updateMapValue(value, event) {
       // Update the global variable
@@ -37,18 +30,6 @@ export default {
 
       // You can add additional logic here if needed
     },
-
-    scrollToSection(id) {
-      const headerOffset = 150; // Substitua pelo valor da altura do cabeçalho em pixels
-      const element = document.getElementById(id);
-      const elementPosition = element.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: "smooth"
-      });
-    }    
     // --------------------/
   }
 };
@@ -56,6 +37,7 @@ export default {
 
 <template>
   <main>
+    <div class = "for-pc">
     <div class="about-us-section" id="aboutUs">
       <div class="about-us-container">
         <div class="about-us-text">
@@ -144,24 +126,91 @@ export default {
     </div>
     <div class="full-height">
     <strong class="call-servicos">
-      CONHEÇA MAIS SOBRE NOSSOS SERVIÇOS, ENTRE NO GALPÃO
+      CONHEÇA MAIS SOBRE NOSSOS SERVIÇOS
     </strong>
     <br>
     <br>
-    <div class="imagem-link">
-      <router-link :to="{ path: '/Nossos-Servicos' }" style="color: black; text-decoration: none;">
-        <img src="../../assets/images/galpao.jpg" v-motion-fade-visible-once class="services-img">
-      </router-link>
+    <div class="link-images">
+      <div class="imagem-link">
+        <strong class="call-servicos">
+          LOGÍSTICA
+        </strong>
+        <router-link :to="{ path: '/Nossos-Servicos' }" style="color: black; text-decoration: none;">
+          <img src="../../assets/images/galpao.jpg" v-motion-fade-visible-once class="services-img">
+        </router-link>
+      </div>
+      <div class="imagem-link">
+        <strong class="call-servicos">
+          TECNOLOGIA
+        </strong>
+        <router-link :to="{ path: '/Tecnologias' }" style="color: black; text-decoration: none;">
+          <img src="../../assets/images/computer_room.webp" v-motion-fade-visible-once class="services-img">
+        </router-link>
+      </div>
     </div>
 
-
   </div>
-
-
+</div>
 
     <div class="espaco-cell">
+      <br>
+      <br>
+      <br>
+    <img src="../../assets/images/grupoembalarte_cover.jpg" v-motion-fade-visible-once alt="Imagem de Quem Somos" id="ImgTexto">
+
+        <p id="paragrafo" class="about-us-text" v-motion-slide-visible-once-bottom>
+          <strong>
+          A EMBALARTE nasceu do sonho de Fernando Alves Vieira em criar uma empresa forte e sólida, para oferecer 
+          ao mercado soluções completas e personalizadas. Fundada em 1999 e com 16 anos de experiência, vem conquistado 
+          seu espaço como uma das melhores empresas no segmento. Situada na Cidade de Santana de Paranaíba no Estado de 
+          São Paulo, dispõe em sua planta própria, 4.000m2 de área.
+          </strong>
+        </p>
+        <img src="../../assets/images/containers.jpg" v-motion-fade-visible-once alt="Imagem de Quem Somos" id="ImgTexto">
+
+    <div class="text-overlay">
+        <div class="embalarte-txt">
+        <strong class="about-us-text" id="about-us-nos">NÓS, DO GRUPO EMBALARTE</strong>
+        </div>
+        <strong class="about-us-text" id="localTexto">TEMOS NOSSA SEDE EM<br> </strong>
+          <ul class="lista-cidades-cllr">
+            <li><a>📌 Santana de Parnaíba</a></li>
+          </ul>
+           <strong class="about-us-text" id="localTexto">
+          E ESTAMOS PRESENTES EM OUTRAS 3 CIDADES NO ESTADO DE SÃO PAULO!</strong>
+        <ul class="lista-cidades-cllr">
+          <li><a>📌 Osasco</a></li>
+          <li><a>📌 São José dos Campos</a></li>
+          <li><a>📌 Cajamar</a></li>
+        </ul>
+
     <hr class="custom-hr">
     <hr class="custom-hr">
+      </div>  
+      <div class="full-height">
+    <strong class="call-servicos">
+      CONHEÇA MAIS SOBRE NOSSOS SERVIÇOS
+    </strong>
+    <div class="link-images">
+      <div class="imagem-link">
+        <strong class="call-servicos">
+          LOGÍSTICA
+        </strong>
+        <router-link :to="{ path: '/Nossos-Servicos' }" style="color: black; text-decoration: none;">
+          <img src="../../assets/images/galpao.jpg" v-motion-fade-visible-once class="services-img">
+        </router-link>
+      </div>
+      <div class="imagem-link">
+        <strong class="call-servicos">
+          TECNOLOGIA
+        </strong>
+        <router-link :to="{ path: '/Tecnologias' }" style="color: black; text-decoration: none;">
+          <img src="../../assets/images/computer_room.webp" v-motion-fade-visible-once class="services-img">
+        </router-link>
+      </div>
+    </div>
+
+  </div>
     </div>
 
 
@@ -259,6 +308,31 @@ export default {
   flex: 1;
   margin-right: 20px; /* Espaçamento à direita */
 }
+.link-images {
+  display: flex;
+  justify-content: center; /* Centers the image containers within the parent container */
+  gap: 20%; /* Space between image containers */
+  margin: 5%;
+}
+
+.imagem-link {
+  display: flex;
+  flex-direction: column; /* Stacks text and image vertically */
+  align-items: center; /* Centers content horizontally within each container */
+  text-align: center; /* Centers the text within the container */
+}
+
+.call-servicos {
+  margin-bottom: 10px; /* Space between the text and the image */
+}
+
+.services-img {
+  width: 600px; /* Fixed width for consistency */
+  height: 300px; /* Fixed height for consistency */
+  object-fit: cover; /* Ensures the image covers the space */
+  border-radius: 8px; /* Optional: Adds rounded corners */
+}
+
 .embalarte-txt #about-us-nos {
   font-size: 2.2em;
   position: relative;
@@ -372,15 +446,82 @@ export default {
 .mapa-cel {
   display: none;
 }
-@media (max-width: 300px) {
-.about-us-image-img{
+
+@media (max-width: 1250px) {
+.about-us-paragraph {
+  font-size: 0.rem;
+}
+
+.about-us-title {
+  font-size: 2.2rem;
+}
+}
+
+@media (max-width: 1000px) {
+.about-us-paragraph {
+  font-size: 0.7rem;
+}
+
+.about-us-title {
+  font-size: 1.7rem;
+}
+}
+
+@media (max-width: 768px) {
+  .for-pc{
   display: none;
 }
+.about-us-paragraph {
+  display: flex;
+  justify-content: center; /* Centraliza horizontalmente */
+  align-items: center; /* Centraliza verticalmente */
+  height: 25vh; /* Faz o contêiner ocupar toda a altura da viewport */
+  text-align: center; /* Alinha o texto no centro do parágrafo */
 }
-@media (max-width: 768px) {
+
+.about-us-paragraph p {
+  max-width: 600px; /* Ajuste o tamanho máximo conforme necessário */
+  margin: 0; /* Remove as margens padrão do parágrafo */
+  padding: 20px; /* Adiciona um pouco de espaço ao redor do texto */
+}
+
+.full-height {
+  display: block;
+  place-items: center; /* Center content horizontally and vertically */
+  width: 100vw; /* Full width of the viewport */
+  margin: 0; /* Remove any default margin */
+  padding: 0; /* Remove any default padding */
+}
+
+.call-servicos {
+  text-align: center; /* Center text within the container */
+}
+
+.imagem-link {
+  display: flex;
+  justify-content: center; /* Center image horizontally within its container */
+  align-items: center; /* Center image vertically within its container */
+}
+
+.services-img {
+  max-width: 100%; /* Ensure image does not exceed container width */
+  height: auto; /* Maintain aspect ratio of image */
+}
+
+.call-servicos {
+  display: flex;
+  justify-content: center; /* Centraliza horizontalmente */
+  align-items: center; /* Centraliza verticalmente */
+  height: 10vh; /* Faz o contêiner ocupar toda a altura da viewport */
+  text-align: center; /* Alinha o texto no centro do parágrafo */
+}
   /* Estilos para telas menores */
   .local-section {
     flex-direction: column-reverse; 
+  }
+
+  #ImgTexto {
+    border-radius: 0px;
   }
 
   .espaco-cell {
@@ -415,28 +556,88 @@ export default {
     margin-right: 0px; /* Espaçamento entre o texto e a imagem */
   }
 
-  .lista-cidades {
+  .lista-cidades-cllr {
     list-style-type: none;
     padding-left: 0;
-    font-size: 1.4em;
-    text-align: center; /* Centraliza a lista de cidades */
+    font-size: 1.2em;
+    margin-bottom: -20px;
+    margin-top: -50px;
   }
 
-  .text-overlay {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 10px;
-    text-align: center;
-    font-family: 'Mulish', sans-serif; /* Aplica a fonte 'Mulish' */
-    position: relative;
-    margin-top: -20px; /* Valor negativo para subir o texto */
-  }
+  .lista-cidades-cllr {
+  list-style-type: none; /* Remove default list styling */
+  padding: 0;
+}
 
-  .text-overlay h2, .text-overlay p {
-    margin: 0; /* Remove margens padrão */
+.lista-cidades-cllr li {
+  margin: 15px 0; /* Add space between items */
+}
+
+.lista-cidades-cllr a {
+  text-decoration: none; /* Remove underline from links */
+  color: #000000; /* Blue color for links */
+  font-weight: bold; /* Bold text */
+  display: inline-block; /* Make the entire list item clickable */
+  padding: 10px 15px; /* Add padding to clickable area */
+  border-radius: 5px; /* Rounded corners */
+  border: 2px solid #86acca; /* Black border */
+  user-select: none; /* Prevent text selection */
+  cursor: pointer; /* Change cursor to pointer on hover */
+}
+
+
+.text-overlay {
+  margin-left: -0%;
+  display: flex;
+  flex-direction: column; /* Stack items vertically */
+  align-items: center; /* Center items horizontally */
+  justify-content: center; /* Center items vertically */
+  height: 100vh; /* Full viewport height */
+  width: 100vw; /* Full viewport width */
+  text-align: center; /* Center text within each item */
+}
+
+.embalarte-txt {
+  margin-bottom: 20px; /* Space below the title */
+}
+
+.about-us-text {
+  display: block; /* Ensure each text element takes full width */
+  margin-bottom: 10px; /* Space between text elements */
+}
+
+.lista-cidades-cllr {
+  list-style-type: none; /* Remove default list styling */
+  padding: 0; /* Remove default padding */
+  margin: 0; /* Remove default margin */
+}
+
+.lista-cidades-cllr li {
+  margin-bottom: 5px; /* Space between list items */
+}
+
+.custom-hr {
+  width: 80%; /* Width of the horizontal rule */
+  border: 1px solid #000; /* Style of the horizontal rule */
+  margin: 20px 0; /* Space above and below the horizontal rule */
+}
+  .custom-hr {
+  border: 0;
+  height: 3px;
+  background-color: rgba(255, 255, 255, 0);
+}
+
+#paragrafo {
+  font-size: 20px
+}
+
+.call-servicos {
+  font-size: 1.5rem;
+}
+}
+@media (max-width: 750px){
+  #paragrafo {
+    margin-top: 50px;
   }
 }
 /* --------------------------------------------------------------------------/ */

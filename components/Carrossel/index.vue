@@ -1,6 +1,7 @@
 <template>
   <main class="carrossel-main">
     <!-- TEXTO BOAS VINDAS -->
+     <div class="carrosel-pc">
     <div class="boas-vindas-texto">
       <div class="div-cima">
         <hr class="custom-hr2">
@@ -9,129 +10,94 @@
       </div>
       <p class="text-justify texto-justificado" style="padding: 0px 10px;">O <strong>Grupo EMBALARTE</strong> oferece as mais diversas soluções logísticas de acordo com cada necessidade. Atendimento personalizado, suporte e gestão são nossos maiores diferenciais. Solicite um orçamento para o seu projeto sem compromisso.</p>
     </div>
+  </div>
     <div>
-    <div class="boas-vindas-cellr">
-    <hr class="custom-hr2">
-    <hr class="custom-hr2">
-    <hr class="custom-hr2">       
-    <hr class="custom-hr2">
-    <hr class="custom-hr2">
-    <hr class="custom-hr2">
-    <hr class="custom-hr2">
-    <hr class="custom-hr2">
-    <hr class="custom-hr2">
-    <hr class="custom-hr2">
-    <hr class="custom-hr2">
 
-    </div>
     </div>
     <!-- FIM DO TEXTO BOAS VINDAS -->
-
     <!-- Carrossel de imagens -->
-    <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
-      <div class="carousel-inner">
-        <!-- Slide 1 -->
-        <div class="carousel-item active">
-          <img src="assets/images/carrossel-estantes.png" class="d-block w-100 carrossel-imagem" alt="estantes">
-        </div>
+    <swiper
+      :grabCursor="true"
+      :effect="'creative'"
+      :creativeEffect="{
+        prev: {
+          shadow: true,
+          translate: ['-20%', 0, -1],
+        },
+        next: {
+          translate: ['100%', 0, 0],
+        },
+      }"
+      :simulateTouch="true"
+      :modules="modules"
+      :autoplay="{
+        delay: 2000,           
+        disableOnInteraction: false 
+      }"
+      class="mySwiper3"
+    >
+      <swiper-slide>
+        <img src="assets/images/galpao_car.jpg" alt="estantes" class="swiper-image" />
+      </swiper-slide>
+      <swiper-slide>
+        <img src="assets/images/landing.jpg" alt="fachada" class="swiper-image" />
+      </swiper-slide>
+      <swiper-slide>
+        <img src="assets/images/galpao.jpg" alt="estantes" class="swiper-image" />
+      </swiper-slide>
+      <swiper-slide>
+        <img src="assets/images/containers.jpg" alt="containers" class="swiper-image" />
+      </swiper-slide>
+      <swiper-slide>
+        <img src="assets/images/mais_galpao.jpeg" alt="containers" class="swiper-image" />
+      </swiper-slide>
+      <swiper-slide>
+        <img src="assets/images/galpao_ia.jpg" alt="containers" class="swiper-image" />
+      </swiper-slide>
+    </swiper>
 
-        <!-- Slide 2 -->
-        <div class="carousel-item">
-          <img src="assets/images/carrossel-linha-producao.png" class="d-block w-100 carrossel-imagem" alt="producao">
-        </div>
+    <div>
+    <hr class="custom-hr2" id="linhaInv">
+    <hr class="custom-hr2" id="linhaInv">
 
-        <!-- Slide 3 -->
-        <div class="carousel-item">
-          <img src="assets/images/landing.jpg" class="d-block w-100 carrossel-imagem" alt="fachada">
-        </div>
-
-        <!-- Slide 4 -->
-        <div class="carousel-item">
-          <img src="assets/images/containers.jpg" class="d-block w-100 carrossel-imagem" alt="fachada">
-        </div>
-      </div>
-
-      <!-- Controles do carrossel -->
-      <button class="carousel-control-prev custom-carousel1-control" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Previous</span>
-      </button>
-      <button class="carousel-control-next custom-carousel1-control" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Next</span>
-      </button>
     </div>
     <hr class="custom-hr2" id="linhaInv">
   </main>
 </template>
 
 <style scoped>
-.carrossel-main {
-  position: relative;
-  padding: 0;
-  margin: 0;
+body {
+  overflow-x: hidden;
+}
+
+.mySwiper3 {
   width: 100%;
-  overflow: hidden;
+  height: 10%; /* Define uma altura fixa para o carrossel */
+}
+
+
+.swiper-slide {
+  display: flex;
+  height: 60vh;
+  justify-content: center;
+  align-items: center;
+  height: 100%; /* Ajusta a altura do slide para 100% do contêiner do Swiper */
+}
+
+.img {
+  opacity: 0.7; /* Define a opacidade da imagem */
+}
+
+.swiper-image {
+  width: auto;
+  width: 100%;
+  height: 100vh;
+  display: block;
+
 }
 
 .boas-vindas-cellr {
   display: none; 
-}
-
-@media only screen and (max-width: 500px) {
-  .boas-vindas-cellr {
-    display: block;
-  width: 0%;
-  max-width: 70%;
-  padding: 200px 100px 100px 20px; /* Ajuste o espaçamento conforme necessário */
-  text-align: center; /* Centraliza o texto */
-  margin: 0 auto; /* Centraliza a div horizontalmente */
-}
-}
-
-@media only screen and (max-width: 768px) {
-  .boas-vindas-texto {
-    width: 100%;
-    max-width: 100%;
-    padding: 0 10px; /* Ajuste o espaçamento conforme necessário */
-    text-align: center; /* Centraliza o texto */
-  }
-  .boas-vindas-cellr {
-  display: block;
-  width: 0%;
-  max-width: 70%;
-  padding: 200px 100px 100px 20px; /* Ajuste o espaçamento conforme necessário */
-  text-align: center; /* Centraliza o texto */
-  margin: 0 auto; /* Centraliza a div horizontalmente */
-}
-
-  .div-cima {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .logo {
-    max-width: 100%; /* Ajusta a largura da imagem */
-    height: auto;
-    margin-top: 10px; /* Espaçamento superior */
-  }
-
-  .texto-justificado {
-    font-size: 100%; /* Ajusta o tamanho da fonte conforme necessário */
-  }
-
-  .carousel-item {
-    /* Definindo altura do carrossel */
-    height: 300px; /* Ajuste conforme necessário */
-    opacity: 0.7;
-    overflow: hidden;
-  }
-
-  /* Esconde o carrossel em telas menores */
-  #carouselExample {
-    display: none;
-  }
 }
 
 .text-justify {
@@ -174,14 +140,9 @@
   border-radius: 10px;
 }
 
-.carousel-item {
-  /* Definindo altura do carrossel */
-  height: 80vh;
-  opacity: 0.7;
-  overflow: hidden;
-}
 
 .custom-carousel1-control {
+  
   background-color: rgb(172, 172, 172);
   border-radius: 50%;
   width: 40px;
@@ -219,9 +180,32 @@
   margin-left: 20px;
 }
 
-.carrossel-imagem {
-  height: 100%;
-  width: 100%;
-  object-fit: cover;
+
+@media (max-width: 768px) {
+  .carrossel-main {
+  display: none;
+  }
 }
+
+
+
 </style>
+
+<script>
+import { Swiper, SwiperSlide } from 'swiper/vue';
+import 'swiper/swiper-bundle.css';
+
+import { Navigation, Pagination, EffectFlip, EffectCreative, Autoplay } from 'swiper/modules';
+export default {
+  components: {
+    Swiper,
+    SwiperSlide,
+  },
+  data() {
+    return {
+      modules: [EffectCreative, Navigation, Pagination, Autoplay, EffectFlip],
+    };
+  },
+};
+
+</script>

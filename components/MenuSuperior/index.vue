@@ -4,33 +4,31 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.3/font/bootstrap-icons.min.css" rel="stylesheet">
 </head>
 
-    <!-- Cabeçalho -->
-    <header class="header">
+<!-- Cabeçalho -->
+<header class="header">
+  <div class="container-header">
+    <!-- Só a imagem -->
+    <div class="image">
+      <NuxtLink to="/">
+        <a class="imagem">
+          <img src="../../assets/images/logo-embalarte-sem-fundo.jpg" alt="Logo Embalarte">
+        </a>
+      </NuxtLink>
+    </div>       
 
-      <div class="container-header">
-        <!-- Só a imagem -->
-        <div class="image">
-          <NuxtLink to="/">
-            <a class="imagem">
-              <img src="../../assets/images/logo-embalarte-sem-fundo.jpg" alt="Logo Embalarte">
-            </a>
-          </NuxtLink>
-        </div>       
-
-        <!-- Textos e ícones -->
-        <div class="menu">
-          <ul class="ul-header">
-
+    <!-- Textos e ícones -->
+    <div class="menu">
+      <ul class="ul-header">
             <!-- Textos -->
             <div class="textos">
               <li class="drop-hover" ref="dropdownToggle" @mouseenter="mouseMainDrop" @mouseleave="handleMouseLeave">
-                <a style="color: black; text-decoration: none;">
+                <a id="sobre-nos-txt" style="color: black; text-decoration: none;">
                   SOBRE NÓS
                   <i class="bi" :class="{'bi-caret-right-fill': !isDropdownActive, 'bi-caret-down-fill': isDropdownActive}"></i>
                 </a>
                 <div class="drop" v-show="isDropdownActive">
                   <div class="drop-hover" ref="subDropdownToggle" @mouseenter="mouseSubDrop" @mouseleave="mouseSubLeave">
-                    <a style="color: black; text-decoration: none;">
+                    <a id="qmSomos-sub" style="color: black; text-decoration: none;">
                       QUEM SOMOS
                       <i class="bi" :class="{'bi-caret-right-fill': !isSubDropdownActive, 'bi-caret-down-fill': isSubDropdownActive}"></i>
                     </a>
@@ -40,20 +38,28 @@
                       <router-link :to="{ path: '/Nossa-Cultura' }" style="color: black; text-decoration: none;">Cultura</router-link>
                       <hr class="custom-hr2">
                       <router-link :to="{ path: '/Nossos-Valores' }" style="color: black; text-decoration: none;">Valores</router-link>
-
                     </div>
                   </div>
                   <hr class="custom-hr2">
-                  <router-link :to="{ path: '/Nossos-Servicos' }" style="color: black; text-decoration: none;">NOSSOS SERVIÇOS</router-link>
-
+                  <div class="drop-hover" ref="subDropdownToggle" @mouseenter="mouseSub2Drop" @mouseleave="mouseSub2Leave">
+                    <a id="servicos-sub" style="color: black; text-decoration: none;">
+                      NOSSOS SERVIÇOS
+                      <i class="bi" :class="{'bi-caret-right-fill': !isSubDropdown2Active, 'bi-caret-down-fill': isSubDropdown2Active}"></i>
+                    </a>
+                    <div class="sub-drop" id= "subDrop2" v-show="isSubDropdown2Active">
+                      <router-link :to="{ path: '/Nossos-Servicos' }" style="color: black; text-decoration: none;">Soluções em Logística</router-link>
+                      <hr class="custom-hr2">
+                      <router-link :to="{ path: '/Tecnologias' }" style="color: black; text-decoration: none;">Soluções em Tecnologia</router-link>
+                    </div>
+                  </div>
                 </div>
               </li>
 
               <!-- Login Cliente -->
-              <li><a data-bs-toggle="modal" data-bs-target="#acessoClienteModal" href="" style="color: black; text-decoration: none;">LOGIN CLIENTE</a></li>
+              <li><a id="cliente-txt" data-bs-toggle="modal" data-bs-target="#acessoClienteModal" href="" style="color: black; text-decoration: none;">LOGIN CLIENTE</a></li>
 
               <!-- Contato -->
-              <li><a data-bs-toggle="modal" data-bs-target="#contatoModal" href="" style="color: black; text-decoration: none;">CONTATO</a></li>
+              <li><a id="contato-txt" data-bs-toggle="modal" data-bs-target="#contatoModal" href="" style="color: black; text-decoration: none;">CONTATO</a></li>
             </div>
 
             <!-- Íxones -->
@@ -81,6 +87,48 @@
       </div>
     </header>
 
+    <!-- Cabeçalho celular -->
+    <header class="header-cllr">
+      <div class="container-header-cllr">
+        <div class="menu-cllr">
+          <div class="image">
+            <NuxtLink to="/">
+              <a class="imagem-cllr">
+                <img src="../../assets/images/logo-embalarte-sem-fundo.jpg" alt="Logo Embalarte">
+              </a>
+            </NuxtLink>
+          </div>   
+          <img src="../../assets/images/menu-hamburger.png" alt="menu" @click="toggleMenu" ref="toggleButton">
+        </div>
+        <div v-if="isMenuVisible" class="hamburger" ref="menu">
+          <ul>
+            <div @click="toggleSubDropCllr1" class="opcao">
+              <li><a style="color: black; text-decoration: none;">SOBRE NÓS</a></li>
+              <i class="bi" :class="{'bi-caret-right-fill': !isSubDrop1Cllr, 'bi-caret-down-fill': isSubDrop1Cllr}"></i>
+            </div>
+            <div class="subdrop-cllr" v-if="isSubDrop1Cllr">
+              <router-link :to="{ path: '/Nossa-Historia' }" style="color: black; text-decoration: none;">História</router-link>
+              <hr class="custom-hr2">
+              <router-link :to="{ path: '/Nossa-Cultura' }" style="color: black; text-decoration: none;">Cultura</router-link>
+              <hr class="custom-hr2">
+              <router-link :to="{ path: '/Nossos-Valores' }" style="color: black; text-decoration: none;">Valores</router-link>
+              <hr class="custom-hr2">
+            </div>
+            <div @click="toggleSubDropCllr2" class="opcao">
+              <li><a style="color: black; text-decoration: none;">NOSSOS SERVIÇOS</a></li>
+              <i class="bi" :class="{'bi-caret-right-fill': !isSubDrop2Cllr, 'bi-caret-down-fill': isSubDrop2Cllr}"></i>
+            </div>
+            <div class="subdrop-cllr" v-if="isSubDrop2Cllr">
+              <router-link :to="{ path: '/Nossos-Servicos' }" style="color: black; text-decoration: none;">Soluções em Logística</router-link>
+              <hr class="custom-hr2">
+              <router-link :to="{ path: '/Tecnologias' }" style="color: black; text-decoration: none;">Soluções em Tecnologia</router-link>
+            </div>
+          </ul>
+        </div>
+      </div>
+    </header>
+
+
     <!-- Modal de contato -->
     <div class="modal fade" id="contatoModal" tabindex="-1" aria-labelledby="contatoModalLabel" aria-hidden="true">
       <div class="modal-dialog">
@@ -92,6 +140,15 @@
           <div class="modal-body">
             <p>Conte-nos como podemos ajudar. Nós responderemos em breve!</p>
             <form @submit.prevent="insertContato()">
+              <div class="mb-3">
+                <label for="nome" class="form-label">Com que setor deseja falar?</label>
+                <select class="form-control" id="nome" v-model="contato.area" required>
+                  <option value="" disabled selected>Selecione uma opção</option>
+                  <option value="opcao1">RH</option>
+                  <option value="opcao2">Financeiro</option>
+                  <option value="opcao3">Outros</option>
+                </select>
+              </div>
               <div class="mb-3">
                 <label for="nome" class="form-label">Nome</label>
                 <input type="text" class="form-control" id="nome" v-model="contato.nome" required>
@@ -146,6 +203,12 @@ export default {
     return {
       isDropdownActive: false,
       isSubDropdownActive: false,
+      isSubDropdown2Active: false,
+      isMenuVisible: false,
+
+      isSubDrop1Cllr: false,
+      isSubDrop2Cllr: false,
+
       contato: {
         nome: '',
         email: '',
@@ -159,15 +222,38 @@ export default {
   },
   mounted() {
     window.addEventListener('scroll', this.handleScroll);
+    document.addEventListener('click', this.handleClickOutside);
+    document.addEventListener('mousemove', this.handleMouseMove);
+    window.addEventListener('touchmove', this.handleTouchMove); 
   },
   unmounted() {
-    window.removeEventListener('scroll', this.handleScroll);
+    document.removeEventListener('click', this.handleClickOutside);
+    document.removeEventListener('scroll', this.handleScroll);
+    document.removeEventListener('mousemove', this.handleMouseMove);
+    window.addEventListener('touchmove', this.handleTouchMove);
   },
   methods: {
+    handleTouchMove() {
+      console.log('Tela está sendo deslizada!');
+      // Adicione aqui a lógica para ocultar o menu ou qualquer outra ação
+      if (this.isMenuVisible) {
+        this.isMenuVisible = false; // Fecha o menu ao deslizar a tela
+      }
+    },
+    handleClickOutside(event) {
+    const menu = this.$refs.menu;
+    const toggleButton = this.$refs.toggleButton;
+
+    if (menu && !menu.contains(event.target) && toggleButton && !toggleButton.contains(event.target)) {
+      this.closeMenu();
+    }
+  },
     // Operação do dropdown -------------------------------------------\
+    // Dropdown principal
     mouseMainDrop() {
       this.isDropdownActive = true;
     },
+    // Subdropdown 1
     mouseSubDrop() {
       this.isSubDropdownActive = true;
     },
@@ -180,6 +266,38 @@ export default {
     },
     toggleSubDropdown() {
       this.isSubDropdownActive = !this.isSubDropdownActive; // Alterna a visibilidade do submenu
+    },
+    //Dropdown 2
+    mouseSub2Drop() {
+      this.isSubDropdown2Active = true;
+    },
+    handleMouseLeave2() {
+      this.isDropdownActive = false;
+      this.isSubDropdown2Active = false; // Fecha o submenu quando o mouse sai do dropdown principal
+    },
+    mouseSub2Leave() {
+      this.isSubDropdown2Active = false; // Fecha o submenu quando o mouse sai do submenu
+    },
+    toggleSubDropdown2() {
+      this.isSubDropdown2Active = !this.isSubDropdown2Active; // Alterna a visibilidade do submenu
+    },
+    toggleMenu() {
+      console.log('foi clicado')
+      this.isSubDrop1Cllr = false;
+      this.isSubDrop2Cllr = false;
+      this.isMenuVisible = !this.isMenuVisible;
+      console.log('agora o menu está: ', this.isMenuVisible)
+    },
+    closeMenu() {
+      this.isMenuVisible = false;
+    },
+    toggleSubDropCllr1 () {
+      console.log('clicou o submenu 1')
+      this.isSubDrop1Cllr = !this.isSubDrop1Cllr; // Alterna a visibilidade do submenu
+    },
+    toggleSubDropCllr2 () {
+      console.log('clicou o submenu 2')
+      this.isSubDrop2Cllr = !this.isSubDrop2Cllr; // Alterna a visibilidade do submenu
     },
     // -----------------------------------------------------------------/
 
@@ -237,19 +355,24 @@ export default {
   height: 1px;
   background-color: black;
   border: none;
-  margin: 5px 0px 5px;
+  margin-top: 0.75%
 }
 
 /* PROPRIEDADES DO CABEÇALHO -----------------------------------------------------------\ */
+
 .header {
   position: fixed; /* Faz o cabeçalho descer junto com a página */
-  padding: 1.2%; /*Aumenta a tamanho em altura do header */
+  display: flex;
+  padding: 0.8%; /*Aumenta a tamanho em altura do header */
   width: 100%; /* Faz o cabeçalho ficar da largura certa da página */
   z-index: 1000; /* Dá prioridade para o cabeçalho ficar na frente de todos os outros itens da página */
   background-color: rgb(255, 255, 255); /* Fundo branco inicial */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Cria uma pequena sombra embaixo do cabeçalho */
   transition: background-color 0.3s ease, backdrop-filter 0.3s ease; /* Suaviza a transição quando scrolla a página */
 }
+.header-cllr {
+    display: none;
+  }
 /* Para o header começar branco e ficar opaco*/
 .header-initial {
   background-color: rgba(255, 255, 255, 1); /* Fundo branco inicial */
@@ -266,42 +389,49 @@ export default {
 
 /* propriedades gerais do container */
 .container-header {
+  width: 100%;
   display: flex;  /* Organiza lateralmente o header */
   align-items: center; /* Deixa centralizado no meio da altura */
   justify-content: space-between; /* Faz ter um espaço entre a parte da imagem e a parte dos textos e íconesx */
 }
+
 .ul-header {
-  list-style-type: none;  /* Tira as bolinhas da lista */
-  display: flex; /* Organiza lateralmente a imagem, os textos e os ícones */
-  gap: 20px; /* Dá um espaço entre as divs de imagem, texto e ícone, no caso apenas muda visualmente o texto e os ícones*/
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+}
+
+.ul-header li {
+  margin: 0 10px;
+}
+
+.textos, .icones {
+  display: flex;
+  align-items: center;
+}
+
+.menu {
+  display: flex;
+  align-items: center;
 }
 
 /* Relativo ao logo */
 .imagem img {
-  max-width: 40%; /* Tamanho da imagem */
-  margin-top: -2%; /* Espaço para a parte de cima */
+  /* max-width: 10px; */
+  width: 40%; /* Faz a imagem ocupar a largura disponível do contêiner, respeitando max-width */
+  height: auto; /* Mantém a proporção da imagem */
+  margin-top: -0.5%; /* Ajusta a posição vertical da imagem */
 }
-
-/* Engloba o sobre nós, o login cliente e o contato e o dropdown */
-.textos {
-  display: flex; /* Organiza lateralmente */
-  gap: 25px; /* Espaço entre os itens */
-}
-.textos a {
-  font-size: 1.0em; /* Tamanho da fonte */
-  display: block; /* Faz com que a margem seja aplicada corretamente */
-  margin-top: 4px; /* Adiciona 20px de espaço acima do texto */
-}
-
 /* Trata do dropdown */
 .drop {
-  margin-top: 0.28%;
+  margin-top: 0.10%;
+  width: 10.5%; /* Defina uma largura para o dropdown */
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
   background-color: #ececec;
-  padding: 10px 0; /* Ajusta o padding para remover o espaçamento lateral */
   display: block;
   position: absolute;
-  width: 200px; /* Defina uma largura para o dropdown */
 }
 
 .drop a {
@@ -327,8 +457,12 @@ export default {
   left: 100%;
   top: 0;
   z-index: 2;
-  border-radius: 4px;
-  width: 200px; /* Defina uma largura para o sub-dropdown */
+}
+
+#subDrop2 {
+  margin-top: 30%;  
+  width: 125%; /* Defina uma largura para o sub-dropdown */
+
 }
 
 .sub-drop a {
@@ -353,19 +487,159 @@ export default {
   width: 100%; /* Ajusta a largura do ícone */
   height: 100%; /* Ajusta a altura do ícone */
 }
+
 /* --------------------------------------------------------------------------------------/ */
 
-@media (max-width: 768px) {
-  /* Estilos para telas menores */
-  .header{
-    display: none; 
+/* PORTABILIDADES -----------------------------------------------------------------------\ */
+/* PARA O CELULAR */
+@media only screen and (max-width: 768px){
+  .header {
+    display: none;
+  }
+  .header-cllr {
+    top: -0.001%;
+    display: flex;
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+    background-color: rgb(255, 255, 255); /* Cor de fundo do cabeçalho */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  .menu-cllr {
+    display: flex;
+  }
+  .opcao {  
+    margin-top: 1%;
+  }
+  .opcao a {  
+    font-size: 1.2rem;
   }
 
-.navbar {
-  display: block;
-  background-color: #f1f1f1;
-  color: #f1f1f1;
+  .container-header-cllr {
+    display: column;
+  }
+  .imagem-cllr img{
+    width: 60%; /* Faz a imagem ocupar a largura disponível do contêiner, respeitando max-width */
+    height: auto; /* Mantém a proporção da imagem */
+    margin-bottom: 10px;
+  }
+  .hamburger {
+    display: flex; /* Usa flexbox para layout */
+    flex-direction: column; /* Alinha os itens em coluna */
+    background-color: rgb(226, 226, 226);
+  }
+  .hamburger ul {
+  list-style-type: none; /* Remove os marcadores da lista */
+  padding: 0; /* Remove o padding padrão */
+  margin: 0; /* Remove a margem padrão */
+}
+
+.hamburger li {
+  margin-bottom: 10px; /* Espaço entre os itens */
+}
+.opcao {
+  display: flex;
+}
+
+.subdrop-cllr {
+  background-color: #bbbbbb;
+}
+.subdrop-cllr a {
+  font-size: 1.3rem;
 }
 }
 
+
+/* ZOOM MAS AINDA NO PC */
+@media (min-width: 1700px) {
+  .header {
+  position: fixed; /* Faz o cabeçalho descer junto com a página */
+  padding: 1%; /*Aumenta a tamanho em altura do header */
+  width: 100%; /* Faz o cabeçalho ficar da largura certa da página */
+  z-index: 1000; /* Dá prioridade para o cabeçalho ficar na frente de todos os outros itens da página */
+  background-color: rgb(255, 255, 255); /* Fundo branco inicial */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Cria uma pequena sombra embaixo do cabeçalho */
+  transition: background-color 0.3s ease, backdrop-filter 0.3s ease; /* Suaviza a transição quando scrolla a página */
+}
+}
+@media (max-width: 1270px) {
+  .header {
+  position: fixed; /* Faz o cabeçalho descer junto com a página */
+  padding: 0.4%; /*Aumenta a tamanho em altura do header */
+  width: 100%; /* Faz o cabeçalho ficar da largura certa da página */
+  z-index: 1000; /* Dá prioridade para o cabeçalho ficar na frente de todos os outros itens da página */
+  background-color: rgb(255, 255, 255); /* Fundo branco inicial */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Cria uma pequena sombra embaixo do cabeçalho */
+  transition: background-color 0.3s ease, backdrop-filter 0.3s ease; /* Suaviza a transição quando scrolla a página */
+}
+.imagem img {
+  /* max-width: 10px; */
+  width: 20%; /* Faz a imagem ocupar a largura disponível do contêiner, respeitando max-width */
+  height: auto; /* Mantém a proporção da imagem */
+  margin-top: -2%; /* Ajusta a posição vertical da imagem */
+}
+.drop {
+  margin-top: -0.10%;
+  width: 14.2%; /* Defina uma largura para o dropdown */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  background-color: #ececec;
+  display: block;
+  position: absolute;
+}
+  .icones {
+  display: flex; /* Se estiver agrupando textos, use flex também */
+  gap: 20px  ; /* Espaço entre os itens */
+}
+.icones svg {
+  width: 70%; /* Ajusta a largura do ícone */
+  height: 70%; /* Ajusta a altura do ícone */
+}
+  .textos a {
+  font-size: 70%; /* Tamanho da fonte */
+  display: block; /* Faz com que a margem seja aplicada corretamente */
+  margin-top: 7%; /* Adiciona um espaço acima do texto */
+}
+}
+@media (max-width: 950px) {
+ .drop {
+  margin-top: 0.4%;
+ }
+}
+@media (max-width: 800px) {
+ .drop {
+  margin-top: 0.5%;
+  margin-left: -5%;
+  width: 12.5%; /* Defina uma largura para o dropdown */
+ }
+}
+@media (max-width: 1000px) {
+  .icones {
+  margin-top: 25%;
+  display: flex; /* Se estiver agrupando textos, use flex também */
+  gap: 20px  ; /* Espaço entre os itens */
+}
+.icones svg {
+  width: 70%; /* Ajusta a largura do ícone */
+  height: 70%; /* Ajusta a altura do ícone */
+}
+}
+@media (max-width: 1000px) {
+  .imagem img {
+  /* max-width: 10px; */
+  width: 20%; /* Faz a imagem ocupar a largura disponível do contêiner, respeitando max-width */
+  height: auto; /* Mantém a proporção da imagem */
+  margin-top: 0.5%; /* Ajusta a posição vertical da imagem */
+  margin-bottom: 0.5%
+}
+}
+@media (max-width: 1050px) {
+  .ul-header {
+  list-style-type: none;  /* Tira as bolinhas da lista */
+  display: flex; /* Organiza lateralmente a imagem, os textos e os ícones */
+ /* VOLTAR AQUI */
+  gap: 20px; /* Dá um espaço entre as divs de imagem, texto e ícone, no caso apenas muda visualmente o texto e os ícones*/
+  font-size: 15px; 
+  margin-top: -22%;
+}
+}
 </style>
