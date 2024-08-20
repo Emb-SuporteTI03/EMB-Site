@@ -56,15 +56,17 @@ flex-direction: column;
 gap: 20px; /* Espaço entre linhas de imagens */
 }
 .about-us-title {
+text-align: center; /* Justifica o texto no centro */
 font-size: 6rem;
-color:rgb(7, 7, 100);
+color: #01385C;
 }
 .about-us-title2 {
+text-align: center; /* Justifica o texto no centro */
 font-size: 4rem;
 }
 .about-us-paragraph {
-padding: 0px 10px;
-font-size: 2rem;
+  padding: 0px 15%;
+font-size: 1rem;
 text-align: center; /* Justifica o texto no centro */
 }
 .custom-hr {
@@ -81,8 +83,8 @@ flex-wrap: wrap; /* Permite que as imagens quebrem para a linha seguinte se nece
 
 /* Estilo das imagens */
 .about-us-image-img {
-width: 20%; /* Define a largura desejada */
-height: 20%; /* Define a altura desejada */
+width: 10%; /* Define a largura desejada */
+height: 10%; /* Define a altura desejada */
 object-fit: contain; /* Ajusta a imagem para caber no contêiner sem cortar */
 }
 
