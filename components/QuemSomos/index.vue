@@ -144,7 +144,7 @@ export default {
           TECNOLOGIA
         </strong>
         <router-link :to="{ path: '/Tecnologias' }" style="color: black; text-decoration: none;">
-          <img src="../../assets/images/computer_room.webp" v-motion-fade-visible-once class="services-img">
+          <img src="../../assets/images/pc_tecnologia.jpg" id="tecnologiasPC" v-motion-fade-visible-once class="services-img">
         </router-link>
       </div>
     </div>
@@ -205,7 +205,7 @@ export default {
           TECNOLOGIA
         </strong>
         <router-link :to="{ path: '/Tecnologias' }" style="color: black; text-decoration: none;">
-          <img src="../../assets/images/computer_room.webp" v-motion-fade-visible-once class="services-img">
+          <img src="../../assets/images/pc_tecnologia.jpg" v-motion-fade-visible-once class="services-img">
         </router-link>
       </div>
     </div>
@@ -313,6 +313,12 @@ export default {
   justify-content: center; /* Centers the image containers within the parent container */
   gap: 20%; /* Space between image containers */
   margin: 5%;
+}
+
+#tecnologiasPC {
+  border: 2px solid #01385C; /* Borda de 5px de espessura e cor preta */
+    border-radius: 10px; /* Bordas arredondadas com raio de 10px */
+    padding: 10px; /* Espaçamento interno entre a borda e a imagem */
 }
 
 .imagem-link {

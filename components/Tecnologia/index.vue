@@ -41,7 +41,8 @@ export default {
 
 <template>
       <div class="container-history">
-        <hr class="custom-hr">   
+      <hr class="custom-hr">   
+      <hr class="custom-hr">   
         <hr class="custom-hr">   
         <h1 class="titulo-nassas-tecnologias" style="font-family: 'Outfit', sans-serif;" v-motion-slide-visible-once-bottom>
           NOSSAS TECNOLOGIAS
