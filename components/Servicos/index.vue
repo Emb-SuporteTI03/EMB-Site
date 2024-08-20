@@ -156,7 +156,7 @@ export default {
         <div v-motion-fade-visible-once class="imagem-nossos-servicos">
           <img
           draggable="false" 
-          src="../../assets/images/notebook-icon-free-png.webp" 
+          src="../../assets/images/caderno.png" 
           id="caderno"
           v-motion-fade-visible-once 
           class="imagem-nossos-servicos-img">  
