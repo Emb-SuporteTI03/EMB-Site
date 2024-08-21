@@ -40,87 +40,91 @@ export default {
 </script>
 
 <template>
-      <div class="container-history">
-      <hr class="custom-hr">   
-      <hr class="custom-hr">   
-        <hr class="custom-hr">   
-        <h1 class="titulo-nassas-tecnologias" style="font-family: 'Outfit', sans-serif;" v-motion-slide-visible-once-bottom>
-          NOSSAS TECNOLOGIAS
-        </h1>  
-        <div class="texto-intro-tecnologias">
-              <img draggable="false" id="celular" src="../../assets/images/celular.png" class="imagem-intro-tec"/>
-              <p class="paragrafo-tecnologias-intro" style="font-family: 'Outfit', sans-serif;" v-motion-slide-visible-once-bottom>
-                  Bem-vindo à Embalarte, uma empresa inovadora e versátil 
-                  no setor de embalagens. Com um portfólio diversificado de produtos, 
-                  nos dedicamos a fornecer soluções de embalagem de alta qualidade 
-                  que atendem às necessidades específicas de cada cliente. <br>
-              </p>
-              <img draggable="false" id="notebook" src="../../assets/images/notebook.png" class="imagem-intro-tec"/>
-          </div> 
-        <div class="texto-tecnologias">
+  <div class="container-tecnologia">
+    <hr class="custom-hr">   
+    <hr class="custom-hr">   
+    <hr class="custom-hr">   
 
-    <div 
-    id="recebimento"
-    v-motion-fade-visible-once 
-    class="imagem-nossos-servicos">
-          <p class="paragrafo-nossas-tecnologias" id="texto_cm" style="font-family: 'Outfit', sans-serif;" v-motion-slide-visible-once-bottom>
-            Recebimento e Armazenagem <br>
-            Na Embalarte, reconhecemos o papel crucial que a logística de distribuição e o 
-            atendimento eficiente desempenham no sucesso das operações de e-commerce. 
-            Oferecemos soluções personalizadas para garantir que seus produtos cheguem 
-            ao cliente final de forma rápida e segura.
-            Aqui, nosso compromisso é oferecer soluções inovadoras e completas 
-            que apoiem o crescimento do seu negócio, especialmente no dinâmico 
-            mundo do e-commerce. Confie em nós para ser seu parceiro de confiança 
-            em todas as etapas do processo, desde a embalagem até a entrega final.
-          </p>
-          <img draggable="false" src="../../assets/images/tablet.png" v-motion-fade-visible-once class="imagem-nossos-servicos-img">  
+    <h1 class="titulo-nossas-tecnologias" style="font-family: 'Outfit', sans-serif;" v-motion-slide-visible-once-bottom>
+      NOSSAS TECNOLOGIAS
+    </h1>  
 
-
-
-        </div>   
-      <div class="texto-explicacao">
-        <img draggable="false" src="../../assets/images/app.jpeg" id="app-img" v-motion-fade-visible-once class="imagem-nossos-servicos-img">  
-      <p 
-      class="paragrafo-nossas-tecnologias" 
-      id="blisters"
-      style="font-family: 'Outfit', sans-serif;"
-      v-motion-slide-visible-once-bottom>
-      APLICATIVO PRÓPRIO <br>
-          Entre nossos produtos, destacamos a fabricação de blisters, uma solução 
-          ideal para proteger e exibir produtos de maneira eficaz. Os blisters são 
-          amplamente utilizados em diversos setores, incluindo farmacêutico, 
-          cosmético, eletrônico e de consumo, por sua capacidade de garantir 
-          segurança e visibilidade ao produto.
+    <div class="texto-intro-tecnologias">
+      <div class="item-tecnologia">
+        <img draggable="false" id="celular" src="../../assets/images/celular.png" class="imagem-intro-tec"/>
+      </div>
+      <div class="item-tecnologia">
+        <p class="paragrafo-tecnologias-intro" style="font-family: 'Outfit', sans-serif;" v-motion-slide-visible-once-bottom>
+          Bem-vindo à Embalarte, uma empresa inovadora e versátil 
+          no setor de embalagens. Com um portfólio diversificado de produtos, 
+          nos dedicamos a fornecer soluções de embalagem de alta qualidade 
+          que atendem às necessidades específicas de cada cliente. <br>
         </p>
       </div>
-        <div v-motion-fade-visible-once class="imagem-nossos-servicos">
-          <p 
-          class="paragrafo-nossas-tecnologias" 
-          id="armazenagem"
-          style="font-family: 'Outfit', sans-serif;" 
-          v-motion-slide-visible-once-bottom>
-            USO E DESENVOLVIMENTO DE API<br>
-            Na Embalarte, compreendemos a importância do processo de 
-            recebimento e armazenagem para garantir a integridade dos 
-            produtos antes de serem embalados. Nosso sistema de logística 
-            é projetado para otimizar cada etapa, desde a chegada de materiais 
-            até o armazenamento eficiente em nosso depósito.
-          </p>
-          <img draggable="false" src="../../assets/images/api.png" v-motion-fade-visible-once class="imagem-nossos-servicos-img">  
-        </div>
-        <div class="separador"></div> <!-- Separador adicionado aqui -->
-
+      <div class="item-tecnologia">
+        <img draggable="false" id="notebook" src="../../assets/images/notebook.png" class="imagem-intro-tec"/>
       </div>
+    </div> 
+    
+    <div class="texto-tecnologias">
 
-      </div>
+    <div class="nossas_tecnologias">
+      <p class="paragrafo-nossas-tecnologias_esquerda" style="font-family: 'Outfit', sans-serif;" v-motion-slide-visible-once-bottom>
+      <strong>Recebimento e Armazenagem</strong> <br>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. In ornare venenatis iaculis. Phasellus tempor bibendum enim, id sodales dui posuere nec. Curabitur rhoncus, erat ut hendrerit fermentum, arcu dolor gravida tortor, quis placerat ipsum libero non risus. Ut fringilla elit vestibulum ipsum finibus, quis tempor eros iaculis. Curabitur in purus sit amet nunc venenatis rutrum. Ut vitae eros at ex varius bibendum nec a arcu. Cras ut viverra sem.
+      
+      </p>
+      <img draggable="false" src="../../assets/images/tablet.png" v-motion-fade-visible-once class="nossas_tecnologias-img">  
+    </div>   
+
+    <div class="nossas_tecnologias">
+      <img draggable="false" id="appEmb" src="../../assets/images/app.jpeg" v-motion-fade-visible-once class="nossas_tecnologias-img">  
+      <p class="paragrafo-nossas-tecnologias_direita" style="font-family: 'Outfit', sans-serif;" v-motion-slide-visible-once-bottom>
+      <strong>APLICATIVO PRÓPRIO</strong> <br>
+      Suspendisse et condimentum quam. Nunc pretium aliquam tellus non condimentum. Ut condimentum neque lobortis sem pretium pretium. Vivamus tincidunt sem mauris, at viverra nibh tristique et. Sed tortor lacus, interdum vel porttitor vel, sodales non nulla. Suspendisse in libero ipsum. Integer lobortis malesuada nibh sit amet consectetur. Donec sit amet urna tellus. Vivamus vehicula id ipsum ac viverra. Mauris ut ligula et tellus maximus lobortis. Proin condimentum nunc dui, sit amet ultricies mauris interdum vitae. Duis vitae ipsum lobortis, imperdiet ex eget, ornare massa. Integer sapien nunc, maximus ut feugiat et, hendrerit sed ante.
+    </p>
+    </div>
+
+    <div class="nossas_tecnologias">
+      <p class="paragrafo-nossas-tecnologias_esquerda" style="font-family: 'Outfit', sans-serif;" v-motion-slide-visible-once-bottom>
+        <strong>USO E DESENVOLVIMENTO DE API</strong><br>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. In ornare venenatis iaculis. Phasellus tempor bibendum enim, id sodales dui posuere nec. Curabitur rhoncus, erat ut hendrerit fermentum, arcu dolor gravida tortor, quis placerat ipsum libero non risus. Ut fringilla elit vestibulum ipsum finibus, quis tempor eros iaculis. Curabitur in purus sit amet nunc venenatis rutrum. Ut vitae eros at ex varius bibendum nec a arcu. Cras ut viverra sem.
+      </p>
+      <img draggable="false" src="../../assets/images/api.png" v-motion-fade-visible-once class="nossas_tecnologias-img">  
+    </div>
+  </div>
+
+</div>
   </template>
   
   <style>
+.custom-hr {
+  background-color: rgba(255, 255, 255, 0);
+  color: rgba(255, 255, 255, 0);
+}
+
+.titulo-nossas-tecnologias {
+  font-size: 6rem;
+  color:#01395E;
+  justify-content: center; /* Centraliza os parágrafos dentro do contêiner */
+  align-items: center; /* Alinha verticalmente os parágrafos no centro */
+}
+
+.item-tecnologia {
+  flex: 1; /* Faz com que cada item ocupe uma parte igual do espaço disponível */
+  display: flex;
+  justify-content: center; /* Centraliza o conteúdo dentro do item */
+  align-items: center; /* Alinha verticalmente o conteúdo no centro */
+}
+
+.imagem-intro-tec {
+  max-width: 100%; /* Garante que as imagens não excedam o tamanho do contêiner */
+  height: auto; /* Mantém a proporção das imagens */
+}
 
 #notebook {
   transform: scaleX(-1); /* Reverte a imagem horizontalmente */
-  width: 15%; /* Ensure images do not exceed viewport width */
+  width: 40%; /* Ensure images do not exceed viewport width */
   margin-right: 6%;
 }
 
@@ -139,35 +143,45 @@ export default {
   background-color: rgb(154, 191, 207);
 }
 
+/* Contêiner para centralizar imagens e texto */
+.nossas_tecnologias {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 5% 10%; /* Ajuste o espaçamento vertical */
+}
+
 .paragrafo-tecnologias-intro {
+  font-size: 1.4rem;
   display: flex;
   align-items: center;
   justify-content: center;
 }
-.texto-intro-tecnologias p {
-  width: 40%; /* Ajuste o valor conforme necessário */
-  text-align: center; /* Opcional: centraliza o texto dentro do parágrafo */
+
+
+.texto-tecnologias {
+  margin-left: 12%; /* Espaço à esquerda */
+  margin-right: 12%; /* Espaço à direita */  
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
-.imagem-intro-tec {
-  width: 150px; /* Define uma largura fixa para as imagens, ajuste conforme necessário */
-  height: auto; /* Mantém a proporção da imagem */
+#appEmb {
+  border: 2px solid #01395E; /* Borda tracejada de 2px com cor azul */
 }
 
-.separador {
-    width: 100px; /* Make it full-width or adjust as needed */
-  }
-
-  /* Contêiner de imagens */
-  .texto-tecnologias {
-    margin-left: 12%; /* Espaço à esquerda */
-    margin-right: 12%; /* Espaço à direita */  
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+.paragrafo-nossas-tecnologias_esquerda {
+  margin-left: 5%; /* Espaço à esquerda */
+  margin-right: 7%; /* Espaço à direita */  
 }
 
-  .animado {
+.paragrafo-nossas-tecnologias_direita {
+  margin-left: 5%; /* Espaço à esquerda */
+  margin-right: 7%; /* Espaço à direita */  
+}
+
+.animado {
   display: inline-block; /* Para permitir o efeito de transformação */
   animation: pulsar 2s infinite; /* Adiciona a animação de pulsação */
 }
@@ -184,15 +198,8 @@ export default {
     transform: scale(1);
   }
 }
-  .textos {
-    background: linear-gradient(
-    to bottom, /* Direção do gradiente */
-    rgb(228, 228, 228) 0% /* Branco na base */
-    rgb(114, 114, 114) 50%, /* Cinza no meio */
-    rgb(255, 255, 255) 100%, /* Cinza no meio */
-  );
-  }
-.container-history {
+
+.container-tecnologia {
   display: flex;
   flex-direction: column; /* Alinha os elementos em coluna */
   justify-content: center; /* Centraliza horizontalmente */
@@ -200,104 +207,22 @@ export default {
   text-align: center; /* Centraliza o texto dentro do contêiner */
 }
 
-#app-img {
-  border: 5px solid black; /* Adiciona uma borda preta de 5 pixels ao redor da imagem */
-  width: 25%; /* Ajuste a largura da imagem conforme necessário */
-  height: auto; /* Mantém a proporção da imagem com base na largura */
-  /* Se você quiser definir uma altura específica e manter a proporção, use: */
-  /* height: 200px; */
-  /* width: auto; */
-}
-
-
-  .titulo-nassas-tecnologias {
+.titulo-nassas-tecnologias {
   font-size: 6rem;
   color:#01395E;
   justify-content: center; /* Centraliza os parágrafos dentro do contêiner */
   align-items: center; /* Alinha verticalmente os parágrafos no centro */
-  }
-  .titulo-nassas-tecnologias2 {
-  font-size: 4rem;
-  
-  }
-  .texto-explicacao {
-  display: flex; /* Torna o contêiner flexível */
-  justify-content: center; /* Centraliza os parágrafos dentro do contêiner */
-  align-items: center; /* Alinha verticalmente os parágrafos no centro */
-  gap: 20px; /* Adiciona espaço entre os parágrafos */
-  flex-wrap: wrap; /* Permite que os parágrafos quebrem para a próxima linha em telas menores */
-  margin: 20px 80px; /* Ajuste o espaçamento vertical */
-
-}
-html {
-  overflow-x: hidden;
 }
 
-body {
-  overflow-x: hidden;
-}
-
-
-.paragrafo-nossas-tecnologias {
-  padding: 0 25%; /* Mantém o padding lateral */
-  font-size: 1.1rem;
-  text-align: center; /* Centraliza o texto dentro dos parágrafos */
-  flex: 1; /* Permite que cada parágrafo ocupe o mesmo espaço */
-  min-width: 250px; /* Define uma largura mínima para os parágrafos */
-  margin-top: 50px;
-  margin-left: -270px;
-  margin-right: -75px;
-  margin-bottom: 150px;
-}
-#recebimento {
-  margin-left: 10px;
-  margin-right: 10%;  
-}
-
-#blisters {
-  margin-left: -15%;
-  margin-right: -25%;
-  margin-top: 12%; 
-}
-
-#armazenagem {
-  margin-left: -30%;
-  margin-right: -5%;
-  margin-top: 15%; 
-}
-
-#encadernacao {
-  margin-left: -10%;
-  margin-right: -25%;
-  margin-top: 15%; 
-}
-
-  .custom-hr {
-  background-color: rgba(255, 255, 255, 0);
-  color: rgba(255, 255, 255, 0);
-  }
-  /* Contêiner de imagens individuais */
-.imagem-nossos-servicos-img {
-  width: 100%; /* Ajuste para a largura desejada */
-  height: auto; /* Mantém a proporção da imagem */
-  object-fit: contain; /* Ajusta a imagem para caber no contêiner sem cortar */
-  border-radius: 10px; 
+.titulo-nassas-tecnologias2 {
+  font-size: 4rem; 
 }
 
 /* Estilo das imagens */
-.imagem-nossos-servicos-img {
+.nossas_tecnologias-img {
   width: 20%; /* Ajuste para a largura desejada */
   height: auto; /* Mantém a proporção da imagem */
   object-fit: contain; /* Ajusta a imagem para caber no contêiner sem cortar */
-  border-radius: 10px; 
-}
-
-/* Contêiner para centralizar imagens e texto */
-.imagem-nossos-servicos {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 20px 80px; /* Ajuste o espaçamento vertical */
 }
   
   </style>
