@@ -3,46 +3,55 @@
     <div class="container-history">
       <hr class="custom-hr">    
       <hr class="custom-hr">   
-      <h1 class="about-us-title" style="font-family: 'Outfit', sans-serif;" v-motion-slide-visible-once-bottom>
+      <h1 class="valores_titulo" style="font-family: 'Outfit', sans-serif;" v-motion-slide-visible-once-bottom>
         NOSSOS VALORES
       </h1>
-      <p class="about-us-paragraph" style="font-family: 'Outfit', sans-serif;" v-motion-slide-visible-once-bottom>
-        Valores da Empresa
-Ética e Transparência:
-<br>
-Agir com honestidade em todas as interações e manter uma comunicação aberta sobre práticas e decisões.
-Compromisso com o Cliente:
-<br>
-
-Priorizar as necessidades dos clientes e buscar sempre superar suas expectativas.
-Responsabilidade Social e Ambiental:
-<br>
-
-Adotar práticas sustentáveis e contribuir positivamente para a comunidade.
-Inovação e Criatividade:
-<br>
-
-Encorajar e implementar ideias novas e criativas para resolver problemas e melhorar produtos/serviços.
-Qualidade e Excelência:
-<br>
-
-Manter altos padrões de qualidade em todos os aspectos do trabalho e buscar a excelência contínua.
-Trabalho em Equipe:
-<br>
-
-Valorizar a colaboração e a sinergia entre os membros da equipe para alcançar objetivos comuns.
-Desenvolvimento e Crescimento:
-<br>
-
-Investir no desenvolvimento profissional dos colaboradores e apoiar seu crescimento pessoal.
-
+      <div class="about-us-paragraph" style="font-family: 'Outfit', sans-serif;" v-motion-slide-visible-once-bottom>
         
-      </p>
-      <div v-motion-fade-visible-once class="about-us-image">
-        <img draggable="false" src="../../assets/images/1924771.png" v-motion-fade-visible-once class="about-us-image-img">
-        <img draggable="false" src="../../assets/images/4127193.png" v-motion-fade-visible-once class="about-us-image-img">
-        <img draggable="false" src="../../assets/images/download.png" v-motion-fade-visible-once class="about-us-image-img">
+        <div class="section">
+          <div class="text-content">
+            <h2 class="valores_titulo2">Valores Fundamentais:</h2>
+            <ul class="styled-list">
+              <li><strong>Integridade:</strong> Fazer o que é certo, mesmo quando ninguém está olhando.</li>
+              <li><strong>Inovação:</strong> Buscar constantemente novas e melhores formas de atender às necessidades dos nossos clientes.</li>
+              <li><strong>Excelência: </strong>Comprometimento com a qualidade e a melhoria contínua.</li>
+              <li><strong>Colaboração:</strong> Trabalhar em equipe e valorizar as contribuições de todos os membros.</li>
+              <li><strong>Respeito:</strong> Tratar todos com dignidade e consideração.</li>       
+            </ul>
+          </div>
+          <div class="image-content">
+            <img draggable="false" src="../../assets/images/download.png" v-motion-fade-visible-once class="valores_imagem">
+          </div>
+        </div>
 
+        <div class="section">
+          <div class="text-content">
+            <h2 class="valores_titulo2">Ambiente de Trabalho:</h2>
+            <ul class="styled-list">
+              <li><strong>Inclusivo e Diverso:</strong> Promover um ambiente que valorize a diversidade e a inclusão.</li>
+              <li><strong>Colaborativo:</strong> Estimular o trabalho em equipe e a comunicação aberta.</li>
+              <li><strong>Apoio ao Desenvolvimento:</strong> Oferecer oportunidades para crescimento profissional e pessoal.</li>
+            </ul>
+          </div>
+          <div class="image-content">
+            <img draggable="false" src="../../assets/images/4127193.png" v-motion-fade-visible-once class="valores_imagem">
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="text-content">
+            <h2 class="valores_titulo2">Estilo de Liderança:</h2>
+            <ul class="styled-list">
+              <li><strong>Inspirador:</strong> Líderes que motivam e engajam suas equipes.</li>
+              <li><strong>Acessível:</strong> Líderes que estão disponíveis para ouvir e apoiar suas equipes.</li>
+              <li><strong>Transparente:</strong> Comunicação clara e honesta sobre os objetivos e desafios da empresa.</li>
+            </ul>
+          </div>
+          <div class="image-content">
+            <img draggable="false" src="../../assets/images/1924771.png" v-motion-fade-visible-once class="valores_imagem">
+          </div>
+        </div>
+        
       </div>
     </div>
   </div>
@@ -51,41 +60,62 @@ Investir no desenvolvimento profissional dos colaboradores e apoiar seu crescime
 <style>
 /* Contêiner de imagens */
 .container-history {
-display: flex;
-flex-direction: column;
-gap: 20px; /* Espaço entre linhas de imagens */
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Espaço entre linhas de imagens */
 }
-.about-us-title {
-text-align: center; /* Justifica o texto no centro */
-font-size: 6rem;
-color: #01385C;
+
+.valores_titulo {
+  font-size: 6rem;
+  text-align: center; /* Justifica o texto no centro */
+  color: #01385C;
 }
-.about-us-title2 {
-text-align: center; /* Justifica o texto no centro */
-font-size: 4rem;
+
+.valores_titulo2 {
+  font-size: 2rem;
+  text-align: center; /* Justifica o texto no centro */
+  color: #01385C;
 }
+
 .about-us-paragraph {
   padding: 0px 15%;
-font-size: 1rem;
-text-align: center; /* Justifica o texto no centro */
-}
-.custom-hr {
-background-color: rgba(255, 255, 255, 0);
-color: rgba(255, 255, 255, 0);
-}
-/* Contêiner de imagens individuais */
-.about-us-image {
-display: flex;
-gap: 10px; /* Espaço entre as imagens */
-justify-content: center; /* Centraliza as imagens horizontalmente */
-flex-wrap: wrap; /* Permite que as imagens quebrem para a linha seguinte se necessário */
+  font-size: 1rem;
+  text-align: left; /* Alinha o texto à esquerda */
 }
 
-/* Estilo das imagens */
-.about-us-image-img {
-width: 10%; /* Define a largura desejada */
-height: 10%; /* Define a altura desejada */
-object-fit: contain; /* Ajusta a imagem para caber no contêiner sem cortar */
+/* Estilização da lista */
+.styled-list {
+  list-style-type: none; /* Remove marcadores da lista */
+  padding-left: 0;
 }
 
+.styled-list li {
+  margin-bottom: 10px; /* Espaçamento entre itens da lista */
+  font-size: 1.1rem;
+}
+
+.section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px; /* Espaçamento entre seções */
+}
+
+/* Texto à esquerda */
+.text-content {
+  width: 60%;
+}
+
+/* Imagem à direita */
+.image-content {
+  width: 35%;
+  display: flex;
+  justify-content: center;
+}
+
+.valores_imagem {
+  width: 40%; /* Faz com que a imagem ocupe toda a largura do contêiner */
+  height: auto; /* Mantém a proporção da imagem */
+  object-fit: contain; /* Ajusta a imagem para caber no contêiner sem cortar */
+}
 </style>
