@@ -39,19 +39,17 @@
       <swiper-slide>
         <img src="assets/images/galpao_car.jpg" alt="estantes" class="swiper-image" />
       </swiper-slide>
-
       <swiper-slide>
-        <img src="assets/images/galpao.jpg" alt="estantes" class="swiper-image" />
+        <img src="assets/images/cargo-delivery-vehicle.jpg" alt="estantes" class="swiper-image" />
       </swiper-slide>
       <swiper-slide>
         <img src="assets/images/containers.jpg" alt="containers" class="swiper-image" />
       </swiper-slide>
 
       <swiper-slide>
-        <img src="assets/images/galpao_ia.jpg" alt="containers" class="swiper-image" />
+        <img src="assets/images/tecnologia_carrossel.jpg" alt="containers" class="swiper-image" />
       </swiper-slide>
     </swiper>
-
     <div>
     <hr class="custom-hr2">
     <hr class="custom-hr2">

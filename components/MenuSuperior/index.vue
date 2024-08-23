@@ -47,9 +47,84 @@
                       <i class="bi" :class="{'bi-caret-right-fill': !isSubDropdown2Active, 'bi-caret-down-fill': isSubDropdown2Active}"></i>
                     </a>
                     <div class="sub-drop" id= "subDrop2" v-show="isSubDropdown2Active">
-                      <router-link :to="{ path: '/Nossos-Servicos' }" style="color: black; text-decoration: none;">Soluções em Logística</router-link>
+                      <router-link 
+                        :to="{ path: '/Nossos-Servicos', hash: '#Armazenagem' }" 
+                        style="color: black; text-decoration: none;"
+                      >
+                        Armazenagem
+                      </router-link>
+
+                      <router-link 
+                        :to="{ path: '/Nossos-Servicos', hash: '#Picking_Packing' }" 
+                        style="color: black; text-decoration: none;"
+                      >
+                      Picking e Packing e Cross-Docking
+                      </router-link>
+
+                      <router-link 
+                        :to="{ path: '/Nossos-Servicos', hash: '#Atendimento_E-Commerce' }" 
+                        style="color: black; text-decoration: none;"
+                      >
+                      Atendimento E-commerce
+                      </router-link>
+
+                      <router-link 
+                        :to="{ path: '/Nossos-Servicos', hash: '#Manuseio_e_Kits' }" 
+                        style="color: black; text-decoration: none;"
+                      >
+                      Manuseios Diversos e Montagem de Kits
+
+                      </router-link>
+
+                      <router-link 
+                        :to="{ path: '/Nossos-Servicos', hash: '#Logistica_Promocional' }" 
+                        style="color: black; text-decoration: none;"
+                      >
+                      Logistica Promocional
+                      </router-link>
+
+                      <router-link 
+                        :to="{ path: '/Nossos-Servicos', hash: '#Envaze_e_Blister' }" 
+                        style="color: black; text-decoration: none;"
+                      >
+                      Envaze e Blister
+                      </router-link>
+
+                      <router-link 
+                        :to="{ path: '/Nossos-Servicos', hash: '#Encadernacao' }" 
+                        style="color: black; text-decoration: none;"
+                      >
+                      Encadernações em Espiral
+                      </router-link>
+
+                      <router-link 
+                        :to="{ path: '/Nossos-Servicos', hash: '#Etiquetagem' }" 
+                        style="color: black; text-decoration: none;"
+                      >
+                      Etiquetagem e Rótulagem
+                      </router-link>
+
+                      <router-link 
+                        :to="{ path: '/Nossos-Servicos', hash: '#Gravacao' }" 
+                        style="color: black; text-decoration: none;"
+                      >
+                      Gravação Inkjet
+                      </router-link>
+
+                      <router-link 
+                        :to="{ path: '/Nossos-Servicos', hash: '#Distribuicao' }" 
+                        style="color: black; text-decoration: none;"
+                      >
+                      Distribuição em Nível Nacional
+                      </router-link>
+
                       <hr class="custom-hr2">
-                      <router-link :to="{ path: '/Tecnologias' }" style="color: black; text-decoration: none;">Soluções em Tecnologia</router-link>
+                      <router-link 
+                        :to="{ path: '/Nossos-Servicos', hash: '#Secao_Tecnologia' }" 
+                        style="color: black; text-decoration: none;"
+                      >
+                        Soluções em Tecnologia
+                      </router-link>
                     </div>
                   </div>
                 </div>
