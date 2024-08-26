@@ -129,7 +129,7 @@ body {
   z-index: 300;
   text-align: center;
   color: rgb(58, 106, 141);
-  background-color: rgba(255, 255, 255, 1);
+  background-color: rgba(255, 255, 255, 0.8);
   padding: 20px;
   border-radius: 10px;
 }
