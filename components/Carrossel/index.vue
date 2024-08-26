@@ -37,17 +37,17 @@
       class="mySwiper3"
     >
       <swiper-slide>
-        <img src="assets/images/galpao_car.jpg" alt="estantes" class="swiper-image" />
+        <img src="assets/images/galpao_carrossel.jpeg" alt="estantes" class="swiper-image" />
       </swiper-slide>
       <swiper-slide>
-        <img src="assets/images/cargo-delivery-vehicle.jpg" alt="estantes" class="swiper-image" />
+        <img src="assets/images/container_carrossel.jpeg" alt="estantes" class="swiper-image" />
       </swiper-slide>
       <swiper-slide>
-        <img src="assets/images/containers.jpg" alt="containers" class="swiper-image" />
+        <img src="assets/images/plane_carrossel.jpeg" alt="containers" class="swiper-image" />
       </swiper-slide>
 
       <swiper-slide>
-        <img src="assets/images/tecnologia_carrossel.jpg" alt="containers" class="swiper-image" />
+        <img src="assets/images/tec_carrossel.jpeg" alt="containers" class="swiper-image" />
       </swiper-slide>
     </swiper>
     <div>

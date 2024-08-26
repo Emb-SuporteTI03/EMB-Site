@@ -2,6 +2,7 @@
 export default {
   data() {
     return {
+      volume: 20,
       isDropdownActive: false,
       isSubDropdownActive: false,
       mapAtual: '1',
@@ -17,6 +18,18 @@ export default {
     };
   },
   methods: {
+    togglePlayPause() {
+      const video = this.$refs.autoPlayVideo;
+      if (video.paused) {
+        video.play();
+      } else {
+        video.pause();
+      }
+    },
+    updateVolume() {
+      const video = this.$refs.autoPlayVideo;
+      video.volume = this.volume / 70; // Convert volume to 0.0 - 1.0 range
+    },
     toggleDropdown() {
       this.isDropdownActive = !this.isDropdownActive;
     },
@@ -44,6 +57,8 @@ export default {
     }
   },
   mounted() {
+      this.updateVolume(); // Set the initial volume
+
     // Check if the browser supports IntersectionObserver
     if ('IntersectionObserver' in window) {
       const observer = new IntersectionObserver(this.handleIntersection, { threshold: 0.5 });
@@ -79,12 +94,51 @@ export default {
         </div>
         <div class="video-container">
           <!-- Add ref to video element -->
-          <video ref="autoPlayVideo" preload="auto">
+          <video 
+            ref="autoPlayVideo" 
+            preload="auto" 
+            autoplay 
+            @click="togglePlayPause"
+            style="cursor: pointer;"
+          >
             <source src="../../assets/images/videoEmb.mp4" type="video/mp4">
             Your browser does not support the video tag.
           </video>
+          <div>
+            <i class="bi bi-volume-down" style="font-size: 2rem;"></i>
+            <input 
+            type="range" 
+            min="0" 
+            max="100" 
+            v-model="volume" 
+            @input="updateVolume"
+            style="margin-top: 10px;"
+          />
+          </div>
         </div>
       </div>
+      <div class="diferenciais">
+        <br>
+        <br>
+        <br>
+      <h1>NOSSOS DIFERENCIAIS</h1>
+      <br>
+      <br>
+      <br>
+      <div class="grid-container">
+      <div class="grid-item">🏢 Unidade própria com 4.000m²</div>
+      <div class="grid-item">👥 Equipe treinada e qualificada</div>
+      <div class="grid-item">🏭 Modernas instalações</div>
+      <div class="grid-item">🚗 Próximo às Rodovias Anhanguera e Bandeirantes</div>
+      <div class="grid-item">🚛 Docas com facilidade de acesso para carga e descarga</div>
+      <div class="grid-item">📱 Controle por software e aplicativos mobile</div>
+    </div>
+    <br>
+    <br>
+    <br>
+
+
+    </div>
     </div>
     <div  class="local-section">
       <div class="caixa-mapa">
@@ -131,14 +185,14 @@ export default {
         <div class="embalarte-txt">
         <strong class="about-us-text" id="about-us-nos">NÓS, DO GRUPO EMBALARTE</strong>
         </div>
-        <strong class="about-us-text" id="localTexto">TEMOS NOSSA SEDE EM<br> </strong>
+        <strong class="about-us-text" id="localTexto">TEMOS NOSSA MATRIZ EM<br> </strong>
           <ul class="lista-cidades">
             <li><a @click.prevent="updateMapValue('1', $event)">📌 Santana de Parnaíba</a></li>
           </ul>
            <strong class="about-us-text" id="localTexto">
           E ESTAMOS PRESENTES EM OUTRAS 3 CIDADES NO ESTADO DE SÃO PAULO!</strong>
         <ul class="lista-cidades">
-          <li><a @click.prevent="updateMapValue('2', $event)">📌 Osasco</a></li>
+          <li><a @click.prevent="updateMapValue('2', $event)">📌 São Paulo</a></li>
           <li><a @click.prevent="updateMapValue('3', $event)">📌 São José dos Campos</a></li>
           <li><a @click.prevent="updateMapValue('4', $event)">📌 Cajamar</a></li>
         </ul>
@@ -248,6 +302,31 @@ export default {
 </template>
 
 <style scoped>
+
+.container {
+  width: 80%;
+  margin: 0 auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Grid Container */
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+/* Grid Item */
+.grid-item {
+  background: #e2e2e2;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px;
+  text-align: center;
+}
 
 /* Barra para espaçamento ---------------------------------------------------\ */
 .custom-hr {

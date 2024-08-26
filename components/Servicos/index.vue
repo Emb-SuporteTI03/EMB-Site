@@ -36,16 +36,6 @@ export default {
   },
   methods: {
 
-    scrollToSection(sectionId) {
-      // Navegar para a página desejada
-      this.$router.push('/Nossos-Servicos').then(() => {
-        // Rolar suavemente até a seção desejada
-        const section = document.getElementById(sectionId);
-        if (section) {
-          section.scrollIntoView({ behavior: 'smooth' });
-        }
-      });
-    }
     
   }
 }
@@ -77,26 +67,11 @@ export default {
         <div class="nossos_servicos">
           <p class="paragrafo-nossos-servicos_esquerda" style="font-family: 'Outfit', sans-serif;" v-motion-slide-visible-once-bottom>
         <h2>Armazenagem</h2>
-
-            Lorem ipsum dolor sit amet, consectetur 
-            adipiscing elit. Cras rhoncus tincidunt
-            urna sit amet dignissim. Nam lacinia justo 
-            eu tellus rutrum eleifend. Proin libero 
-            dui, pulvinar ut justo in, dapibus
-            consectetur arcu. Cras gravida, massa ac 
-            efficitur efficitur, magna tellus ornare mi, 
-            ut finibus nisi dolor egestas orci. In a nisi 
-            eu lectus elementum convallis eu in mauris. Nam 
-            ut tellus eget urna aliquet ultrices. Proin mollis 
-            fermentum rhoncus. Quisque dictum enim quis nunc mollis, 
-            ac blandit dui aliquam. In et consectetur sem, at 
-            efficitur massa. Morbi volutpat consectetur mi, 
-            vitae posuere nibh consequat eget. Ut 
-            placerat ante ac aliquam imperdiet. Suspendisse 
-            massa massa, maximus sed neque non, vulputate 
-            fringilla leo. Sed semper, sem ac mattis lacinia, 
-            augue arcu facilisis nibh, eu rhoncus nisi odio eget quam.
-          </p>
+        Na nossa matriz, contamos com uma estrutura verticalizada e moderna que maximiza o uso do espaço, proporcionando uma solução eficiente para armazenagem em diversos segmentos. O controle de estoque é realizado com precisão através de leitura de códigos e aplicativos mobile, permitindo uma gestão em tempo real e otimizada.
+        <br>
+        <br>
+        Nossa abordagem flexível atende a uma ampla gama de necessidades, desde produtos de consumo até itens industriais. Com tecnologia avançada e uma infraestrutura adaptável, garantimos uma armazenagem segura e eficiente, oferecendo um serviço confiável e de alta qualidade para nossos clientes.
+        </p>
           <img draggable="false"src="../../assets/images/armazenagem_servicos.jpg"  id="armazenagem" class="imagem-intro">
         </div>
         <hr class="custom-hr2"  id="Picking_Packing">
@@ -110,24 +85,10 @@ export default {
         style="font-family: 'Outfit', sans-serif;"
         v-motion-slide-visible-once-bottom>
         <h2>Picking e Packing e Cross-Docking</h2>
-        Lorem ipsum dolor sit amet, consectetur 
-        adipiscing elit. Cras rhoncus tincidunt
-        urna sit amet dignissim. Nam lacinia justo 
-        eu tellus rutrum eleifend. Proin libero 
-        dui, pulvinar ut justo in, dapibus
-        consectetur arcu. Cras gravida, massa ac 
-        efficitur efficitur, magna tellus ornare mi, 
-        ut finibus nisi dolor egestas orci. In a nisi 
-        eu lectus elementum convallis eu in mauris. Nam 
-        ut tellus eget urna aliquet ultrices. Proin mollis 
-        fermentum rhoncus. Quisque dictum enim quis nunc mollis, 
-        ac blandit dui aliquam. In et consectetur sem, at 
-        efficitur massa. Morbi volutpat consectetur mi, 
-        vitae posuere nibh consequat eget. Ut 
-        placerat ante ac aliquam imperdiet. Suspendisse 
-        massa massa, maximus sed neque non, vulputate 
-        fringilla leo. Sed semper, sem ac mattis lacinia, 
-        augue arcu facilisis nibh, eu rhoncus nisi odio eget quam.
+        Nosso processo de picking e packing é realizado com coletores avançados, o que aumenta significativamente nossa capacidade de produção e eficiência. O tempo de coleta e separação é gerido de acordo com o SLA acordado com o cliente, garantindo precisão e pontualidade em cada etapa do processo.
+        <br>
+        <br>
+        Além disso, oferecemos controle e visibilidade total das operações por meio de nossa plataforma web em tempo real. Essa tecnologia permite monitorar o progresso e a eficácia das operações, proporcionando uma gestão transparente e eficiente para atender às suas necessidades com a máxima agilidade.
         </p>
         </div>
 
@@ -136,25 +97,10 @@ export default {
         <div class="nossos_servicos">
           <p class="paragrafo-nossos-servicos_esquerda" style="font-family: 'Outfit', sans-serif;" v-motion-slide-visible-once-bottom>
         <h2>Atendimento E-commerce</h2>
-
-            Lorem ipsum dolor sit amet, consectetur 
-            adipiscing elit. Cras rhoncus tincidunt
-            urna sit amet dignissim. Nam lacinia justo 
-            eu tellus rutrum eleifend. Proin libero 
-            dui, pulvinar ut justo in, dapibus
-            consectetur arcu. Cras gravida, massa ac 
-            efficitur efficitur, magna tellus ornare mi, 
-            ut finibus nisi dolor egestas orci. In a nisi 
-            eu lectus elementum convallis eu in mauris. Nam 
-            ut tellus eget urna aliquet ultrices. Proin mollis 
-            fermentum rhoncus. Quisque dictum enim quis nunc mollis, 
-            ac blandit dui aliquam. In et consectetur sem, at 
-            efficitur massa. Morbi volutpat consectetur mi, 
-            vitae posuere nibh consequat eget. Ut 
-            placerat ante ac aliquam imperdiet. Suspendisse 
-            massa massa, maximus sed neque non, vulputate 
-            fringilla leo. Sed semper, sem ac mattis lacinia, 
-            augue arcu facilisis nibh, eu rhoncus nisi odio eget quam.
+        Oferecemos toda a infraestrutura necessária para o atendimento completo da sua loja virtual, cobrindo desde o recebimento dos pedidos até a embalagem, separação e envio dos produtos. Nosso serviço é projetado para garantir um processo eficiente e sem falhas, assegurando a satisfação de seus clientes.
+        <br>
+        <br>
+        Para uma integração perfeita com diversos sistemas e plataformas, disponibilizamos soluções via API. Além disso, realizamos coletas diárias de grandes marketplaces como Mercado Livre, Magazine Luiza e Amazon, garantindo que seus pedidos sejam processados e enviados com rapidez e precisão.
           </p>
           <img draggable="false" src="../../assets/images/e-commerce.jpg" v-motion-fade-visible-once class = "nossos_servicos-img">  
         </div>
@@ -168,25 +114,10 @@ export default {
           v-motion-fade-visible-once class = "nossos_servicos-img"> 
           <p class="paragrafo-nossos-servicos_direita" style="font-family: 'Outfit', sans-serif;" v-motion-slide-visible-once-bottom>
         <h2>Manuseios Diversos e Montagem de Kits</h2>
-         
-            Lorem ipsum dolor sit amet, consectetur 
-          adipiscing elit. Cras rhoncus tincidunt
-          urna sit amet dignissim. Nam lacinia justo 
-          eu tellus rutrum eleifend. Proin libero 
-          dui, pulvinar ut justo in, dapibus
-          consectetur arcu. Cras gravida, massa ac 
-          efficitur efficitur, magna tellus ornare mi, 
-          ut finibus nisi dolor egestas orci. In a nisi 
-          eu lectus elementum convallis eu in mauris. Nam 
-          ut tellus eget urna aliquet ultrices. Proin mollis 
-          fermentum rhoncus. Quisque dictum enim quis nunc mollis, 
-          ac blandit dui aliquam. In et consectetur sem, at 
-          efficitur massa. Morbi volutpat consectetur mi, 
-          vitae posuere nibh consequat eget. Ut 
-          placerat ante ac aliquam imperdiet. Suspendisse 
-          massa massa, maximus sed neque non, vulputate 
-          fringilla leo. Sed semper, sem ac mattis lacinia, 
-          augue arcu facilisis nibh, eu rhoncus nisi odio eget quam.
+        Realizamos uma ampla gama de operações manuais, incluindo encaixotamento, colagem de etiquetas, inserção de lâminas e encartes, entre outros serviços. Nossa abordagem flexível permite adaptar nossas operações às necessidades específicas de cada cliente.
+        <br>
+        <br>
+        Além disso, utilizamos tecnologia avançada para a colagem de Sniffs e outros itens, oferecendo soluções automatizadas que aumentam a eficiência e a precisão dos processos. Combinando experiência e inovação, garantimos um serviço de manuseio diversificado e de alta qualidade.
           </p>
         </div> 
 
@@ -196,25 +127,10 @@ export default {
         <div class="nossos_servicos">
           <p class="paragrafo-nossos-servicos_esquerda" style="font-family: 'Outfit', sans-serif;" v-motion-slide-visible-once-bottom>
         <h2>Logistica Promocional</h2>
-
-          Lorem ipsum dolor sit amet, consectetur 
-          adipiscing elit. Cras rhoncus tincidunt
-          urna sit amet dignissim. Nam lacinia justo 
-          eu tellus rutrum eleifend. Proin libero 
-          dui, pulvinar ut justo in, dapibus
-          consectetur arcu. Cras gravida, massa ac 
-          efficitur efficitur, magna tellus ornare mi, 
-          ut finibus nisi dolor egestas orci. In a nisi 
-          eu lectus elementum convallis eu in mauris. Nam 
-          ut tellus eget urna aliquet ultrices. Proin mollis 
-          fermentum rhoncus. Quisque dictum enim quis nunc mollis, 
-          ac blandit dui aliquam. In et consectetur sem, at 
-          efficitur massa. Morbi volutpat consectetur mi, 
-          vitae posuere nibh consequat eget. Ut 
-          placerat ante ac aliquam imperdiet. Suspendisse 
-          massa massa, maximus sed neque non, vulputate 
-          fringilla leo. Sed semper, sem ac mattis lacinia, 
-          augue arcu facilisis nibh, eu rhoncus nisi odio eget quam.
+        Especializamos na montagem de kits promocionais e diversos, oferecendo um serviço completo que abrange desde o planejamento e a estratégia até a criação e a disponibilização dos itens.
+        <br>
+        <br>
+        Nossos serviços incluem a personalização dos kits, com opções como gravação Inkjet, etiquetagem e a elaboração de peças personalizadas em MDF. Garantimos que cada kit seja montado com atenção aos detalhes e alinhado às suas necessidades específicas.
           </p>
           <img draggable="false" src="../../assets/images/logistica.jpg" v-motion-fade-visible-once class = "nossos_servicos-img"> 
         </div>
@@ -227,24 +143,8 @@ export default {
           <p class="paragrafo-nossos-servicos_direita" style="font-family: 'Outfit', sans-serif;" v-motion-slide-visible-once-bottom>
         <h2>Envaze e Blister</h2>
 
-          Lorem ipsum dolor sit amet, consectetur 
-          adipiscing elit. Cras rhoncus tincidunt
-          urna sit amet dignissim. Nam lacinia justo 
-          eu tellus rutrum eleifend. Proin libero 
-          dui, pulvinar ut justo in, dapibus
-          consectetur arcu. Cras gravida, massa ac 
-          efficitur efficitur, magna tellus ornare mi, 
-          ut finibus nisi dolor egestas orci. In a nisi 
-          eu lectus elementum convallis eu in mauris. Nam 
-          ut tellus eget urna aliquet ultrices. Proin mollis 
-          fermentum rhoncus. Quisque dictum enim quis nunc mollis, 
-          ac blandit dui aliquam. In et consectetur sem, at 
-          efficitur massa. Morbi volutpat consectetur mi, 
-          vitae posuere nibh consequat eget. Ut 
-          placerat ante ac aliquam imperdiet. Suspendisse 
-          massa massa, maximus sed neque non, vulputate 
-          fringilla leo. Sed semper, sem ac mattis lacinia, 
-          augue arcu facilisis nibh, eu rhoncus nisi odio eget quam.
+        Envase e Blister
+        Oferecemos envase automático em bisnagas ou frascos, utilizando equipamentos de última geração para garantir precisão e eficiência no processo. Além disso, realizamos o processo de blisterização em cartelas com nossa avançada máquina Carrossel, proporcionando um acabamento profissional e seguro para seus produtos.
           </p>
         </div>
 
@@ -255,24 +155,10 @@ export default {
         <div class="nossos_servicos">
           <p class="paragrafo-nossos-servicos_esquerda" style="font-family: 'Outfit', sans-serif;" v-motion-slide-visible-once-bottom>
             <h2>Encadernações em Espiral</h2>
-          Lorem ipsum dolor sit amet, consectetur 
-          adipiscing elit. Cras rhoncus tincidunt
-          urna sit amet dignissim. Nam lacinia justo 
-          eu tellus rutrum eleifend. Proin libero 
-          dui, pulvinar ut justo in, dapibus
-          consectetur arcu. Cras gravida, massa ac 
-          efficitur efficitur, magna tellus ornare mi, 
-          ut finibus nisi dolor egestas orci. In a nisi 
-          eu lectus elementum convallis eu in mauris. Nam 
-          ut tellus eget urna aliquet ultrices. Proin mollis 
-          fermentum rhoncus. Quisque dictum enim quis nunc mollis, 
-          ac blandit dui aliquam. In et consectetur sem, at 
-          efficitur massa. Morbi volutpat consectetur mi, 
-          vitae posuere nibh consequat eget. Ut 
-          placerat ante ac aliquam imperdiet. Suspendisse 
-          massa massa, maximus sed neque non, vulputate 
-          fringilla leo. Sed semper, sem ac mattis lacinia, 
-          augue arcu facilisis nibh, eu rhoncus nisi odio eget quam.
+            Especializamos em acabamentos em espiral plástico e metálico para livros e apostilas, oferecendo uma solução de encadernação durável e esteticamente agradável. Utilizamos perfuração semi-automática para criar furos oblongos ou redondos, garantindo precisão e consistência no acabamento.
+            <br>
+            <br>
+            Disponibilizamos espirais em diversas cores, podendo também atender a especificações de pantone escolhidas pelo cliente. Nossa operação é caracterizada por alta produtividade, assegurando eficiência e rapidez no atendimento às suas demandas de encadernação.
           </p>
           <img draggable="false" src="../../assets/images/caderno.png" v-motion-fade-visible-once class = "nossos_servicos-img"> 
 
@@ -285,24 +171,10 @@ export default {
           <img draggable="false" src="../../assets/images/etiquetagem.png" v-motion-fade-visible-once class = "nossos_servicos-img"> 
           <p class="paragrafo-nossos-servicos_direita" style="font-family: 'Outfit', sans-serif;" v-motion-slide-visible-once-bottom>
             <h2>Etiquetagem e Rótulagem</h2>
-          Lorem ipsum dolor sit amet, consectetur 
-          adipiscing elit. Cras rhoncus tincidunt
-          urna sit amet dignissim. Nam lacinia justo 
-          eu tellus rutrum eleifend. Proin libero 
-          dui, pulvinar ut justo in, dapibus
-          consectetur arcu. Cras gravida, massa ac 
-          efficitur efficitur, magna tellus ornare mi, 
-          ut finibus nisi dolor egestas orci. In a nisi 
-          eu lectus elementum convallis eu in mauris. Nam 
-          ut tellus eget urna aliquet ultrices. Proin mollis 
-          fermentum rhoncus. Quisque dictum enim quis nunc mollis, 
-          ac blandit dui aliquam. In et consectetur sem, at 
-          efficitur massa. Morbi volutpat consectetur mi, 
-          vitae posuere nibh consequat eget. Ut 
-          placerat ante ac aliquam imperdiet. Suspendisse 
-          massa massa, maximus sed neque non, vulputate 
-          fringilla leo. Sed semper, sem ac mattis lacinia, 
-          augue arcu facilisis nibh, eu rhoncus nisi odio eget quam.
+            Oferecemos serviços completos de etiquetagem e rotulagem para uma ampla gama de produtos. Produzimos etiquetas QR Code, códigos de barras e etiquetas promocionais, adaptando-nos às necessidades específicas de cada cliente.
+            <br>
+            <br>
+            Utilizamos impressoras Zebra para garantir a melhor qualidade de leitura e codificação, assegurando a precisão e durabilidade das informações nas etiquetas. Nossa abordagem detalhista e tecnológica proporciona soluções eficazes para o etiquetamento de seus produtos.
           </p>
         </div>
 
@@ -313,27 +185,12 @@ export default {
         <div class="nossos_servicos">
           <p class="paragrafo-nossos-servicos_esquerda" style="font-family: 'Outfit', sans-serif;" v-motion-slide-visible-once-bottom>
             <h2>Gravação Inkjet</h2>
-          Lorem ipsum dolor sit amet, consectetur 
-          adipiscing elit. Cras rhoncus tincidunt
-          urna sit amet dignissim. Nam lacinia justo 
-          eu tellus rutrum eleifend. Proin libero 
-          dui, pulvinar ut justo in, dapibus
-          consectetur arcu. Cras gravida, massa ac 
-          efficitur efficitur, magna tellus ornare mi, 
-          ut finibus nisi dolor egestas orci. In a nisi 
-          eu lectus elementum convallis eu in mauris. Nam 
-          ut tellus eget urna aliquet ultrices. Proin mollis 
-          fermentum rhoncus. Quisque dictum enim quis nunc mollis, 
-          ac blandit dui aliquam. In et consectetur sem, at 
-          efficitur massa. Morbi volutpat consectetur mi, 
-          vitae posuere nibh consequat eget. Ut 
-          placerat ante ac aliquam imperdiet. Suspendisse 
-          massa massa, maximus sed neque non, vulputate 
-          fringilla leo. Sed semper, sem ac mattis lacinia, 
-          augue arcu facilisis nibh, eu rhoncus nisi odio eget quam.
+            Oferecemos gravação Inkjet para produtos e caixas, permitindo a impressão clara e durável de informações como lote e validade. Nosso serviço de personalização atende a diversas necessidades, garantindo que cada item seja marcado com precisão.
+            <br>
+            <br>
+            Utilizamos equipamentos automáticos de gravação para assegurar eficiência e consistência, proporcionando uma solução rápida e de alta qualidade para suas necessidades de marcação e personalização.
           </p>
           <img draggable="false" src="../../assets/images/inkjet-removebg-preview.png" v-motion-fade-visible-once class = "nossos_servicos-img"> 
-
         </div>
         
         <hr class="custom-hr" id="Distribuicao">   
@@ -348,24 +205,10 @@ export default {
           class="animado">
           <p class="paragrafo-nossos-servicos_direita" style="font-family: 'Outfit', sans-serif;" v-motion-slide-visible-once-bottom>
             <h2>Distribuição em Nível Nacional</h2>
-          Lorem ipsum dolor sit amet, consectetur 
-          adipiscing elit. Cras rhoncus tincidunt
-          urna sit amet dignissim. Nam lacinia justo 
-          eu tellus rutrum eleifend. Proin libero 
-          dui, pulvinar ut justo in, dapibus
-          consectetur arcu. Cras gravida, massa ac 
-          efficitur efficitur, magna tellus ornare mi, 
-          ut finibus nisi dolor egestas orci. In a nisi 
-          eu lectus elementum convallis eu in mauris. Nam 
-          ut tellus eget urna aliquet ultrices. Proin mollis 
-          fermentum rhoncus. Quisque dictum enim quis nunc mollis, 
-          ac blandit dui aliquam. In et consectetur sem, at 
-          efficitur massa. Morbi volutpat consectetur mi, 
-          vitae posuere nibh consequat eget. Ut 
-          placerat ante ac aliquam imperdiet. Suspendisse 
-          massa massa, maximus sed neque non, vulputate 
-          fringilla leo. Sed semper, sem ac mattis lacinia, 
-          augue arcu facilisis nibh, eu rhoncus nisi odio eget quam.
+            Oferecemos serviços completos de logística e distribuição para todo o Brasil, garantindo que seus produtos cheguem de maneira eficiente e segura a qualquer local do país. Nossas operações incluem opções de frete fracionado ou dedicado, adaptando-se às suas necessidades específicas.
+            <br>
+            <br>
+            Realizamos envios via Correios com um sistema integrado para rastreamento e entrega porta-a-porta. Além disso, disponibilizamos operações de Cross-Docking em nossa matriz, otimizando o fluxo de mercadorias e acelerando o processo de distribuição.
           </p>
         </div>
       </div>
@@ -402,29 +245,50 @@ export default {
 
     <div class="nossas_tecnologias">
       <p class="paragrafo-nossas-tecnologias_esquerda" style="font-family: 'Outfit', sans-serif;" v-motion-slide-visible-once-bottom>
-      <strong>Recebimento e Armazenagem</strong> <br>
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. In ornare venenatis iaculis. Phasellus tempor bibendum enim, id sodales dui posuere nec. Curabitur rhoncus, erat ut hendrerit fermentum, arcu dolor gravida tortor, quis placerat ipsum libero non risus. Ut fringilla elit vestibulum ipsum finibus, quis tempor eros iaculis. Curabitur in purus sit amet nunc venenatis rutrum. Ut vitae eros at ex varius bibendum nec a arcu. Cras ut viverra sem.
-      
+      <strong>USO DE TABLETS E DE OUTRAS TECNOLOGIAS</strong> <br>
+      Utilizamos tablets e outras tecnologias avançadas para otimizar nossos processos operacionais e melhorar a eficiência. Os tablets são empregados para facilitar o acesso a informações em tempo real, controle de inventário e execução de tarefas, garantindo precisão e agilidade nas operações.
+      <br>
+      <br>
+      Além dos tablets, incorporamos tecnologias modernas para automatizar e monitorar diferentes aspectos do nosso serviço. Essas inovações permitem uma gestão mais eficaz, melhorando a comunicação, a coleta de dados e o acompanhamento de tarefas, resultando em um serviço mais ágil e eficiente.
       </p>
       <img draggable="false" src="../../assets/images/tablet.png" v-motion-fade-visible-once class="nossas_tecnologias-img">  
     </div>   
 
     <div class="nossas_tecnologias">
-      <img draggable="false" id="appEmb" src="../../assets/images/app.jpeg" v-motion-fade-visible-once class="nossas_tecnologias-img">  
+      <img draggable="false" src="../../assets/images/solucoes.jpg" v-motion-fade-visible-once class="nossas_tecnologias-img">  
       <p class="paragrafo-nossas-tecnologias_direita" style="font-family: 'Outfit', sans-serif;" v-motion-slide-visible-once-bottom>
-      <strong>APLICATIVO PRÓPRIO</strong> <br>
-      Suspendisse et condimentum quam. Nunc pretium aliquam tellus non condimentum. Ut condimentum neque lobortis sem pretium pretium. Vivamus tincidunt sem mauris, at viverra nibh tristique et. Sed tortor lacus, interdum vel porttitor vel, sodales non nulla. Suspendisse in libero ipsum. Integer lobortis malesuada nibh sit amet consectetur. Donec sit amet urna tellus. Vivamus vehicula id ipsum ac viverra. Mauris ut ligula et tellus maximus lobortis. Proin condimentum nunc dui, sit amet ultricies mauris interdum vitae. Duis vitae ipsum lobortis, imperdiet ex eget, ornare massa. Integer sapien nunc, maximus ut feugiat et, hendrerit sed ante.
+      <strong>DESENVOLVIMENTO DE SOLUÇÕES MOBILE</strong> <br>
+      Estamos na vanguarda do uso de tablets e outras tecnologias avançadas para otimizar nossos processos e operações. A integração de dispositivos móveis em nosso fluxo de trabalho permite uma gestão mais ágil e eficiente das tarefas diárias, desde o controle de inventário até a comunicação interna.
+      <br>
+      <br>
+      Nossos sistemas são projetados para aproveitar ao máximo a tecnologia disponível, oferecendo uma experiência mais conectada e produtiva. A adoção de tecnologias inovadoras garante que possamos atender às demandas do mercado com rapidez e precisão, mantendo-nos sempre à frente nas melhores práticas de gestão e operação.
     </p>
     </div>
 
     <div class="nossas_tecnologias">
       <p class="paragrafo-nossas-tecnologias_esquerda" style="font-family: 'Outfit', sans-serif;" v-motion-slide-visible-once-bottom>
         <strong>USO E DESENVOLVIMENTO DE API</strong><br>
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. In ornare venenatis iaculis. Phasellus tempor bibendum enim, id sodales dui posuere nec. Curabitur rhoncus, erat ut hendrerit fermentum, arcu dolor gravida tortor, quis placerat ipsum libero non risus. Ut fringilla elit vestibulum ipsum finibus, quis tempor eros iaculis. Curabitur in purus sit amet nunc venenatis rutrum. Ut vitae eros at ex varius bibendum nec a arcu. Cras ut viverra sem.
+        No uso e desenvolvimento de APIs, focamos em criar soluções que permitem integração eficiente e comunicação fluida entre diferentes sistemas e plataformas. Nossas APIs são projetadas para garantir que os dados sejam transmitidos com segurança e precisão, facilitando a interoperabilidade e a automação de processos.
+        <br>
+        <br>
+        Desenvolvemos APIs personalizadas para atender às necessidades específicas de nossos clientes, melhorando a funcionalidade e a escalabilidade dos sistemas existentes. Com uma abordagem voltada para a inovação e a eficiência, garantimos que nossas soluções de API ofereçam suporte robusto e flexível, promovendo uma integração perfeita e um fluxo contínuo de informações.
       </p>
       <img draggable="false" src="../../assets/images/api.png" v-motion-fade-visible-once class="nossas_tecnologias-img">  
     </div>
+
+    <div class="nossas_tecnologias">
+      <img draggable="false" id="appEmb" src="../../assets/images/app.jpeg" v-motion-fade-visible-once class="nossas_tecnologias-img">  
+      <p class="paragrafo-nossas-tecnologias_direita" style="font-family: 'Outfit', sans-serif;" v-motion-slide-visible-once-bottom>
+      <strong>APLICATIVO PRÓPRIO</strong> <br>
+      Desenvolvemos um aplicativo próprio para oferecer uma experiência personalizada e eficiente aos nossos clientes. Com nosso aplicativo, você tem acesso fácil e rápido a todas as funcionalidades e serviços que oferecemos, desde o acompanhamento de pedidos até a gestão de operações.
+      <br>
+      <br>
+      O aplicativo é projetado para integrar-se perfeitamente aos nossos sistemas, proporcionando uma interface intuitiva e recursos avançados para otimizar a sua experiência. Com ele, você pode monitorar em tempo real, acessar informações detalhadas e realizar ações de forma prática e segura.
+    </p>
+    </div>
   </div>
+
+
 
 </div>
   </template>
