@@ -41,7 +41,6 @@ export default {
       
       const clickedLink = event.target;
       clickedLink.classList.add('selected');
-      console.log('Updated mapAtual:', this.mapAtual);
     },
     handleIntersection(entries) {
       entries.forEach(entry => {
@@ -56,25 +55,17 @@ export default {
       });
     },
     handleMouseMove(event) {
-      const blurCircle = document.querySelector('.blur-circle');
-      if (blurCircle) {
-        const rect = this.$refs.aboutUsSection.getBoundingClientRect();
-        // Verifica se o cursor está dentro da seção
-        if (
-          event.clientX >= rect.left &&
-          event.clientX <= rect.right &&
-          event.clientY >= rect.top &&
-          event.clientY <= rect.bottom
-        ) {
-          blurCircle.style.display = 'block'; // Mostra o círculo
-          blurCircle.style.transform = `translate(${event.clientX - 50}px, ${event.clientY - 50}px)`; // Posiciona o círculo
-        } else {
-          blurCircle.style.display = 'none'; // Oculta o círculo
-        }
-      }
-    }
+      const circle = this.$el;
+      const { clientX: x, clientY: y } = event;
+
+      circle.style.left = `${x}px`;
+      circle.style.top = `${y}px`;
+    },
+
   },
   mounted() {
+    document.addEventListener('mousemove', this.handleMouseMove);
+
     this.updateVolume(); // Set the initial volume
 
     // Check if the browser supports IntersectionObserver
@@ -94,11 +85,10 @@ export default {
     document.body.appendChild(blurCircle);
 
     // Adiciona o evento de mouse para movimentar o círculo
-    document.addEventListener('mousemove', this.handleMouseMove);
   },
   beforeDestroy() {
-    // Remove o evento de mouse quando o componente for destruído
     document.removeEventListener('mousemove', this.handleMouseMove);
+    // Remove o evento de mouse quando o componente for destruído
   }
 };
 
@@ -106,14 +96,9 @@ export default {
 
 <template>
   <main>
+
     <div class = "for-pc">
-      <div 
-        class="about-us-section" 
-        id="aboutUs"
-        :class="{'blur-effect': isBlurred, 'no-blur': !isBlurred}" 
-        @mouseover="applyBlur" 
-        @mouseleave="removeBlur"
-      >
+      <div class="about-us-section" id="aboutUs">
       <div class="about-us-container">
         <div class="quem-somos-txt">
           <h1 class="about-us-title" v-motion-slide-visible-once-bottom>QUEM SOMOS</h1>
@@ -232,10 +217,9 @@ export default {
     <br>
     <br>
     <br>
-
-
-    </div>
 </div>
+</div>
+
 
     <div class="espaco-cell">
       <br>
@@ -273,8 +257,6 @@ export default {
     <hr class="custom-hr">
       </div>  
     </div>
-
-
   </main>
 </template>
 
@@ -314,6 +296,7 @@ export default {
   justify-content: space-between;
   align-items: flex-start;
   flex-wrap: wrap;
+  pointer-events: none; /* Permite que os eventos de mouse passem para os elementos abaixo */
 }
 
 .lista-cidades {
@@ -355,6 +338,7 @@ export default {
   color: #000;             /* Ajuste a cor do texto conforme necessário */
 }
 .about-us-section {
+  overflow: hidden; 
   display: flex;
   flex-direction: column;
   align-items: center; /* Centraliza o conteúdo horizontalmente */
@@ -368,6 +352,7 @@ export default {
   z-index: 10;
   pointer-events: auto; /* Garante que os eventos de mouse sejam reconhecidos */
 }
+
 .quem-somos-txt {
   font-family: "Outfit", sans-serif; /* Fonte */ 
   text-align: center; /* Centraliza o texto */
@@ -390,7 +375,7 @@ export default {
   border: 0;
 }
 .about-us-title {
-
+  pointer-events: none; /* Permite que os eventos de mouse passem para os elementos abaixo */
   font-size: 8vh;
   color: black;
 }
@@ -466,6 +451,7 @@ export default {
   border: 0;
   border-radius: 10px;
 }
+
 .lista-cidades {
   list-style-type: none;
   padding-left: 0;
