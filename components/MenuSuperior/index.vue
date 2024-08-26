@@ -131,10 +131,10 @@
               </li>
 
               <!-- Login Cliente -->
-              <li><a id="cliente-txt" data-bs-toggle="modal" data-bs-target="#acessoClienteModal" href="" style="color: black; text-decoration: none;">LOGIN CLIENTE</a></li>
+              <li><a data-bs-toggle="modal" data-bs-target="#acessoClienteModal" href="" style="color: black; text-decoration: none;">LOGIN CLIENTE</a></li>
 
               <!-- Contato -->
-              <li><a id="contato-txt" data-bs-toggle="modal" data-bs-target="#contatoModal" href="" style="color: black; text-decoration: none;">CONTATO</a></li>
+              <li><a data-bs-toggle="modal" data-bs-target="#contatoModal" href="" style="color: black; text-decoration: none;">CONTATO</a></li>
             </div>
 
             <!-- Íxones -->
@@ -444,6 +444,7 @@ export default {
   background-color: rgb(255, 255, 255); /* Fundo branco inicial */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Cria uma pequena sombra embaixo do cabeçalho */
   transition: background-color 0.3s ease, backdrop-filter 0.3s ease; /* Suaviza a transição quando scrolla a página */
+  height: 10vh;
 }
 .header-cllr {
     display: none;
@@ -464,7 +465,7 @@ export default {
 
 /* propriedades gerais do container */
 .container-header {
-  width: 100%;
+  width:100vw; /* Ajusta a largura do ícone */
   display: flex;  /* Organiza lateralmente o header */
   align-items: center; /* Deixa centralizado no meio da altura */
   justify-content: space-between; /* Faz ter um espaço entre a parte da imagem e a parte dos textos e íconesx */
@@ -479,10 +480,11 @@ export default {
 }
 
 .ul-header li {
-  margin: 0 10px;
+  margin: 0 2vh;
 }
 
 .textos, .icones {
+  font-size: 2vh;
   display: flex;
   align-items: center;
 }
@@ -491,18 +493,15 @@ export default {
   display: flex;
   align-items: center;
 }
-
-/* Relativo ao logo */
 .imagem img {
-  /* max-width: 10px; */
-  width: 40%; /* Faz a imagem ocupar a largura disponível do contêiner, respeitando max-width */
-  height: auto; /* Mantém a proporção da imagem */
-  margin-top: -0.5%; /* Ajusta a posição vertical da imagem */
+  width: 12vw;
+  height: auto; /* Mantém a proporção correta da imagem */
 }
+
 /* Trata do dropdown */
 .drop {
   margin-top: 0.06%;
-  width: 10.5%; /* Defina uma largura para o dropdown */
+  width: 25vh; /* Defina uma largura para o dropdown */
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
   background-color: #ececec;
   display: block;
@@ -510,8 +509,9 @@ export default {
 }
 
 .drop a {
+  font-size: 2vh; /* Defina uma largura para o sub-dropdown */
   display: block;
-  padding: 10px 15px;
+  padding: 2vh 1.5vh;
   text-align: left;
   opacity: 0.7;
   transition: opacity 0.3s ease;
@@ -526,17 +526,19 @@ export default {
   margin-top: 0;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
   background-color: #ececec;
-  padding: 0; /* Remove o padding para evitar espaçamento lateral */
+  padding: 2vh 2vh;
+  gap: 2vh 0;
   display: block;
   position: absolute;
   left: 100%;
   top: 0;
   z-index: 2;
+  width: 25vh; /* Defina uma largura para o sub-dropdown */
 }
 
 #subDrop2 {
   margin-top: 30%;  
-  width: 125%; /* Defina uma largura para o sub-dropdown */
+  width: 25vh; /* Defina uma largura para o sub-dropdown */
 
 }
 
@@ -544,7 +546,8 @@ export default {
   display: block;
   color: black;
   text-decoration: none;
-  padding: 8px 15px; /* Altera o padding para que ocupe toda a largura */
+  font-size: 2vh; /* Defina uma largura para o sub-dropdown */
+  padding: 0.7vh 1.5vh;
   transition: background-color 0.3s ease;
 }
 
@@ -556,11 +559,11 @@ export default {
 /* Ícones do instagram e linkedin */
 .icones {
   display: flex; /* Se estiver agrupando textos, use flex também */
-  gap: 20px  ; /* Espaço entre os itens */
+  gap: 1vw; /* Espaço entre os itens */
 }
 .icones svg {
-  width: 100%; /* Ajusta a largura do ícone */
-  height: 100%; /* Ajusta a altura do ícone */
+  width: 2vw; /* Ajusta a largura do ícone */
+  height: 2vw; /* Ajusta a altura do ícone */
 }
 
 /* --------------------------------------------------------------------------------------/ */
@@ -621,100 +624,6 @@ export default {
 }
 .subdrop-cllr a {
   font-size: 1.3rem;
-}
-}
-
-
-/* ZOOM MAS AINDA NO PC */
-@media (min-width: 1700px) {
-  .header {
-  position: fixed; /* Faz o cabeçalho descer junto com a página */
-  padding: 1%; /*Aumenta a tamanho em altura do header */
-  width: 100%; /* Faz o cabeçalho ficar da largura certa da página */
-  z-index: 1000; /* Dá prioridade para o cabeçalho ficar na frente de todos os outros itens da página */
-  background-color: rgb(255, 255, 255); /* Fundo branco inicial */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Cria uma pequena sombra embaixo do cabeçalho */
-  transition: background-color 0.3s ease, backdrop-filter 0.3s ease; /* Suaviza a transição quando scrolla a página */
-}
-}
-@media (max-width: 1270px) {
-  .header {
-  position: fixed; /* Faz o cabeçalho descer junto com a página */
-  padding: 0.4%; /*Aumenta a tamanho em altura do header */
-  width: 100%; /* Faz o cabeçalho ficar da largura certa da página */
-  z-index: 1000; /* Dá prioridade para o cabeçalho ficar na frente de todos os outros itens da página */
-  background-color: rgb(255, 255, 255); /* Fundo branco inicial */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Cria uma pequena sombra embaixo do cabeçalho */
-  transition: background-color 0.3s ease, backdrop-filter 0.3s ease; /* Suaviza a transição quando scrolla a página */
-}
-.imagem img {
-  /* max-width: 10px; */
-  width: 20%; /* Faz a imagem ocupar a largura disponível do contêiner, respeitando max-width */
-  height: auto; /* Mantém a proporção da imagem */
-  margin-top: -2%; /* Ajusta a posição vertical da imagem */
-}
-.drop {
-  margin-top: -0.10%;
-  width: 14.2%; /* Defina uma largura para o dropdown */
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-  background-color: #ececec;
-  display: block;
-  position: absolute;
-}
-  .icones {
-  display: flex; /* Se estiver agrupando textos, use flex também */
-  gap: 20px  ; /* Espaço entre os itens */
-}
-.icones svg {
-  width: 70%; /* Ajusta a largura do ícone */
-  height: 70%; /* Ajusta a altura do ícone */
-}
-  .textos a {
-  font-size: 70%; /* Tamanho da fonte */
-  display: block; /* Faz com que a margem seja aplicada corretamente */
-  margin-top: 7%; /* Adiciona um espaço acima do texto */
-}
-}
-@media (max-width: 950px) {
- .drop {
-  margin-top: 0.4%;
- }
-}
-@media (max-width: 800px) {
- .drop {
-  margin-top: 0.5%;
-  margin-left: -5%;
-  width: 12.5%; /* Defina uma largura para o dropdown */
- }
-}
-@media (max-width: 1000px) {
-  .icones {
-  margin-top: 25%;
-  display: flex; /* Se estiver agrupando textos, use flex também */
-  gap: 20px  ; /* Espaço entre os itens */
-}
-.icones svg {
-  width: 70%; /* Ajusta a largura do ícone */
-  height: 70%; /* Ajusta a altura do ícone */
-}
-}
-@media (max-width: 1000px) {
-  .imagem img {
-  /* max-width: 10px; */
-  width: 20%; /* Faz a imagem ocupar a largura disponível do contêiner, respeitando max-width */
-  height: auto; /* Mantém a proporção da imagem */
-  margin-top: 0.5%; /* Ajusta a posição vertical da imagem */
-  margin-bottom: 0.5%
-}
-}
-@media (max-width: 1050px) {
-  .ul-header {
-  list-style-type: none;  /* Tira as bolinhas da lista */
-  display: flex; /* Organiza lateralmente a imagem, os textos e os ícones */
- /* VOLTAR AQUI */
-  gap: 20px; /* Dá um espaço entre as divs de imagem, texto e ícone, no caso apenas muda visualmente o texto e os ícones*/
-  font-size: 15px; 
-  margin-top: -22%;
 }
 }
 </style>

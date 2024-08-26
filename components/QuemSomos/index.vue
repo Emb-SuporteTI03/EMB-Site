@@ -54,10 +54,28 @@ export default {
           video.pause();
         }
       });
+    },
+    handleMouseMove(event) {
+      const blurCircle = document.querySelector('.blur-circle');
+      if (blurCircle) {
+        const rect = this.$refs.aboutUsSection.getBoundingClientRect();
+        // Verifica se o cursor está dentro da seção
+        if (
+          event.clientX >= rect.left &&
+          event.clientX <= rect.right &&
+          event.clientY >= rect.top &&
+          event.clientY <= rect.bottom
+        ) {
+          blurCircle.style.display = 'block'; // Mostra o círculo
+          blurCircle.style.transform = `translate(${event.clientX - 50}px, ${event.clientY - 50}px)`; // Posiciona o círculo
+        } else {
+          blurCircle.style.display = 'none'; // Oculta o círculo
+        }
+      }
     }
   },
   mounted() {
-      this.updateVolume(); // Set the initial volume
+    this.updateVolume(); // Set the initial volume
 
     // Check if the browser supports IntersectionObserver
     if ('IntersectionObserver' in window) {
@@ -69,16 +87,35 @@ export default {
       // Fallback: If IntersectionObserver is not supported, autoplay without checking visibility
       this.$refs.autoPlayVideo.play();
     }
+
+    // Adiciona o círculo de blur à página
+    const blurCircle = document.createElement('div');
+    blurCircle.classList.add('blur-circle');
+    document.body.appendChild(blurCircle);
+
+    // Adiciona o evento de mouse para movimentar o círculo
+    document.addEventListener('mousemove', this.handleMouseMove);
+  },
+  beforeDestroy() {
+    // Remove o evento de mouse quando o componente for destruído
+    document.removeEventListener('mousemove', this.handleMouseMove);
   }
 };
+
 </script>
 
 <template>
   <main>
     <div class = "for-pc">
-    <div class="about-us-section" id="aboutUs">
+      <div 
+        class="about-us-section" 
+        id="aboutUs"
+        :class="{'blur-effect': isBlurred, 'no-blur': !isBlurred}" 
+        @mouseover="applyBlur" 
+        @mouseleave="removeBlur"
+      >
       <div class="about-us-container">
-        <div class="about-us-text">
+        <div class="quem-somos-txt">
           <h1 class="about-us-title" v-motion-slide-visible-once-bottom>QUEM SOMOS</h1>
           <hr class="about-us-divider">
           <p class="about-us-paragraph" v-motion-slide-visible-once-bottom>
@@ -104,41 +141,18 @@ export default {
             <source src="../../assets/images/videoEmb.mp4" type="video/mp4">
             Your browser does not support the video tag.
           </video>
-          <div>
-            <i class="bi bi-volume-down" style="font-size: 2rem;"></i>
+          <div class="volume-video">
+            <i class="bi bi-volume-down" style="font-size: 4vh;"></i>
             <input 
             type="range" 
             min="0" 
             max="100" 
             v-model="volume" 
             @input="updateVolume"
-            style="margin-top: 10px;"
           />
           </div>
         </div>
       </div>
-      <div class="diferenciais">
-        <br>
-        <br>
-        <br>
-      <h1>NOSSOS DIFERENCIAIS</h1>
-      <br>
-      <br>
-      <br>
-      <div class="grid-container">
-      <div class="grid-item">🏢 Unidade própria com 4.000m²</div>
-      <div class="grid-item">👥 Equipe treinada e qualificada</div>
-      <div class="grid-item">🏭 Modernas instalações</div>
-      <div class="grid-item">🚗 Próximo às Rodovias Anhanguera e Bandeirantes</div>
-      <div class="grid-item">🚛 Docas com facilidade de acesso para carga e descarga</div>
-      <div class="grid-item">📱 Controle por software e aplicativos mobile</div>
-    </div>
-    <br>
-    <br>
-    <br>
-
-
-    </div>
     </div>
     <div  class="local-section">
       <div class="caixa-mapa">
@@ -182,14 +196,12 @@ export default {
             referrerpolicy="no-referrer-when-downgrade"
       ></iframe>
       <div class="text-overlay">
-        <div class="embalarte-txt">
-        <strong class="about-us-text" id="about-us-nos">NÓS, DO GRUPO EMBALARTE</strong>
-        </div>
-        <strong class="about-us-text" id="localTexto">TEMOS NOSSA MATRIZ EM<br> </strong>
+        <strong class="filiais-txt" id="about-us-nos">NÓS, DO GRUPO EMBALARTE</strong>
+        <strong class="filiais-txt" id="localTexto">TEMOS NOSSA MATRIZ EM<br> </strong>
           <ul class="lista-cidades">
             <li><a @click.prevent="updateMapValue('1', $event)">📌 Santana de Parnaíba</a></li>
           </ul>
-           <strong class="about-us-text" id="localTexto">
+           <strong class="filiais-txt" id="localTexto">
           E ESTAMOS PRESENTES EM OUTRAS 3 CIDADES NO ESTADO DE SÃO PAULO!</strong>
         <ul class="lista-cidades">
           <li><a @click.prevent="updateMapValue('2', $event)">📌 São Paulo</a></li>
@@ -202,38 +214,27 @@ export default {
     <hr class="custom-hr">
     <hr class="custom-hr">
     <hr class="custom-hr">
-    <hr class="custom-hr">
       </div>    
     </div>
-    <div class="full-height">
-    <strong class="call-servicos">
-      CONHEÇA MAIS SOBRE NOSSOS SERVIÇOS
-    </strong>
-    <br>
-    <br>
-    <div class="link-images">
-      <div class="imagem-link">
-        <strong class="call-servicos">
-          LOGÍSTICA
-        </strong>
-        <router-link :to="{ path: '/Nossos-Servicos' }" style="color: black; text-decoration: none;">
-          <img src="../../assets/images/galpao.jpg" v-motion-fade-visible-once class="services-img">
-        </router-link>
-      </div>
-      <div class="imagem-link">
-        <strong class="call-servicos">
-          TECNOLOGIA
-        </strong>
-        <router-link 
-        :to="{ path: '/Nossos-Servicos', hash: '#Secao_Tecnologia' }" 
-        style="color: black; text-decoration: none;"
-        >        
-        <img src="../../assets/images/pc_tecnologia.jpg" id="tecnologiasPC" v-motion-fade-visible-once class="services-img">
-        </router-link>
-      </div>
+    <div class="diferenciais">
+      <h1 class="diferenciais-titulo">NOSSOS DIFERENCIAIS</h1>
+      <br>
+      <br>
+      <br>
+      <div class="grid-container">
+      <div class="grid-item">🏢 Unidade própria com 4.000m²</div>
+      <div class="grid-item">👥 Equipe treinada e qualificada</div>
+      <div class="grid-item">🏭 Modernas instalações</div>
+      <div class="grid-item">🚗 Próximo às Rodovias Anhanguera e Bandeirantes</div>
+      <div class="grid-item">🚛 Docas com facilidade de acesso para carga e descarga</div>
+      <div class="grid-item">📱 Controle por software e aplicativos mobile</div>
     </div>
+    <br>
+    <br>
+    <br>
 
-  </div>
+
+    </div>
 </div>
 
     <div class="espaco-cell">
@@ -242,7 +243,7 @@ export default {
       <br>
     <img src="../../assets/images/grupoembalarte_cover.jpg" v-motion-fade-visible-once alt="Imagem de Quem Somos" id="ImgTexto">
 
-        <p id="paragrafo" class="about-us-text" v-motion-slide-visible-once-bottom>
+        <p id="paragrafo" class="quem-somos-txt" v-motion-slide-visible-once-bottom>
           <strong>
           A EMBALARTE nasceu do sonho de Fernando Alves Vieira em criar uma empresa forte e sólida, para oferecer 
           ao mercado soluções completas e personalizadas. Fundada em 1999 e com 16 anos de experiência, vem conquistado 
@@ -254,13 +255,13 @@ export default {
 
     <div class="text-overlay">
         <div class="embalarte-txt">
-        <strong class="about-us-text" id="about-us-nos">NÓS, DO GRUPO EMBALARTE</strong>
+        <strong class="filiais-txt" id="about-us-nos">NÓS, DO GRUPO EMBALARTE</strong>
         </div>
-        <strong class="about-us-text" id="localTexto">TEMOS NOSSA SEDE EM<br> </strong>
+        <strong class="filiais-txt" id="localTexto">TEMOS NOSSA SEDE EM<br> </strong>
           <ul class="lista-cidades-cllr">
             <li><a>📌 Santana de Parnaíba</a></li>
           </ul>
-           <strong class="about-us-text" id="localTexto">
+           <strong class="filiais-txt" id="localTexto">
           E ESTAMOS PRESENTES EM OUTRAS 3 CIDADES NO ESTADO DE SÃO PAULO!</strong>
         <ul class="lista-cidades-cllr">
           <li><a>📌 Osasco</a></li>
@@ -271,30 +272,6 @@ export default {
     <hr class="custom-hr">
     <hr class="custom-hr">
       </div>  
-      <div class="full-height">
-    <strong class="call-servicos">
-      CONHEÇA MAIS SOBRE NOSSOS SERVIÇOS
-    </strong>
-    <div class="link-images">
-      <div class="imagem-link">
-        <strong class="call-servicos">
-          LOGÍSTICA
-        </strong>
-        <router-link :to="{ path: '/Nossos-Servicos' }" style="color: black; text-decoration: none;">
-          <img src="../../assets/images/galpao.jpg" v-motion-fade-visible-once class="services-img">
-        </router-link>
-      </div>
-      <div class="imagem-link">
-        <strong class="call-servicos">
-          TECNOLOGIA
-        </strong>
-        <router-link :to="{ path: '/Tecnologias' }" style="color: black; text-decoration: none;">
-          <img src="../../assets/images/pc_tecnologia.jpg" v-motion-fade-visible-once class="services-img">
-        </router-link>
-      </div>
-    </div>
-
-  </div>
     </div>
 
 
@@ -303,20 +280,11 @@ export default {
 
 <style scoped>
 
-.container {
-  width: 80%;
-  margin: 0 auto;
-  padding: 20px;
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
 /* Grid Container */
 .grid-container {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
+  gap: 1vh;
 }
 
 /* Grid Item */
@@ -324,8 +292,10 @@ export default {
   background: #e2e2e2;
   border: 1px solid #ddd;
   border-radius: 8px;
-  padding: 10px;
+  padding: 2vh;
   text-align: center;
+  font-size: 3vh;         /* Ajuste o tamanho da fonte conforme necessário */
+
 }
 
 /* Barra para espaçamento ---------------------------------------------------\ */
@@ -339,25 +309,11 @@ export default {
 
 /* Parte dos textos e imagens -----------------------------------------------\ */
 .about-us-container {
+  width: 80%;
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   flex-wrap: wrap;
-}
-.services-img {
-  border-radius: 15px; /* Arredonda as bordas da imagem */
-  width: 100%; /* Ajusta a largura da imagem conforme o contêiner */
-  max-width: 500px; /* Define um tamanho máximo para a imagem */
-  transition: transform 0.3s ease; /* Adiciona uma transição suave para o efeito de crescimento */
-}
-
-.imagem-link:hover .services-img {
-  transform: scale(1.1); /* Increase the size to 110% when hovered */
-}
-
-.full-height {
-  display: grid;
-  place-items: center;     /* Centraliza horizontal e verticalmente */  
 }
 
 .lista-cidades {
@@ -366,18 +322,19 @@ export default {
 }
 
 .lista-cidades li {
-  margin: 15px 0; /* Add space between items */
+  margin: 5vh 0; /* Space between items */
 }
 
 .lista-cidades a {
   text-decoration: none; /* Remove underline from links */
+  font-size: 3vh; /* Slightly larger font size */
   color: #007bff; /* Blue color for links */
   font-weight: bold; /* Bold text */
   display: inline-block; /* Make the entire list item clickable */
-  padding: 10px 15px; /* Add padding to clickable area */
+  padding: 2vh 3vw; /* More responsive padding */
   border-radius: 5px; /* Rounded corners */
   transition: transform 0.3s ease-in-out, background-color 0.3s, color 0.3s; /* Smooth transition effects */
-  border: 2px solid #86acca; /* Black border */
+  border: 2px solid #86acca; /* Blue border */
   user-select: none; /* Prevent text selection */
   cursor: pointer; /* Change cursor to pointer on hover */
 }
@@ -402,74 +359,44 @@ export default {
   flex-direction: column;
   align-items: center; /* Centraliza o conteúdo horizontalmente */
   text-align: center; /* Centraliza o texto dentro do contêiner */
-  padding: 20px; /* Espaçamento interno */
   background: linear-gradient(
     to bottom,
     #ffffff 5%, /* Azul claro de 30% a 70% */
     #c7c7c7 70% /* Branco no fundo */
   );
   position: relative;
+  z-index: 10;
+  pointer-events: auto; /* Garante que os eventos de mouse sejam reconhecidos */
 }
-.about-us-text {
+.quem-somos-txt {
   font-family: "Outfit", sans-serif; /* Fonte */ 
   text-align: center; /* Centraliza o texto */
-  padding: 20px 20px 20px 20px; /* Espaçamento interno */
   flex: 1;
-  margin-right: 20px; /* Espaçamento à direita */
-}
-.link-images {
-  display: flex;
-  justify-content: center; /* Centers the image containers within the parent container */
-  gap: 20%; /* Space between image containers */
-  margin: 5%;
+  margin-top: 1vh;
 }
 
-#tecnologiasPC {
-  border: 2px solid #01385C; /* Borda de 5px de espessura e cor preta */
-    border-radius: 10px; /* Bordas arredondadas com raio de 10px */
-    padding: 10px; /* Espaçamento interno entre a borda e a imagem */
-}
-
-.imagem-link {
-  display: flex;
-  flex-direction: column; /* Stacks text and image vertically */
-  align-items: center; /* Centers content horizontally within each container */
-  text-align: center; /* Centers the text within the container */
-}
-
-.call-servicos {
-  margin-bottom: 10px; /* Space between the text and the image */
-}
-
-.services-img {
-  width: 600px; /* Fixed width for consistency */
-  height: 300px; /* Fixed height for consistency */
-  object-fit: cover; /* Ensures the image covers the space */
-  border-radius: 8px; /* Optional: Adds rounded corners */
-}
-
-.embalarte-txt #about-us-nos {
-  font-size: 2.2em;
-  position: relative;
+#about-us-nos {
+  font-size: 6vh;
   top: 10px; /* Valor positivo para mover o texto para baixo */
 }
   .video-container {
-  width: 40%;
+    width: 80vh;
   }
   .video-container video{
   width: 85%;
-  margin-top: 15%;
+  margin-top: 15vh;
   }
 .about-us-divider {
   border: 0;
 }
 .about-us-title {
-  font-size: 4rem;
+
+  font-size: 8vh;
   color: black;
 }
 .about-us-paragraph {
-  padding: 0px 10px 0px 10px;
-  font-size: 1.2rem;
+  padding: 0px 7vh 0px 7vh;
+  font-size: 2.4vh;
 }
 #ImgTexto {
   max-width: 100%;
@@ -493,18 +420,35 @@ export default {
     #c7c7c7 0%, /* Azul claro até 90% da altura */
     #ffffff 97%  /* Branco começando a partir de 90% até o fundo */
   );
-
 }
+
+.blur-effect {
+  filter: blur(5px); /* Ajuste o valor conforme necessário */
+  transition: filter 0.3s ease;
+}
+
+/* Adicione esta classe para remover o desfoque */
+.no-blur {
+  filter: none;
+  transition: filter 0.3s ease;
+}
+.filiais-txt {
+  margin-right: 10vh;
+  font-family: "Outfit", sans-serif; /* Fonte */ 
+  font-size: 30%;
+}
+
 #localTexto {
-  font-size: 1.5em;
-  margin-bottom: 50px;
+  font-size: 3vh;
+  margin-bottom: 6vh;
   margin-top: 25px;
 }
 .caixa-mapa {
   background: rgb(58, 106, 141);
   border-radius: 10px;
   padding: 15px;
-  width: 40%; /* Aumenta a largura da caixa do mapa */
+  width: 80vh; /* Aumenta a largura da caixa do mapa */
+  height: 80vh;
   margin-top: 5%;
   margin-left: 5%;
 }
@@ -513,19 +457,20 @@ export default {
   padding: 12px; /* Ajuste conforme necessário */
   border-radius: 10px;
   overflow: hidden;
+  width: 100%;
+  height: 100%;
 }
 .mapa {
   width: 100%;
-  height: 400px;
+  height: 100%;
   border: 0;
   border-radius: 10px;
 }
 .lista-cidades {
   list-style-type: none;
   padding-left: 0;
-  font-size: 1.2em;
-  margin-bottom: -20px;
-  margin-top: -50px;
+  margin-bottom: -5vh;
+  margin-top: -5vh;
 }
 .text-overlay {
   font-family: 'Mulish', sans-serif; /* Aplica a fonte 'Mulish' */
@@ -536,7 +481,21 @@ export default {
   align-items: center;
   padding: 10px;
   text-align: center;
-  margin-left: 10%;
+  margin-left: 10vh;
+  margin-top: 7vh
+}
+.diferenciais {
+  margin-left: 15%;
+  margin-right: 15%;
+  margin-top: 2vh;
+}
+.diferenciais-titulo {
+  align-items: center;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-size: 6vh;
+  font-weight: bold;
 }
 /* --------------------------------------------------------------------------/ */
 
@@ -587,14 +546,6 @@ export default {
   padding: 20px; /* Adiciona um pouco de espaço ao redor do texto */
 }
 
-.full-height {
-  display: block;
-  place-items: center; /* Center content horizontally and vertically */
-  width: 100vw; /* Full width of the viewport */
-  margin: 0; /* Remove any default margin */
-  padding: 0; /* Remove any default padding */
-}
-
 .call-servicos {
   text-align: center; /* Center text within the container */
 }
@@ -603,11 +554,6 @@ export default {
   display: flex;
   justify-content: center; /* Center image horizontally within its container */
   align-items: center; /* Center image vertically within its container */
-}
-
-.services-img {
-  max-width: 100%; /* Ensure image does not exceed container width */
-  height: auto; /* Maintain aspect ratio of image */
 }
 
 .call-servicos {
@@ -653,7 +599,7 @@ export default {
     justify-content: space-between; /* Espaça o texto e a imagem igualmente */
   }
 
-  .about-us-text {
+  .quem-somos-txt {
     flex: 1; /* Faz o texto ocupar o máximo de espaço disponível */
     margin-right: 0px; /* Espaçamento entre o texto e a imagem */
   }
@@ -703,7 +649,7 @@ export default {
   margin-bottom: 20px; /* Space below the title */
 }
 
-.about-us-text {
+.quem-somos-txt {
   display: block; /* Ensure each text element takes full width */
   margin-bottom: 10px; /* Space between text elements */
 }
