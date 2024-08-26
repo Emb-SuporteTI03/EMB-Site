@@ -2,6 +2,7 @@
 export default {
   data() {
     return {
+      volume: 20,
       isDropdownActive: false,
       isSubDropdownActive: false,
       mapAtual: '1',
@@ -17,6 +18,21 @@ export default {
     };
   },
   methods: {
+    togglePlayPause() {
+      const video = this.$refs.autoPlayVideo;
+      if (video.paused) {
+        video.play();
+      } else {
+        video.pause();
+      }
+    },
+    updateVolume() {
+      const video = this.$refs.autoPlayVideo;
+      video.volume = this.volume / 70; // Convert volume to 0.0 - 1.0 range
+    },
+    toggleDropdown() {
+      this.isDropdownActive = !this.isDropdownActive;
+    },
     updateMapValue(value, event) {
       // Update the global variable
       this.mapAtual = value;
@@ -25,12 +41,34 @@ export default {
       
       const clickedLink = event.target;
       clickedLink.classList.add('selected');
-      // Optionally log the new value to the console
       console.log('Updated mapAtual:', this.mapAtual);
-
-      // You can add additional logic here if needed
     },
-    // --------------------/
+    handleIntersection(entries) {
+      entries.forEach(entry => {
+        const video = this.$refs.autoPlayVideo;
+        if (entry.isIntersecting) {
+          // Video enters the viewport - play the video
+          video.play();
+        } else {
+          // Video leaves the viewport - pause the video
+          video.pause();
+        }
+      });
+    }
+  },
+  mounted() {
+      this.updateVolume(); // Set the initial volume
+
+    // Check if the browser supports IntersectionObserver
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver(this.handleIntersection, { threshold: 0.5 });
+
+      // Start observing the video element
+      observer.observe(this.$refs.autoPlayVideo);
+    } else {
+      // Fallback: If IntersectionObserver is not supported, autoplay without checking visibility
+      this.$refs.autoPlayVideo.play();
+    }
   }
 };
 </script>
@@ -45,7 +83,7 @@ export default {
           <hr class="about-us-divider">
           <p class="about-us-paragraph" v-motion-slide-visible-once-bottom>
             A EMBALARTE nasceu do sonho de Fernando Alves Vieira em criar uma empresa forte e sólida, para oferecer 
-            ao mercado soluções completas e personalizadas. Fundada em 1999 e com 16 anos de experiência, vem conquistado 
+            ao mercado soluções completas e personalizadas. Fundada em 1999 e com mais de 25 anos de experiência, vem conquistado 
             seu espaço como uma das melhores empresas no segmento. Situada na Cidade de Santana de Paranaíba no Estado de 
             São Paulo, dispõe em sua planta própria, 4.000m2 de área. Localizada próximo as rodovias Anhanguera e Bandeirantes 
             e de fácil acesso ao Rodoanel, possibilita agilidade no processo de distribuição e transporte dos materiais. 
@@ -54,10 +92,53 @@ export default {
             são treinados para buscar a melhor solução de acordo com a necessidade dos nossos clientes.
           </p>
         </div>
-        <div v-motion-fade-visible-once class="about-us-image">
-          <img src="../../assets/images/funcionario-interacao-2.png" v-motion-fade-visible-once alt="Imagem de Quem Somos" id="ImgTexto">
+        <div class="video-container">
+          <!-- Add ref to video element -->
+          <video 
+            ref="autoPlayVideo" 
+            preload="auto" 
+            autoplay 
+            @click="togglePlayPause"
+            style="cursor: pointer;"
+          >
+            <source src="../../assets/images/videoEmb.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+          <div>
+            <i class="bi bi-volume-down" style="font-size: 2rem;"></i>
+            <input 
+            type="range" 
+            min="0" 
+            max="100" 
+            v-model="volume" 
+            @input="updateVolume"
+            style="margin-top: 10px;"
+          />
+          </div>
         </div>
       </div>
+      <div class="diferenciais">
+        <br>
+        <br>
+        <br>
+      <h1>NOSSOS DIFERENCIAIS</h1>
+      <br>
+      <br>
+      <br>
+      <div class="grid-container">
+      <div class="grid-item">🏢 Unidade própria com 4.000m²</div>
+      <div class="grid-item">👥 Equipe treinada e qualificada</div>
+      <div class="grid-item">🏭 Modernas instalações</div>
+      <div class="grid-item">🚗 Próximo às Rodovias Anhanguera e Bandeirantes</div>
+      <div class="grid-item">🚛 Docas com facilidade de acesso para carga e descarga</div>
+      <div class="grid-item">📱 Controle por software e aplicativos mobile</div>
+    </div>
+    <br>
+    <br>
+    <br>
+
+
+    </div>
     </div>
     <div  class="local-section">
       <div class="caixa-mapa">
@@ -104,14 +185,14 @@ export default {
         <div class="embalarte-txt">
         <strong class="about-us-text" id="about-us-nos">NÓS, DO GRUPO EMBALARTE</strong>
         </div>
-        <strong class="about-us-text" id="localTexto">TEMOS NOSSA SEDE EM<br> </strong>
+        <strong class="about-us-text" id="localTexto">TEMOS NOSSA MATRIZ EM<br> </strong>
           <ul class="lista-cidades">
             <li><a @click.prevent="updateMapValue('1', $event)">📌 Santana de Parnaíba</a></li>
           </ul>
            <strong class="about-us-text" id="localTexto">
           E ESTAMOS PRESENTES EM OUTRAS 3 CIDADES NO ESTADO DE SÃO PAULO!</strong>
         <ul class="lista-cidades">
-          <li><a @click.prevent="updateMapValue('2', $event)">📌 Osasco</a></li>
+          <li><a @click.prevent="updateMapValue('2', $event)">📌 São Paulo</a></li>
           <li><a @click.prevent="updateMapValue('3', $event)">📌 São José dos Campos</a></li>
           <li><a @click.prevent="updateMapValue('4', $event)">📌 Cajamar</a></li>
         </ul>
@@ -143,8 +224,11 @@ export default {
         <strong class="call-servicos">
           TECNOLOGIA
         </strong>
-        <router-link :to="{ path: '/Tecnologias' }" style="color: black; text-decoration: none;">
-          <img src="../../assets/images/pc_tecnologia.jpg" id="tecnologiasPC" v-motion-fade-visible-once class="services-img">
+        <router-link 
+        :to="{ path: '/Nossos-Servicos', hash: '#Secao_Tecnologia' }" 
+        style="color: black; text-decoration: none;"
+        >        
+        <img src="../../assets/images/pc_tecnologia.jpg" id="tecnologiasPC" v-motion-fade-visible-once class="services-img">
         </router-link>
       </div>
     </div>
@@ -218,6 +302,31 @@ export default {
 </template>
 
 <style scoped>
+
+.container {
+  width: 80%;
+  margin: 0 auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Grid Container */
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+/* Grid Item */
+.grid-item {
+  background: #e2e2e2;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px;
+  text-align: center;
+}
 
 /* Barra para espaçamento ---------------------------------------------------\ */
 .custom-hr {
@@ -344,7 +453,13 @@ export default {
   position: relative;
   top: 10px; /* Valor positivo para mover o texto para baixo */
 }
-
+  .video-container {
+  width: 40%;
+  }
+  .video-container video{
+  width: 85%;
+  margin-top: 15%;
+  }
 .about-us-divider {
   border: 0;
 }
@@ -356,17 +471,6 @@ export default {
   padding: 0px 10px 0px 10px;
   font-size: 1.2rem;
 }
-
-.about-us-image-cont {
-  flex-shrink: 0; /* Garante que a imagem não encolha */
-}
-.about-us-image {
-  display: flex; /* Alinha as imagens lado a lado */
-  align-items: center;  /* Centraliza as imagens no contêiner */
-  flex-wrap: wrap; /* Permite que as imagens quebrem linha se não couberem */
-  flex: 1; /* Precisa disso */
-  padding: 20px; /* Espaço interno ao redor das imagens */
-}
 #ImgTexto {
   max-width: 100%;
   height: auto;
@@ -375,14 +479,6 @@ export default {
 .container-history {
   border: 1px solid rgb(150, 150, 150); /* Define a borda com 5px de espessura, estilo sólido e cor preta */
   border-radius: 5px; /* Arredonda os cantos da borda */
-}
-.about-us-image-img {
-  width: 300px; /* Ajuste a largura conforme necessário */
-  height: auto; /* Mantém a proporção da imagem */
-  margin: 10px; /* Espaçamento entre as imagens */
-  position: relative;
-  top: -15px; /* Valor positivo para mover o texto para baixo */
-  
 }
 /* --------------------------------------------------------------------------/ */
 
