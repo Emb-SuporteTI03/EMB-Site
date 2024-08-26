@@ -426,7 +426,7 @@ export default {
 }
 /* Trata do dropdown */
 .drop {
-  margin-top: 0.10%;
+  margin-top: 0.06%;
   width: 10.5%; /* Defina uma largura para o dropdown */
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
   background-color: #ececec;
