@@ -43,24 +43,27 @@ export default {
 
 <template>
       <div class="container-history">
-      <hr class="custom-hr">   
-      <hr class="custom-hr">    
-        <hr class="custom-hr">   
         <h1 class="titulo-nossos-servicos" style="font-family: 'Outfit', sans-serif;" v-motion-slide-visible-once-bottom>
           NOSSOS SERVIÇOS
         </h1>  
         <div class="texto-intro">
-              <img draggable="false" src="../../assets/images/deposito_sf.png" class="imagem-intro"/>
-              <p style="font-family: 'Outfit', sans-serif;">
-                  Bem-vindo à Embalarte, uma empresa inovadora e versátil 
-                  no setor de embalagens. Com um portfólio diversificado de produtos, 
-                  nos dedicamos a fornecer soluções de embalagem de alta qualidade 
-                  que atendem às necessidades específicas de cada cliente. <br>
-              </p>
-              <img draggable="false" id="galpao_direita" src="../../assets/images/deposito_sf.png" class="imagem-intro"/>
-        </div> 
+          <img draggable="false" src="../../assets/images/deposito_sf.png" class="imagem-intro" />
+          <p style="font-family: 'Outfit', sans-serif;">
+            Bem-vindo à Embalarte, 
+            uma empresa inovadora 
+            e versátil no setor 
+            de embalagens. Com um 
+            portfólio diversificado 
+            de produtos, nos dedicamos 
+            a fornecer soluções de 
+            embalagem de alta qualidade 
+            que atendem às necessidades 
+            específicas de cada cliente. <br>
+          </p>
+          <img draggable="false" id="galpao_direita" src="../../assets/images/deposito_sf.png" class="imagem-intro" />
+        </div>
         <hr class="custom-hr" id="Armazenagem">   
-        <hr class="custom-hr2">
+        <hr class="custom-hr">
         
         <div class="texto-servicos">
 
@@ -74,8 +77,8 @@ export default {
         </p>
           <img draggable="false"src="../../assets/images/armazenagem_servicos.jpg"  id="armazenagem" class="imagem-intro">
         </div>
-        <hr class="custom-hr2"  id="Picking_Packing">
-        <hr class="custom-hr2">
+        <hr class="custom-hr"  id="Picking_Packing">
+        <hr class="custom-hr">
        
 
         <div class="nossos_servicos">
@@ -93,7 +96,7 @@ export default {
         </div>
 
         <hr class="custom-hr" id="Atendimento_E-Commerce">   
-        <hr class="custom-hr2">
+        <hr class="custom-hr">
         <div class="nossos_servicos">
           <p class="paragrafo-nossos-servicos_esquerda" style="font-family: 'Outfit', sans-serif;" v-motion-slide-visible-once-bottom>
         <h2>Atendimento E-commerce</h2>
@@ -107,7 +110,7 @@ export default {
 
 
         <hr class="custom-hr" id="Manuseio_e_Kits">   
-        <hr class="custom-hr2">
+        <hr class="custom-hr">
 
         <div class="nossos_servicos">
           <img draggable="false"  src="../../assets/images/manuseio7.png" 
@@ -122,7 +125,7 @@ export default {
         </div> 
 
         <hr class="custom-hr" id="Logistica_Promocional">   
-        <hr class="custom-hr2">
+        <hr class="custom-hr">
 
         <div class="nossos_servicos">
           <p class="paragrafo-nossos-servicos_esquerda" style="font-family: 'Outfit', sans-serif;" v-motion-slide-visible-once-bottom>
@@ -136,7 +139,7 @@ export default {
         </div>
 
         <hr class="custom-hr" id="Envaze_e_Blister">   
-        <hr class="custom-hr2">
+        <hr class="custom-hr">
 
         <div class="nossos_servicos">
           <img draggable="false" src="../../assets/images/bisnaga.png" v-motion-fade-visible-once class = "nossos_servicos-img"> 
@@ -149,7 +152,7 @@ export default {
         </div>
 
         <hr class="custom-hr" id="Encadernacao">   
-        <hr class="custom-hr2">
+        <hr class="custom-hr">
 
 
         <div class="nossos_servicos">
@@ -165,7 +168,7 @@ export default {
         </div>
 
         <hr class="custom-hr" id="Etiquetagem">   
-        <hr class="custom-hr2">
+        <hr class="custom-hr">
 
         <div class="nossos_servicos">
           <img draggable="false" src="../../assets/images/etiquetagem.png" v-motion-fade-visible-once class = "nossos_servicos-img"> 
@@ -179,7 +182,7 @@ export default {
         </div>
 
         <hr class="custom-hr" id="Gravacao">   
-        <hr class="custom-hr2">
+        <hr class="custom-hr">
 
 
         <div class="nossos_servicos">
@@ -194,7 +197,7 @@ export default {
         </div>
         
         <hr class="custom-hr" id="Distribuicao">   
-        <hr class="custom-hr2">
+        <hr class="custom-hr">
 
 
         <div class="nossos_servicos">
@@ -216,6 +219,7 @@ export default {
 
 
   <div class="container-tecnologia" id="Secao_Tecnologia">
+    <hr class="custom-hr">   
     <hr class="custom-hr">   
     <hr class="custom-hr">   
     <hr class="custom-hr">   
@@ -307,24 +311,42 @@ export default {
     align-items: center; /* Center items vertically */
     justify-content: space-between;
     width: 100%; /* Full width of the parent container */
+    height: 40vh;
     overflow: hidden; /* Hide overflow if images are too large */
     background-color: rgb(154, 191, 207);
-}
+
+  }
 .texto-intro p {
-  font-size: 1.4rem;
+  font-size: 3vh;
 }
+
+.texto-intro img {
+  height: 50vh;
+}
+
 .imagem-intro {
-    flex: 1; /* Allow images to grow and shrink */
-    height: auto; /* Maintain aspect ratio */
-    max-width: 100%; /* Ensure images do not exceed viewport width */
-    object-fit: cover; /* Ensure images cover the allocated space */
-    margin: -60px; /* Remove margin to ensure images touch edges */
+  padding: -10vh;
+  margin: -10vh;
+  display: block; /* Remove o espaço extra causado pelo modo inline padrão */
+}
+
+.imagem-intro img {
+  height: 15vh;
+  width: 10vh;
 }
 
 .nossos_servicos img {
   width: 30%; /* Ajuste para a largura desejada */
   height: auto; /* Mantém a proporção da imagem */
   object-fit: contain; /* Ajusta a imagem para caber no contêiner sem cortar */
+}
+
+.nossos_servicos p {
+  font-size: 2.5vh;
+}
+
+.nossos_servicos h2 {
+  font-size: 5vh;
 }
 
 .nossos_servicos{
@@ -342,7 +364,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 5% 10%; /* Ajuste o espaçamento vertical */
+  margin: 5vh 10vh; /* Ajuste o espaçamento vertical */
 }
 
 .texto-servicos {
@@ -396,13 +418,14 @@ export default {
   text-align: center; /* Centraliza o texto dentro do contêiner */
 }
 .titulo-nossos-servicos {
-  font-size: 6rem;
+  font-size: 10vh;
   color:#01395E;
   justify-content: center; /* Centraliza os parágrafos dentro do contêiner */
   align-items: center; /* Alinha verticalmente os parágrafos no centro */
+  margin-top: 12vh;
 }
 .titulo-nossos-servicos2 {
-  font-size: 4rem;
+  font-size: 4vh;
   
 }
 
@@ -416,8 +439,10 @@ export default {
   margin-right: 7%;  
 }
 .custom-hr {
-  background-color: rgba(255, 255, 255, 0);
-  color: rgba(255, 255, 255, 0);
+  border: none; /* Remove qualquer borda padrão */
+  height: 2vh; /* Altura da linha (pode ser ajustada conforme necessário) */
+  background-color: transparent; /* Torna a linha transparente */
+  margin: 0; /* Remove qualquer margem padrão */
 }
   /* Contêiner de imagens individuais */
 
@@ -436,7 +461,7 @@ export default {
   margin: 15px 100px; /* Ajuste o espaçamento vertical */
 }
 .titulo-nossas-tecnologias {
-  font-size: 6rem;
+  font-size: 10vh;
   color:#01395E;
   justify-content: center; /* Centraliza os parágrafos dentro do contêiner */
   align-items: center; /* Alinha verticalmente os parágrafos no centro */
@@ -484,7 +509,7 @@ export default {
 }
 
 .paragrafo-tecnologias-intro {
-  font-size: 1.4rem;
+  font-size: 3vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -552,9 +577,17 @@ export default {
 
 /* Estilo das imagens */
 .nossas_tecnologias-img {
-  width: 20%; /* Ajuste para a largura desejada */
+  width: 30vh; /* Ajuste para a largura desejada */
   height: auto; /* Mantém a proporção da imagem */
   object-fit: contain; /* Ajusta a imagem para caber no contêiner sem cortar */
+}
+
+.nossas_tecnologias-img img{
+  width: 30vh; /* Ajuste para a largura desejada */
+}
+
+.nossas_tecnologias p {
+  font-size: 2.3vh;
 }
 
   </style>

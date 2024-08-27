@@ -66,7 +66,7 @@ body {
 
 .mySwiper3 {
   width: 100%;
-  height: 10%; /* Define uma altura fixa para o carrossel */
+  height: 100vh; /* Define uma altura fixa para o carrossel */
 }
 
 
@@ -95,7 +95,7 @@ body {
 }
 
 .text-justify {
-  font-size: 120%;
+  font-size: 3vh;
 }
 
 .text-center {

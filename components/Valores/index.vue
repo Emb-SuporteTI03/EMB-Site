@@ -1,9 +1,7 @@
 <template>
   <div> 
     <div class="container-history">
-      <hr class="custom-hr">    
-      <hr class="custom-hr">   
-      <h1 class="valores_titulo" style="font-family: 'Outfit', sans-serif;" v-motion-slide-visible-once-bottom>
+      <h1 class="valores_titulo" id="titulo-container" style="font-family: 'Outfit', sans-serif;" v-motion-slide-visible-once-bottom>
         NOSSOS VALORES
       </h1>
       <div class="about-us-paragraph" style="font-family: 'Outfit', sans-serif;" v-motion-slide-visible-once-bottom>
@@ -66,15 +64,19 @@
 }
 
 .valores_titulo {
-  font-size: 6rem;
+  font-size: 8vh;
   text-align: center; /* Justifica o texto no centro */
   color: #01385C;
 }
 
 .valores_titulo2 {
-  font-size: 2rem;
+  font-size: 5vh;
   text-align: center; /* Justifica o texto no centro */
   color: #01385C;
+}
+
+#titulo-container {
+  margin-top: 6%;
 }
 
 .about-us-paragraph {
@@ -91,7 +93,7 @@
 
 .styled-list li {
   margin-bottom: 10px; /* Espaçamento entre itens da lista */
-  font-size: 1.1rem;
+  font-size: 2.5vh;
 }
 
 .section {
@@ -114,7 +116,7 @@
 }
 
 .valores_imagem {
-  width: 40%; /* Faz com que a imagem ocupe toda a largura do contêiner */
+  width: 20vh; /* Faz com que a imagem ocupe toda a largura do contêiner */
   height: auto; /* Mantém a proporção da imagem */
   object-fit: contain; /* Ajusta a imagem para caber no contêiner sem cortar */
 }
