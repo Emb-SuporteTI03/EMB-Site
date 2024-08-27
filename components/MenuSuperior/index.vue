@@ -196,7 +196,7 @@
             <div class="subdrop-cllr" v-if="isSubDrop2Cllr">
               <router-link :to="{ path: '/Nossos-Servicos' }" style="color: black; text-decoration: none;">Soluções em Logística</router-link>
               <hr class="custom-hr2">
-              <router-link :to="{ path: '/Tecnologias' }" style="color: black; text-decoration: none;">Soluções em Tecnologia</router-link>
+              <router-link :to="{ path: '/Nossos-Servicos', hash: '#Secao_Tecnologia' }"  style="color: black; text-decoration: none;">Soluções em Tecnologia</router-link>
             </div>
           </ul>
         </div>

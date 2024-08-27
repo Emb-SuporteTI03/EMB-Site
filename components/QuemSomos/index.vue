@@ -18,7 +18,7 @@ export default {
     };
   },
   methods: {
-    togglePlayPause() {
+      togglePlayPause() {
       const video = this.$refs.autoPlayVideo;
       if (video.paused) {
         video.play();
@@ -66,30 +66,21 @@ export default {
   mounted() {
     document.addEventListener('mousemove', this.handleMouseMove);
 
-    this.updateVolume(); // Set the initial volume
+    this.updateVolume(); // Define o volume inicial
 
-    // Check if the browser supports IntersectionObserver
+    // Verifica se o navegador suporta IntersectionObserver
     if ('IntersectionObserver' in window) {
       const observer = new IntersectionObserver(this.handleIntersection, { threshold: 0.5 });
 
-      // Start observing the video element
+      // Inicia a observação do elemento de vídeo
       observer.observe(this.$refs.autoPlayVideo);
     } else {
-      // Fallback: If IntersectionObserver is not supported, autoplay without checking visibility
+      // Fallback: Se o IntersectionObserver não for suportado, reproduz o vídeo sem verificar a visibilidade
       this.$refs.autoPlayVideo.play();
     }
-
-    // Adiciona o círculo de blur à página
-    const blurCircle = document.createElement('div');
-    blurCircle.classList.add('blur-circle');
-    document.body.appendChild(blurCircle);
-
-    // Adiciona o evento de mouse para movimentar o círculo
   },
   beforeDestroy() {
-    document.removeEventListener('mousemove', this.handleMouseMove);
-    // Remove o evento de mouse quando o componente for destruído
-  }
+  },
 };
 
 </script>
@@ -117,15 +108,16 @@ export default {
         <div class="video-container">
           <!-- Add ref to video element -->
           <video 
-            ref="autoPlayVideo" 
-            preload="auto" 
-            autoplay 
-            @click="togglePlayPause"
-            style="cursor: pointer;"
-          >
-            <source src="../../assets/images/videoEmb.mp4" type="video/mp4">
-            Your browser does not support the video tag.
-          </video>
+          ref="autoPlayVideo" 
+          preload="auto" 
+          autoplay 
+          muted 
+          @click="togglePlayPause"
+          style="cursor: pointer;"
+        >
+          <source src="../../assets/images/videoEmb.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
           <div class="volume-video">
             <i class="bi bi-volume-down" style="font-size: 4vh;"></i>
             <input 
@@ -152,7 +144,7 @@ export default {
 
           <iframe class="mapa"
             v-if="mapAtual == 2"
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d117054.02054255405!2d-46.86697533846492!3d-23.534727157648103!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ceff085b9ef207%3A0xf21e27d4c824c4e!2sOsasco%2C%20State%20of%20S%C3%A3o%20Paulo!5e0!3m2!1sen!2sbr!4v1723552982838!5m2!1sen!2sbr"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d911.2457160832454!2d-46.76151485984224!3d-23.48653332479644!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94cefea4ba9775b9%3A0x6a406eae9c012bde!2sAv.%20Jornalista%20Paulo%20Zingg%2C%20946%20-%20Jardim%20Jaragua%2C%20S%C3%A3o%20Paulo%20-%20SP%2C%2005157-030!5e1!3m2!1spt-BR!2sbr!4v1724785866527!5m2!1spt-BR!2sbr"
             allowfullscreen loading="lazy"
             referrerpolicy="no-referrer-when-downgrade"
             draggable="false"
@@ -160,7 +152,7 @@ export default {
 
           <iframe class="mapa"
             v-if="mapAtual == 3"
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d234719.22569669844!2d-46.17486207856379!3d-23.188883367975105!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94cc4bb3858cc2e7%3A0xba25a33168f8c1!2sS%C3%A3o%20Jos%C3%A9%20dos%20Campos%2C%20Sao%20Jose%20dos%20Campos%20-%20State%20of%20S%C3%A3o%20Paulo!5e0!3m2!1sen!2sbr!4v1723553613909!5m2!1sen!2sbr"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1827.2562987508402!2d-45.76307128105925!3d-23.139376013124085!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94cc4de55cbd9cb9%3A0x6a121faa2b04301b!2zU29tb3MgRWR1Y2HDp8OjbyAtIENlbnRybyBkZSBEaXN0cmlidWnDp8Ojbw!5e1!3m2!1spt-BR!2sbr!4v1724786136908!5m2!1spt-BR!2sbr"
             allowfullscreen loading="lazy"
             referrerpolicy="no-referrer-when-downgrade"
             draggable="false"
@@ -296,7 +288,6 @@ export default {
   justify-content: space-between;
   align-items: flex-start;
   flex-wrap: wrap;
-  pointer-events: none; /* Permite que os eventos de mouse passem para os elementos abaixo */
 }
 
 .lista-cidades {
@@ -348,9 +339,6 @@ export default {
     #ffffff 5%, /* Azul claro de 30% a 70% */
     #c7c7c7 70% /* Branco no fundo */
   );
-  position: relative;
-  z-index: 10;
-  pointer-events: auto; /* Garante que os eventos de mouse sejam reconhecidos */
 }
 
 .quem-somos-txt {
@@ -375,7 +363,6 @@ export default {
   border: 0;
 }
 .about-us-title {
-  pointer-events: none; /* Permite que os eventos de mouse passem para os elementos abaixo */
   font-size: 8vh;
   color: black;
 }
