@@ -94,6 +94,11 @@
 .rodape {
   display: flex;
   justify-content: center;
+  height: 5vh;
+}
+
+.rodape p {
+  font-size: 2vh;
 }
 
 .abre-modal-termo {

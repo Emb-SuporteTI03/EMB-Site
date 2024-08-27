@@ -1,32 +1,31 @@
   <template>
     <main>
-      <div class="titulo-conheca-servicos">
+      <div class="containerContato">
         <hr class="custom-hr1">
-        <strong class="tituloConheca" 
+        <strong class="tituloContato" 
           v-motion-slide-visible-once-bottom 
-          style="font-size: 2rem; display: block; margin-top: 20px; color:rgb(75, 75, 75)">
+          style="font-size: 5vh; display: block; margin-top: 1vh; color:rgb(75, 75, 75)">
           ENTRE EM CONTATO CONOSCO 
         </strong>
-        <hr class="custom-hr2">
-        <h1 style="font-size: 1.5rem;" class="texto-contato">
+        <h1 style="font-size: 3vh;" class="texto-contato">
           Entre em contato para as <strong class="negrito">melhores</strong> 
           <br>
           soluções em <strong class="negrito">logística</strong> e embalamento
         </h1>
-        <hr class="custom-hr2">
-        <hr class="custom-hr2">
         <img data-bs-toggle="modal" data-bs-target="#contatoModal" href="" src="../../assets/images/contato.png" alt="Contact Icon" class="contact-icon" />
-        <hr class="custom-hr2">
-        <hr class="custom-hr2">
       </div>
     </main>
   </template>
 
   <style>
   /* Estilo para o título "CONHEÇA NOSSOS SERVIÇOS" */
-  .titulo-conheca-servicos {
+  .containerContato {
     text-align: center;
     margin-top: 40px;
+  }
+
+  .tituloContato {
+    font-size: 4vh;
   }
 
   .negrito {
@@ -40,23 +39,10 @@
   .contact-icon {
     cursor: pointer;
     display: block;
-    max-width: 200px; /* Define a largura máxima da imagem */
+    width: 30vh; /* Define a largura máxima da imagem */
     height: auto; /* Mantém a proporção da imagem */
     margin: 0 auto; /* Centraliza horizontalmente */
-    max-height: 100vh; /* Define a altura máxima como 100% da altura da tela */
-  }
-
-  /* Media Query para telas menores */
-  @media (max-width: 768px) {
-    .contact-icon {
-      max-width: 70%; /* Ajusta a largura máxima da imagem para telas menores */
-    }
-  }
-
-  @media (max-width: 480px) {
-    .contact-icon {
-      max-width: 90%; /* Ajusta ainda mais a largura máxima da imagem para telas muito pequenas */
-    }
+    margin-top: 4vh;
   }
 
   .custom-hr1 {
@@ -64,13 +50,6 @@
     border: 0;
     height: 3px;
     background-color: rgb(58, 106, 141);
-  }
-
-  .custom-hr2 {
-    margin: 20px 0px 5px 0px;
-    border: 0;
-    height: 3px;
-    background-color: rgba(255, 255, 255, 0);
   }
   </style>
 

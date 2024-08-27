@@ -1,9 +1,9 @@
 <template>
   <div> 
     <div class="cultura_container">
-      <hr class="custom-hr">    
-      <hr class="custom-hr">   
-      <h1 class="cultura_titulo" style="font-family: 'Outfit', sans-serif;" v-motion-slide-visible-once-bottom>
+      <div>
+        <div class="cultura-content">
+          <h1 class="cultura_titulo" style="font-family: 'Outfit', sans-serif;" v-motion-slide-visible-once-bottom>
         NOSSA CULTURA
       </h1>
       <img draggable="false" src="../../assets/images/Capa LINK - EMBALARTE.png" v-motion-fade-visible-once class="imgem_final">
@@ -35,8 +35,8 @@
         <img draggable="false" src="../../assets/images/Logo-Grupo-Embalarte-5.png" v-motion-fade-visible-once class="cultura_imagem">
 
       </p>
-
-      
+        </div>
+      </div>      
     </div>
   </div>
 </template>
@@ -48,23 +48,31 @@ display: flex;
 flex-direction: column;
 gap: 20px; /* Espaço entre linhas de imagens */
 }
+
+.cultura-content {
+margin-top: 10vh;
+}
+
 .cultura_titulo {
-font-size: 6rem;
+font-size: 6vh;
 text-align: center; /* Justifica o texto no centro */
 color: #01385C;
 }
 .cultura_titulo2 {
-font-size: 4rem;
+font-size: 4vh;
 text-align: center; /* Justifica o texto no centro */
 }
 .cultura_paragrafo {
+height: 25vh;
 padding: 0px 25%;
-font-size: 1rem;
+font-size: 2.5vh;
 text-align: center; /* Justifica o texto no centro */
 }
-
+.imgem_final {
+  height: 40vh;
+}
 .cultura_imagem {
-  width: 40%; /* Faz com que a imagem ocupe toda a largura do contêiner */
+  width: 40vh; /* Faz com que a imagem ocupe toda a largura do contêiner */
   height: auto; /* Mantém a proporção da imagem */
   object-fit: contain; /* Ajusta a imagem para caber no contêiner sem cortar */
 }
@@ -75,6 +83,7 @@ color: rgba(255, 255, 255, 0);
 }
 /* Contêiner de imagens individuais */
 .about-us-image {
+margin-top: 1vh;
 display: flex;
 gap: 10px; /* Espaço entre as imagens */
 justify-content: center; /* Centraliza as imagens horizontalmente */

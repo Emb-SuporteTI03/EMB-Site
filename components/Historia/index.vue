@@ -55,8 +55,11 @@
   display: flex; /* Flexbox */
   flex-direction: column; /* Deixa os itens (que são o título e as linhas) um em baixo do outro*/
 }
+.titulo {
+  margin-top: 4vh;
+}
 .titulo_historia {
-  font-size: 6rem; 
+  font-size: 10vh; 
   display: flex; /* Precisa disso para poder centralizar */
   justify-content: center; /* Centraliza horizontalmente */
   color:#01385C;

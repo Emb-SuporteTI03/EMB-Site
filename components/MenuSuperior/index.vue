@@ -427,9 +427,10 @@ export default {
 
 /* Essa é apenas uma linha preta que pode ser usada para marcação */
 .custom-hr2 {
-  height: 1px;
+  height: 0.1vh;
   background-color: black;
   border: none;
+  margin-bottom: 1vh;
   margin-top: 0.75%
 }
 
@@ -511,7 +512,7 @@ export default {
 .drop a {
   font-size: 2vh; /* Defina uma largura para o sub-dropdown */
   display: block;
-  padding: 2vh 1.5vh;
+  padding: 1vh 1.5vh;
   text-align: left;
   opacity: 0.7;
   transition: opacity 0.3s ease;
