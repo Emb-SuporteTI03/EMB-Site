@@ -43,7 +43,7 @@
         <img src="assets/images/container_carrossel.jpeg" alt="estantes" class="swiper-image" />
       </swiper-slide>
       <swiper-slide>
-        <img src="assets/images/plane_carrossel.jpeg" alt="containers" class="swiper-image" />
+        <img src="assets/images/caminhao_carrossel1.jpeg" alt="containers" class="swiper-image" />
       </swiper-slide>
 
       <swiper-slide>
