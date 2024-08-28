@@ -28,7 +28,8 @@ export default {
     },
     updateVolume() {
       const video = this.$refs.autoPlayVideo;
-      video.volume = this.volume / 70; // Convert volume to 0.0 - 1.0 range
+      video.volume = this.volume / 100; // Convert volume to 0.0 - 1.0 range
+      console.log('o volume agora é: ', video.volume)
     },
     toggleDropdown() {
       this.isDropdownActive = !this.isDropdownActive;
@@ -111,7 +112,6 @@ export default {
           ref="autoPlayVideo" 
           preload="auto" 
           autoplay 
-          muted 
           @click="togglePlayPause"
           style="cursor: pointer;"
         >
@@ -179,15 +179,12 @@ export default {
             <li><a @click.prevent="updateMapValue('1', $event)">📌 Santana de Parnaíba</a></li>
           </ul>
            <strong class="filiais-txt" id="localTexto">
-          E ESTAMOS PRESENTES EM OUTRAS 3 CIDADES NO ESTADO DE SÃO PAULO!</strong>
+          E ESTAMOS PRESENTES EM OUTRAS 3 CIDADES <br> NO ESTADO DE SÃO PAULO!</strong>
         <ul class="lista-cidades">
           <li><a @click.prevent="updateMapValue('2', $event)">📌 São Paulo</a></li>
           <li><a @click.prevent="updateMapValue('3', $event)">📌 São José dos Campos</a></li>
           <li><a @click.prevent="updateMapValue('4', $event)">📌 Cajamar</a></li>
         </ul>
-
-    <hr class="custom-hr">
-    <hr class="custom-hr">
     <hr class="custom-hr">
     <hr class="custom-hr">
     <hr class="custom-hr">
@@ -296,16 +293,16 @@ export default {
 }
 
 .lista-cidades li {
-  margin: 5vh 0; /* Space between items */
+  margin: 4vh 0; /* Space between items */
 }
 
 .lista-cidades a {
   text-decoration: none; /* Remove underline from links */
-  font-size: 3vh; /* Slightly larger font size */
+  font-size: 1vh; /* Slightly larger font size */
   color: #007bff; /* Blue color for links */
   font-weight: bold; /* Bold text */
   display: inline-block; /* Make the entire list item clickable */
-  padding: 2vh 3vw; /* More responsive padding */
+  padding: 1vh 2vh; /* More responsive padding */
   border-radius: 5px; /* Rounded corners */
   transition: transform 0.3s ease-in-out, background-color 0.3s, color 0.3s; /* Smooth transition effects */
   border: 2px solid #86acca; /* Blue border */
@@ -349,7 +346,7 @@ export default {
 }
 
 #about-us-nos {
-  font-size: 6vh;
+  font-size: 4vh;
   top: 10px; /* Valor positivo para mover o texto para baixo */
 }
   .video-container {
@@ -405,24 +402,22 @@ export default {
   transition: filter 0.3s ease;
 }
 .filiais-txt {
-  margin-right: 10vh;
   font-family: "Outfit", sans-serif; /* Fonte */ 
-  font-size: 30%;
 }
 
 #localTexto {
   font-size: 3vh;
   margin-bottom: 6vh;
-  margin-top: 25px;
+  margin-top: 5vh;
 }
 .caixa-mapa {
   background: rgb(58, 106, 141);
   border-radius: 10px;
   padding: 15px;
-  width: 80vh; /* Aumenta a largura da caixa do mapa */
-  height: 80vh;
-  margin-top: 5%;
-  margin-left: 5%;
+  width: 70vh; /* Aumenta a largura da caixa do mapa */
+  height: 70vh;
+  margin-top: 10vh;
+  margin-left: 15vh;
 }
 .map-box {
   background: #ffffff;
@@ -452,11 +447,15 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 10px;
   text-align: center;
   margin-left: 10vh;
-  margin-top: 7vh
+  margin-top: 5vh;
 }
+
+.text-overlay a {
+font-size: 3vh;
+}
+
 .diferenciais {
   margin-left: 15%;
   margin-right: 15%;
@@ -481,25 +480,6 @@ export default {
   display: none;
 }
 
-@media (max-width: 1250px) {
-.about-us-paragraph {
-  font-size: 0.rem;
-}
-
-.about-us-title {
-  font-size: 2.2rem;
-}
-}
-
-@media (max-width: 1000px) {
-.about-us-paragraph {
-  font-size: 0.7rem;
-}
-
-.about-us-title {
-  font-size: 1.7rem;
-}
-}
 
 @media (max-width: 768px) {
   .for-pc{

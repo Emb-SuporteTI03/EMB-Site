@@ -76,7 +76,7 @@ export default {
         <br>
         Nossa abordagem flexível atende a uma ampla gama de necessidades, desde produtos de consumo até itens industriais. Com tecnologia avançada e uma infraestrutura adaptável, garantimos uma armazenagem segura e eficiente, oferecendo um serviço confiável e de alta qualidade para nossos clientes.
         </p>
-          <img draggable="false"src="../../assets/images/armazenagem_servicos.jpg"  id="armazenagem" class="imagem-intro">
+          <img draggable="false"src="../../assets/images/armazenagem_servicos.jpg" class="nossos_servicos-img">
         </div>
         <hr class="custom-hr"  id="Picking_Packing">
         <hr class="custom-hr">
