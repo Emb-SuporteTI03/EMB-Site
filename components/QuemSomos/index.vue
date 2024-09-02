@@ -118,8 +118,8 @@ export default {
           <source src="../../assets/images/videoEmb.mp4" type="video/mp4">
           Your browser does not support the video tag.
         </video>
-          <div class="volume-video">
-            <i class="bi bi-volume-down" style="font-size: 4vh;"></i>
+        <div class="volume-video">
+        <i class="bi bi-volume-down" style="font-size: 4vh;"></i>
             <input 
             type="range" 
             min="0" 
@@ -285,6 +285,11 @@ export default {
   justify-content: space-between;
   align-items: flex-start;
   flex-wrap: wrap;
+}
+
+.volume-video {
+  display: flex;
+  margin-left: 35%;
 }
 
 .lista-cidades {
