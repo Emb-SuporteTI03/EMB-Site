@@ -422,7 +422,7 @@ export default {
   width: 70vh; /* Aumenta a largura da caixa do mapa */
   height: 70vh;
   margin-top: 10vh;
-  margin-left: 15vh;
+  margin-left: 25vh;
 }
 .map-box {
   background: #ffffff;
