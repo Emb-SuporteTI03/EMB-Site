@@ -2,7 +2,7 @@
 export default {
   data() {
     return {
-      volume: 20,
+      volume: 0,
       isDropdownActive: false,
       isSubDropdownActive: false,
       mapAtual: '1',
