@@ -98,7 +98,7 @@ export default {
           <p class="about-us-paragraph" v-motion-slide-visible-once-bottom>
             A EMBALARTE nasceu do sonho de Fernando Alves Vieira em criar uma empresa forte e sólida, para oferecer 
             ao mercado soluções completas e personalizadas. Fundada em 1999 e com mais de 25 anos de experiência, vem conquistado 
-            seu espaço como uma das melhores empresas no segmento. Situada na Cidade de Santana de Paranaíba no Estado de 
+            seu espaço como uma das melhores empresas no segmento. Situada na Cidade de Santana de Parnaíba no Estado de 
             São Paulo, dispõe em sua planta própria, 4.000m2 de área. Localizada próximo as rodovias Anhanguera e Bandeirantes 
             e de fácil acesso ao Rodoanel, possibilita agilidade no processo de distribuição e transporte dos materiais. 
             Equipamentos de ponta, funcionários treinados e qualificados, gestão e tecnologia completam a estrutura voltada para 
@@ -136,7 +136,7 @@ export default {
         <div class="map-box">
           <iframe class="mapa"
             v-if="mapAtual == 1"
-            src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d14646.357919884578!2d-46.8853484!3d-23.4030639!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94cf1c60570bde1f%3A0x5aa53ca281712703!2sGRUPO%20EMBALARTE!5e0!3m2!1spt-BR!2sbr!4v1720455342886!5m2!1spt-BR!2sbr"
+            src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d766.7468449803669!2d-46.88539066807566!3d-23.4031794034974!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94cf1c60570bde1f%3A0x5aa53ca281712703!2sGRUPO%20EMBALARTE!5e1!3m2!1spt-BR!2sbr!4v1725996958922!5m2!1spt-BR!2sbr"
             allowfullscreen loading="lazy"
             referrerpolicy="no-referrer-when-downgrade"
             draggable="false"
@@ -255,7 +255,7 @@ export default {
 .grid-container {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 1vh;
+  gap: 3%;
 }
 
 /* Grid Item */
@@ -263,7 +263,7 @@ export default {
   background: #e2e2e2;
   border: 1px solid #ddd;
   border-radius: 8px;
-  padding: 2vh;
+  padding: 4%;
   text-align: center;
   font-size: 3vh;         /* Ajuste o tamanho da fonte conforme necessário */
 
@@ -298,7 +298,7 @@ export default {
 }
 
 .lista-cidades li {
-  margin: 4vh 0; /* Space between items */
+  margin: 4% 0; /* Space between items */
 }
 
 .lista-cidades a {
@@ -347,19 +347,20 @@ export default {
   font-family: "Outfit", sans-serif; /* Fonte */ 
   text-align: center; /* Centraliza o texto */
   flex: 1;
-  margin-top: 1vh;
+  margin-top: 5%;
 }
 
 #about-us-nos {
-  font-size: 4vh;
+  font-size: 3rem;
   top: 10px; /* Valor positivo para mover o texto para baixo */
 }
   .video-container {
     width: 80vh;
+    max-width: 40%
   }
   .video-container video{
   width: 85%;
-  margin-top: 15vh;
+  margin-top: 30%;
   }
 .about-us-divider {
   border: 0;
