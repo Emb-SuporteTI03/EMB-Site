@@ -427,10 +427,10 @@ export default {
 
 /* Essa é apenas uma linha preta que pode ser usada para marcação */
 .custom-hr2 {
-  height: 0.1vh;
+  height: 0.1%;
   background-color: black;
   border: none;
-  margin-bottom: 1vh;
+  margin-bottom: 1%;
   margin-top: 0.75%
 }
 
@@ -445,7 +445,7 @@ export default {
   background-color: rgb(255, 255, 255); /* Fundo branco inicial */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Cria uma pequena sombra embaixo do cabeçalho */
   transition: background-color 0.3s ease, backdrop-filter 0.3s ease; /* Suaviza a transição quando scrolla a página */
-  height: 10vh;
+  height: 10%;
 }
 .header-cllr {
     display: none;
@@ -495,7 +495,9 @@ export default {
   align-items: center;
 }
 .imagem img {
-  width: 12vw;
+  width: 30vh;
+  min-width: 100px;
+  max-width: 800px;
   height: auto; /* Mantém a proporção correta da imagem */
 }
 
@@ -512,7 +514,7 @@ export default {
 .drop a {
   font-size: 2vh; /* Defina uma largura para o sub-dropdown */
   display: block;
-  padding: 1vh 1.5vh;
+  padding: 7% 5%;
   text-align: left;
   opacity: 0.7;
   transition: opacity 0.3s ease;
@@ -527,19 +529,19 @@ export default {
   margin-top: 0;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
   background-color: #ececec;
-  padding: 2vh 2vh;
-  gap: 2vh 0;
+  padding: 7% 5%;
+  gap: 3% 0;
   display: block;
   position: absolute;
   left: 100%;
   top: 0;
   z-index: 2;
-  width: 25vh; /* Defina uma largura para o sub-dropdown */
+  width: 80%; /* Defina uma largura para o sub-dropdown */
 }
 
 #subDrop2 {
   margin-top: 30%;  
-  width: 25vh; /* Defina uma largura para o sub-dropdown */
+  width: 100%; /* Defina uma largura para o sub-dropdown */
 
 }
 
