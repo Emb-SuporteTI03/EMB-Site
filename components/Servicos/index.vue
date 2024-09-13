@@ -567,15 +567,14 @@ export default {
 
 }
 .texto-intro {
-    display: flex; /* Flexbox for images and text layout */
-    align-items: center; /* Center items vertically */
-    justify-content: space-between;
-    width: 100%; /* Full width of the parent container */
-    height: 40vh;
-    overflow: hidden; /* Hide overflow if images are too large */
-    background-color: rgb(154, 191, 207);
-
-  }
+  display: flex; /* Flexbox for images and text layout */
+  align-items: center; /* Center items vertically */
+  justify-content: space-between;
+  width: 100%; /* Full width of the parent container */
+  height: 40vh;
+  overflow: hidden; /* Hide overflow if images are too large */
+  background-color: rgb(154, 191, 207);
+}
 .texto-intro p {
   font-size: 3vh;
 }
