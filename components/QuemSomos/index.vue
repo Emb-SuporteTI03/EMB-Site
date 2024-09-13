@@ -265,7 +265,7 @@ export default {
   border-radius: 8px;
   padding: 4%;
   text-align: center;
-  font-size: 3vh;         /* Ajuste o tamanho da fonte conforme necessário */
+  font-size: 1.3rem;         /* Ajuste o tamanho da fonte conforme necessário */
 
 }
 
@@ -303,11 +303,10 @@ export default {
 
 .lista-cidades a {
   text-decoration: none; /* Remove underline from links */
-  font-size: 1vh; /* Slightly larger font size */
   color: #007bff; /* Blue color for links */
   font-weight: bold; /* Bold text */
   display: inline-block; /* Make the entire list item clickable */
-  padding: 1vh 2vh; /* More responsive padding */
+  padding: 4% 7%; /* More responsive padding */
   border-radius: 5px; /* Rounded corners */
   transition: transform 0.3s ease-in-out, background-color 0.3s, color 0.3s; /* Smooth transition effects */
   border: 2px solid #86acca; /* Blue border */
@@ -347,7 +346,8 @@ export default {
   font-family: "Outfit", sans-serif; /* Fonte */ 
   text-align: center; /* Centraliza o texto */
   flex: 1;
-  margin-top: 5%;
+  margin-top: 2.5%;
+  max-width: 75%;
 }
 
 #about-us-nos {
@@ -355,8 +355,8 @@ export default {
   top: 10px; /* Valor positivo para mover o texto para baixo */
 }
   .video-container {
-    width: 80vh;
-    max-width: 40%
+    width: 40%;
+    max-width: 400px
   }
   .video-container video{
   width: 85%;
@@ -366,12 +366,12 @@ export default {
   border: 0;
 }
 .about-us-title {
-  font-size: 8vh;
+  font-size: 5rem;
   color: black;
 }
 .about-us-paragraph {
-  padding: 0px 7vh 0px 7vh;
-  font-size: 2.4vh;
+  padding: 0px 7% 0px 7%;
+  font-size: 1rem;
 }
 #ImgTexto {
   max-width: 100%;
@@ -412,18 +412,18 @@ export default {
 }
 
 #localTexto {
-  font-size: 3vh;
-  margin-bottom: 6vh;
-  margin-top: 5vh;
+  font-size: 1.5rem;
+  margin-bottom: 6%;
+  margin-top: 5%;
 }
 .caixa-mapa {
   background: rgb(58, 106, 141);
   border-radius: 10px;
   padding: 15px;
-  width: 70vh; /* Aumenta a largura da caixa do mapa */
-  height: 70vh;
-  margin-top: 10vh;
-  margin-left: 25vh;
+  width: 70%; /* Aumenta a largura da caixa do mapa */
+  height: 70%;
+  margin-top: 10%;
+  margin-left: 25%;
 }
 .map-box {
   background: #ffffff;
@@ -443,8 +443,8 @@ export default {
 .lista-cidades {
   list-style-type: none;
   padding-left: 0;
-  margin-bottom: -5vh;
-  margin-top: -5vh;
+  margin-bottom: -5%;
+  margin-top: -5%;
 }
 .text-overlay {
   font-family: 'Mulish', sans-serif; /* Aplica a fonte 'Mulish' */
@@ -454,25 +454,25 @@ export default {
   justify-content: center;
   align-items: center;
   text-align: center;
-  margin-left: 10vh;
-  margin-top: 5vh;
+  margin-left: 10%;
+  margin-top: 5%;
 }
 
 .text-overlay a {
-font-size: 3vh;
+font-size: 3rem;
 }
 
 .diferenciais {
   margin-left: 15%;
   margin-right: 15%;
-  margin-top: 2vh;
+  margin-top: 2%;
 }
 .diferenciais-titulo {
   align-items: center;
   justify-content: center;
   align-items: center;
   text-align: center;
-  font-size: 6vh;
+  font-size: 3rem;
   font-weight: bold;
 }
 /* --------------------------------------------------------------------------/ */
