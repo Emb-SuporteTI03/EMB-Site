@@ -98,7 +98,7 @@ export default {
           <p class="about-us-paragraph" v-motion-slide-visible-once-bottom>
             A EMBALARTE nasceu do sonho de Fernando Alves Vieira em criar uma empresa forte e sólida, para oferecer 
             ao mercado soluções completas e personalizadas. Fundada em 1999 e com mais de 25 anos de experiência, vem conquistado 
-            seu espaço como uma das melhores empresas no segmento. Situada na Cidade de Santana de Parnaíba no Estado de 
+            seu espaço como uma das melhores empresas no segmento. Situada na Cidade de Santana de Paranaíba no Estado de 
             São Paulo, dispõe em sua planta própria, 4.000m2 de área. Localizada próximo as rodovias Anhanguera e Bandeirantes 
             e de fácil acesso ao Rodoanel, possibilita agilidade no processo de distribuição e transporte dos materiais. 
             Equipamentos de ponta, funcionários treinados e qualificados, gestão e tecnologia completam a estrutura voltada para 
@@ -136,7 +136,7 @@ export default {
         <div class="map-box">
           <iframe class="mapa"
             v-if="mapAtual == 1"
-            src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d766.7468449803669!2d-46.88539066807566!3d-23.4031794034974!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94cf1c60570bde1f%3A0x5aa53ca281712703!2sGRUPO%20EMBALARTE!5e1!3m2!1spt-BR!2sbr!4v1725996958922!5m2!1spt-BR!2sbr"
+            src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d14646.357919884578!2d-46.8853484!3d-23.4030639!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94cf1c60570bde1f%3A0x5aa53ca281712703!2sGRUPO%20EMBALARTE!5e0!3m2!1spt-BR!2sbr!4v1720455342886!5m2!1spt-BR!2sbr"
             allowfullscreen loading="lazy"
             referrerpolicy="no-referrer-when-downgrade"
             draggable="false"
@@ -255,7 +255,7 @@ export default {
 .grid-container {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 3%;
+  gap: 4%;
 }
 
 /* Grid Item */
@@ -263,9 +263,9 @@ export default {
   background: #e2e2e2;
   border: 1px solid #ddd;
   border-radius: 8px;
-  padding: 4%;
+  padding: 2%;
   text-align: center;
-  font-size: 1.3rem;         /* Ajuste o tamanho da fonte conforme necessário */
+  font-size: 1.6rem;         /* Ajuste o tamanho da fonte conforme necessário */
 
 }
 
@@ -306,7 +306,9 @@ export default {
   color: #007bff; /* Blue color for links */
   font-weight: bold; /* Bold text */
   display: inline-block; /* Make the entire list item clickable */
-  padding: 4% 7%; /* More responsive padding */
+  font-size: 0.8rem; /* Slightly larger font size */
+  padding: 5% 5%; /* More responsive padding */
+  margin-left: -10%;
   border-radius: 5px; /* Rounded corners */
   transition: transform 0.3s ease-in-out, background-color 0.3s, color 0.3s; /* Smooth transition effects */
   border: 2px solid #86acca; /* Blue border */
@@ -346,8 +348,7 @@ export default {
   font-family: "Outfit", sans-serif; /* Fonte */ 
   text-align: center; /* Centraliza o texto */
   flex: 1;
-  margin-top: 2.5%;
-  max-width: 75%;
+  margin-top: 0%;
 }
 
 #about-us-nos {
@@ -355,23 +356,22 @@ export default {
   top: 10px; /* Valor positivo para mover o texto para baixo */
 }
   .video-container {
-    width: 40%;
-    max-width: 400px
+    width: 80vh;
   }
   .video-container video{
   width: 85%;
-  margin-top: 30%;
+  margin-top: 15vh;
   }
 .about-us-divider {
   border: 0;
 }
 .about-us-title {
-  font-size: 5rem;
+  font-size: 4rem;
   color: black;
 }
 .about-us-paragraph {
   padding: 0px 7% 0px 7%;
-  font-size: 1rem;
+  font-size: 1.3rem;
 }
 #ImgTexto {
   max-width: 100%;
@@ -412,7 +412,7 @@ export default {
 }
 
 #localTexto {
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   margin-bottom: 6%;
   margin-top: 5%;
 }
@@ -420,10 +420,10 @@ export default {
   background: rgb(58, 106, 141);
   border-radius: 10px;
   padding: 15px;
-  width: 70%; /* Aumenta a largura da caixa do mapa */
-  height: 70%;
-  margin-top: 10%;
-  margin-left: 25%;
+  width: 70vh; /* Aumenta a largura da caixa do mapa */
+  height: 70vh;
+  margin-top: 3%;
+  margin-left: 10%;
 }
 .map-box {
   background: #ffffff;
@@ -454,18 +454,18 @@ export default {
   justify-content: center;
   align-items: center;
   text-align: center;
-  margin-left: 10%;
-  margin-top: 5%;
+  margin-left: 1%;
+  margin-top: 2%;
 }
 
 .text-overlay a {
-font-size: 3rem;
+font-size: 1.8rem;
 }
 
 .diferenciais {
   margin-left: 15%;
   margin-right: 15%;
-  margin-top: 2%;
+  margin-top: 7.5%;
 }
 .diferenciais-titulo {
   align-items: center;

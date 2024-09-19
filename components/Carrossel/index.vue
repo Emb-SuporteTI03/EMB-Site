@@ -95,7 +95,7 @@ body {
 }
 
 .text-justify {
-  font-size: 3vh;
+  font-size: 2rem;
 }
 
 .text-center {

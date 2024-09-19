@@ -1,167 +1,197 @@
 <template>
   <div> 
-    <div class="cultura-container-pc">
-      <div>
-        <div class="cultura-content">
-          <h1 class="cultura_titulo" style="font-family: 'Outfit', sans-serif;" v-motion-slide-visible-once-bottom>
+    <div class="container-history-pc">
+      <h1 class="valores_titulo" id="titulo-container" style="font-family: 'Outfit', sans-serif;" v-motion-slide-visible-once-bottom>
         NOSSA CULTURA
       </h1>
-      <img draggable="false" src="../../assets/images/Capa LINK - EMBALARTE.png" v-motion-fade-visible-once class="imgem_final">
-
-      <p class="cultura_paragrafo" style="font-family: 'Outfit', sans-serif;" v-motion-slide-visible-once-bottom>
-        <br>
-        <br>
-        Na <strong>EMBALARTE</strong>, nossa cultura é a 
-        essência que impulsiona nossa dedicação e 
-        inovação no setor de embalagens. Nosso compromisso 
-        vai além da simples produção de embalagens; 
-        buscamos construir um ambiente de trabalho 
-        que reflete nossos valores e nos inspira 
-        a alcançar a excelência em tudo o que fazemos.
-        <br>
-        </p>              
-        <p class="cultura_paragrafo" style="font-family: 'Outfit', sans-serif;" v-motion-slide-visible-once-bottom>
-        Nossa cultura também é a base de 
-        nossa identidade e o motor 
-        que nos impulsiona a entregar 
-        excelência em embalagens. 
-        Estamos comprometidos em 
-        criar um ambiente de trabalho 
-        positivo, sustentável e 
-        inovador que beneficia
-         nossos clientes e colaboradores.
-         <br>
-         <br>
-        <img draggable="false" src="../../assets/images/Logo-Grupo-Embalarte-5.png" v-motion-fade-visible-once class="cultura_imagem">
-
-      </p>
+      <div class="about-us-paragraph" style="font-family: 'Outfit', sans-serif;" v-motion-slide-visible-once-bottom>
+        
+        <div class="section">
+          <div class="text-content">
+            <h2 class="valores_titulo2">Nossa MISSÃO:</h2>
+            <ul class="styled-list">
+              <li><strong>Oferecer inovação:</strong> em processos e soluções logísticas respeitando a </li>
+              <li>necessidade e individualidade de <strong>cada cliente:</strong>, visando o equilíbrio</li>
+              <li>sustentável em todos os seus quatro alicerces: <strong>Ambiental, Social, Governança e Econômico/Financeiro.</strong></li>
+            </ul>
+          </div>
+          <div class="image-content">
+            <img draggable="false" src="../../assets/images/download.png" v-motion-fade-visible-once class="valores_imagem">
+          </div>
         </div>
-      </div>      
+
+        <div class="section">
+          <div class="text-content">
+            <h2 class="valores_titulo2">Nossa VISÃO:</h2>
+            <ul class="styled-list">
+              <li>Ser um grupo <strong>competitivo</strong> que atue nos diversos segmentos de mercado</li>
+              <li>oferecendo soluções que <strong>superem as expectativas</strong> de nossos clientes.</li>
+            </ul>
+          </div>
+          <div class="image-content">
+            <img draggable="false" src="../../assets/images/4127193.png" v-motion-fade-visible-once class="valores_imagem">
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="text-content">
+            <h2 class="valores_titulo2">Nossos VALORES:</h2>
+            <ul class="styled-list">
+              <li>O relacionamento no <strong>GRUPO EMBALARTE</strong> é baseado na <strong>valorização</strong> </li>
+              <li>do ser humano, na <strong>confiança</strong>, no <strong>respeito mútuo</strong> no <strong>senso de justiça</strong>,</li>
+              <li> na <strong>transparência</strong>, e no <strong>compartilhamento de responsabilidades</strong></li>
+            </ul>
+          </div>
+          <div class="image-content">
+            <img draggable="false" src="../../assets/images/1924771.png" v-motion-fade-visible-once class="valores_imagem">
+          </div>
+        </div>
+        
+      </div>
     </div>
 
-    <div>
-    <div class="cultura-container-celular">
-      <div class="cultura-content">
-          <h1 class="cultura_titulo" style="font-family: 'Outfit', sans-serif;" v-motion-slide-visible-once-bottom>
-        NOSSA CULTURA
+    <div class="container-history-cellphone">
+      <h1 class="valores_titulo" id="titulo-container" style="font-family: 'Outfit', sans-serif;" v-motion-slide-visible-once-bottom>
+        NOSSOS VALORES
       </h1>
-
-      <p class="cultura_paragrafo" style="font-family: 'Outfit', sans-serif;" v-motion-slide-visible-once-bottom>
-        <br>
-        <br>
-        Na <strong>EMBALARTE</strong>, nossa cultura é a 
-        essência que impulsiona nossa dedicação e 
-        inovação no setor de embalagens. Nosso compromisso 
-        vai além da simples produção de embalagens; 
-        buscamos construir um ambiente de trabalho 
-        que reflete nossos valores e nos inspira 
-        a alcançar a excelência em tudo o que fazemos.
-        <br>
-        </p> 
-      </div>
-
-    <div class="cultura-container-celular">
-        <p class="cultura_paragrafo" style="font-family: 'Outfit', sans-serif;" v-motion-slide-visible-once-bottom>
-        Nossa cultura também é a base de 
-        nossa identidade e o motor 
-        que nos impulsiona a entregar 
-        excelência em embalagens. 
-        Estamos comprometidos em 
-        criar um ambiente de trabalho 
-        positivo, sustentável e 
-        inovador que beneficia
-         nossos clientes e colaboradores.
-         <br>
-         <br>
-        <img draggable="false" src="../../assets/images/Logo-Grupo-Embalarte-5.png" v-motion-fade-visible-once class="cultura_imagem">
-
-      </p>     
+      <div class="about-us-paragraph" style="font-family: 'Outfit', sans-serif;" v-motion-slide-visible-once-bottom>
+        
+        <div class="section">
+          <div class="text-content">
+            <h2 class="valores_titulo2">Valores Fundamentais:</h2>
+            <ul class="styled-list">
+              <li><strong>Integridade:</strong> Fazer o que é certo, mesmo quando ninguém está olhando.</li>
+              <li><strong>Inovação:</strong> Buscar constantemente novas e melhores formas de atender às necessidades dos nossos clientes.</li>
+              <li><strong>Excelência: </strong>Comprometimento com a qualidade e a melhoria contínua.</li>
+              <li><strong>Colaboração:</strong> Trabalhar em equipe e valorizar as contribuições de todos os membros.</li>
+              <li><strong>Respeito:</strong> Tratar todos com dignidade e consideração.</li>       
+            </ul>
+          </div>
         </div>
-      </div>  
+
+        <div class="section">
+          <div class="text-content">
+            <h2 class="valores_titulo2">Ambiente de Trabalho:</h2>
+            <ul class="styled-list">
+              <li><strong>Inclusivo e Diverso:</strong> Promover um ambiente que valorize a diversidade e a inclusão.</li>
+              <li><strong>Colaborativo:</strong> Estimular o trabalho em equipe e a comunicação aberta.</li>
+              <li><strong>Apoio ao Desenvolvimento:</strong> Oferecer oportunidades para crescimento profissional e pessoal.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="text-content">
+            <h2 class="valores_titulo2">Estilo de Liderança:</h2>
+            <ul class="styled-list">
+              <li><strong>Inspirador:</strong> Líderes que motivam e engajam suas equipes.</li>
+              <li><strong>Acessível:</strong> Líderes que estão disponíveis para ouvir e apoiar suas equipes.</li>
+              <li><strong>Transparente:</strong> Comunicação clara e honesta sobre os objetivos e desafios da empresa.</li>
+            </ul>
+          </div>
+
+        </div>
+        
+      </div>
     </div>
   </div>
 </template>
 
 <style>
 /* Contêiner de imagens */
-.cultura-container-pc {
-display: flex;
-flex-direction: column;
-gap: 20px; /* Espaço entre linhas de imagens */
-}
-.cultura-container-celular {
+.container-history-cellphone {
   display: none;
 }
-.cultura-content {
-margin-top: 10vh;
+.container-history-pc {
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Espaço entre linhas de imagens */
 }
-.cultura_titulo {
-font-size: 6vh;
-text-align: center; /* Justifica o texto no centro */
-color: #01385C;
+
+.valores_titulo {
+  font-size: 8vh;
+  text-align: center; /* Justifica o texto no centro */
+  color: #01385C;
 }
-.cultura_titulo2 {
-font-size: 4vh;
-text-align: center; /* Justifica o texto no centro */
+
+.valores_titulo2 {
+  font-size: 5vh;
+  text-align: center; /* Justifica o texto no centro */
+  color: #01385C;
 }
-.cultura_paragrafo {
-  padding: 0px 25%;
+
+#titulo-container {
+  margin-top: 6%;
+}
+
+.about-us-paragraph {
+  padding: 0px 15%;
+  font-size: 1rem;
+  text-align: left; /* Alinha o texto à esquerda */
+}
+
+/* Estilização da lista */
+.styled-list {
+  list-style-type: none; /* Remove marcadores da lista */
+  padding-left: 0;
+}
+
+.styled-list li {
+  margin-bottom: 10px; /* Espaçamento entre itens da lista */
   font-size: 2.5vh;
-  text-align: center;
-  /* Remove the fixed height */
-  min-height: 25vh; /* Optional: set a minimum height */
 }
-.imgem_final {
-  height: 40vh;
+
+.section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px; /* Espaçamento entre seções */
 }
-.cultura_imagem {
-  width: 40vh; /* Faz com que a imagem ocupe toda a largura do contêiner */
+
+/* Texto à esquerda */
+.text-content {
+  width: 60%;
+}
+
+/* Imagem à direita */
+.image-content {
+  width: 35%;
+  display: flex;
+  justify-content: center;
+}
+
+.valores_imagem {
+  width: 20vh; /* Faz com que a imagem ocupe toda a largura do contêiner */
   height: auto; /* Mantém a proporção da imagem */
   object-fit: contain; /* Ajusta a imagem para caber no contêiner sem cortar */
 }
-.custom-hr {
-background-color: rgba(255, 255, 255, 0);
-color: rgba(255, 255, 255, 0);
-}
-/* Contêiner de imagens individuais */
-.about-us-image {
-margin-top: 1vh;
-display: flex;
-gap: 10px; /* Espaço entre as imagens */
-justify-content: center; /* Centraliza as imagens horizontalmente */
-flex-wrap: wrap; /* Permite que as imagens quebrem para a linha seguinte se necessário */
-}
-/* Estilo das imagens */
-.about-us-image-img {
-width: 10%; /* Define a largura desejada */
-height: 10%; /* Define a altura desejada */
-object-fit: contain; /* Ajusta a imagem para caber no contêiner sem cortar */
-}
-.imagem_final {
-  width: 100%; /* Define a largura da imagem como 100% do contêiner pai */
-  height: auto; /* Mantém a proporção da imagem */
-  object-fit: cover; /* Ajusta a imagem para cobrir o contêiner sem cortar */
-}
 
 @media only screen and (max-width: 768px){
-  .cultura-container-pc {
+  .container-history-pc {
     display: none;
   }
-  .cultura-container-celular {
+
+  .container-history-cellphone {
     display: block;
-    height: 100%;
-    width: 100%;
+    margin-top: 10vh;
   }
-  .cultura-content {
-    display:block;
-    height: 100%;
+
+  .section {
+    display: flex;
+    align-items: center;
+    justify-content: center;  
+    margin-bottom: 1vh; /* Espaçamento entre seções */
   }
-  .cultura_paragrafo {
-    font-size: 3vh;
-    padding: 1vh 1%;
-  }
-  .cultura_imagem {
-    margin-top: 5%;
-  }
+
+  .valores_titulo2 {
+  font-size: 5vh;
+  display: flex;
+  text-align: center; /* Justifica o texto no centro */
+  justify-content: center;  
+  color: #01385C;
+  margin-left: -7.5vh;
+  margin-right: -7.5vh;
+}
+
 }
 </style>

@@ -571,28 +571,28 @@ export default {
     align-items: center; /* Center items vertically */
     justify-content: space-between;
     width: 100%; /* Full width of the parent container */
-    height: 40vh;
+    height: 40%;
     overflow: hidden; /* Hide overflow if images are too large */
     background-color: rgb(154, 191, 207);
 
   }
 .texto-intro p {
-  font-size: 3vh;
+  font-size: 1.4rem;
 }
 
 .texto-intro img {
-  height: 50vh;
+  height: 50%;
 }
 
 .imagem-intro {
-  padding: -10vh;
-  margin: -10vh;
+  padding: -5%;
+  margin: -5%;
   display: block; /* Remove o espaço extra causado pelo modo inline padrão */
 }
 
 .imagem-intro img {
-  height: 15vh;
-  width: 10vh;
+  height: 15%;
+  width: 10px;
 }
 
 .nossos_servicos img {
@@ -602,11 +602,11 @@ export default {
 }
 
 .nossos_servicos p {
-  font-size: 2.5vh;
+  font-size: 1rem;
 }
 
 .nossos_servicos h2 {
-  font-size: 5vh;
+  font-size: 3rem;
 }
 
 .nossos_servicos{
@@ -624,7 +624,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 5vh 10vh; /* Ajuste o espaçamento vertical */
+  margin: 5% 10%; /* Ajuste o espaçamento vertical */
 }
 
 .texto-servicos {
@@ -678,15 +678,11 @@ export default {
   text-align: center; /* Centraliza o texto dentro do contêiner */
 }
 .titulo-nossos-servicos {
-  font-size: 10vh;
+  font-size: 5rem;
   color:#01395E;
   justify-content: center; /* Centraliza os parágrafos dentro do contêiner */
   align-items: center; /* Alinha verticalmente os parágrafos no centro */
   margin-top: 12vh;
-}
-.titulo-nossos-servicos2 {
-  font-size: 4vh;
-  
 }
 
 .paragrafo-nossos-servicos_esquerda {
@@ -700,7 +696,7 @@ export default {
 }
 .custom-hr {
   border: none; /* Remove qualquer borda padrão */
-  height: 2vh; /* Altura da linha (pode ser ajustada conforme necessário) */
+  height: 2%; /* Altura da linha (pode ser ajustada conforme necessário) */
   background-color: transparent; /* Torna a linha transparente */
   margin: 0; /* Remove qualquer margem padrão */
 }
@@ -721,7 +717,7 @@ export default {
   margin: 15px 100px; /* Ajuste o espaçamento vertical */
 }
 .titulo-nossas-tecnologias {
-  font-size: 10vh;
+  font-size: 5rem;
   color:#01395E;
   justify-content: center; /* Centraliza os parágrafos dentro do contêiner */
   align-items: center; /* Alinha verticalmente os parágrafos no centro */
@@ -746,7 +742,7 @@ export default {
 }
 
 #celular {
-  height: 32vh; /* Maintain aspect ratio */
+  height: 200px; /* Maintain aspect ratio */
   width: auto; /* Ensure images do not exceed viewport width */
   margin-left: 6%;
 }
@@ -756,7 +752,7 @@ export default {
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  height: 35vh;
+  height: 35%;
   background-color: rgb(154, 191, 207);
 }
 
@@ -769,7 +765,7 @@ export default {
 }
 
 .paragrafo-tecnologias-intro {
-  font-size: 3vh;
+  font-size: 1.4rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -837,17 +833,17 @@ export default {
 
 /* Estilo das imagens */
 .nossas_tecnologias-img {
-  width: 30vh; /* Ajuste para a largura desejada */
+  width: 25%; /* Ajuste para a largura desejada */
   height: auto; /* Mantém a proporção da imagem */
   object-fit: contain; /* Ajusta a imagem para caber no contêiner sem cortar */
 }
 
 .nossas_tecnologias-img img{
-  width: 30vh; /* Ajuste para a largura desejada */
+  width: 30%; /* Ajuste para a largura desejada */
 }
 
 .nossas_tecnologias p {
-  font-size: 2.3vh;
+  font-size: 1rem;
 }
 
 @media only screen and (max-width: 768px){

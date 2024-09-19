@@ -36,8 +36,6 @@
                       <router-link :to="{ path: '/Nossa-Historia' }" style="color: black; text-decoration: none;">História</router-link>
                       <hr class="custom-hr2">
                       <router-link :to="{ path: '/Nossa-Cultura' }" style="color: black; text-decoration: none;">Cultura</router-link>
-                      <hr class="custom-hr2">
-                      <router-link :to="{ path: '/Nossos-Valores' }" style="color: black; text-decoration: none;">Valores</router-link>
                     </div>
                   </div>
                   <hr class="custom-hr2">
