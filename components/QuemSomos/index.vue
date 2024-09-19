@@ -119,7 +119,7 @@ export default {
           Your browser does not support the video tag.
         </video>
         <div class="volume-video">
-        <i class="bi bi-volume-down" style="font-size: 4vh;"></i>
+        <i class="bi bi-volume-down" style="font-size: 2.4rem;"></i>
             <input 
             type="range" 
             min="0" 
@@ -176,14 +176,14 @@ export default {
         <strong class="filiais-txt" id="about-us-nos">NÓS, DO GRUPO EMBALARTE</strong>
         <strong class="filiais-txt" id="localTexto">TEMOS NOSSA MATRIZ EM<br> </strong>
           <ul class="lista-cidades">
-            <li><a @click.prevent="updateMapValue('1', $event)">📌 Santana de Parnaíba</a></li>
+            <li><a @click.prevent="updateMapValue('1', $event)" style="font-size: 1.6rem;">📌 Santana de Parnaíba</a></li>
           </ul>
            <strong class="filiais-txt" id="localTexto">
           E ESTAMOS PRESENTES EM OUTRAS 3 CIDADES <br> NO ESTADO DE SÃO PAULO!</strong>
         <ul class="lista-cidades">
-          <li><a @click.prevent="updateMapValue('2', $event)">📌 São Paulo</a></li>
-          <li><a @click.prevent="updateMapValue('3', $event)">📌 São José dos Campos</a></li>
-          <li><a @click.prevent="updateMapValue('4', $event)">📌 Cajamar</a></li>
+          <li><a @click.prevent="updateMapValue('2', $event)" style="font-size: 1.6rem;">📌 São Paulo</a></li>
+          <li><a @click.prevent="updateMapValue('3', $event)" style="font-size: 1.6rem;">📌 São José dos Campos</a></li>
+          <li><a @click.prevent="updateMapValue('4', $event)" style="font-size: 1.6rem;">📌 Cajamar</a></li>
         </ul>
     <hr class="custom-hr">
     <hr class="custom-hr">
@@ -237,7 +237,7 @@ export default {
            <strong class="filiais-txt" id="localTexto">
           E ESTAMOS PRESENTES EM OUTRAS 3 CIDADES NO ESTADO DE SÃO PAULO!</strong>
         <ul class="lista-cidades-cllr">
-          <li><a>📌 Osasco</a></li>
+          <li><a>📌 São Paulo</a></li>
           <li><a>📌 São José dos Campos</a></li>
           <li><a>📌 Cajamar</a></li>
         </ul>
@@ -298,7 +298,7 @@ export default {
 }
 
 .lista-cidades li {
-  margin: 4% 0; /* Space between items */
+  margin: 6% 0; /* Space between items */
 }
 
 .lista-cidades a {
@@ -352,15 +352,19 @@ export default {
 }
 
 #about-us-nos {
-  font-size: 3rem;
+  font-size: 2.5rem;
   top: 10px; /* Valor positivo para mover o texto para baixo */
 }
   .video-container {
     width: 80vh;
   }
   .video-container video{
+    width: 50%;
+    max-width: 600px
+  }
+  .video-container video{
   width: 85%;
-  margin-top: 15vh;
+  margin-top: 20%;
   }
 .about-us-divider {
   border: 0;
@@ -420,11 +424,12 @@ export default {
   background: rgb(58, 106, 141);
   border-radius: 10px;
   padding: 15px;
-  width: 70vh; /* Aumenta a largura da caixa do mapa */
-  height: 70vh;
-  margin-top: 3%;
-  margin-left: 10%;
+  width: 35%; /* A largura será 70% da largura do elemento pai */
+  aspect-ratio: 1 / 1; /* Mantém a proporção quadrada */
+  margin-top: 10%;
+  margin-left: 11%;
 }
+
 .map-box {
   background: #ffffff;
   padding: 12px; /* Ajuste conforme necessário */
@@ -454,8 +459,8 @@ export default {
   justify-content: center;
   align-items: center;
   text-align: center;
-  margin-left: 1%;
-  margin-top: 2%;
+  margin-left: 0%;
+  margin-top: 5%;
 }
 
 .text-overlay a {
@@ -519,7 +524,7 @@ font-size: 1.8rem;
   display: flex;
   justify-content: center; /* Centraliza horizontalmente */
   align-items: center; /* Centraliza verticalmente */
-  height: 10vh; /* Faz o contêiner ocupar toda a altura da viewport */
+  height: 10%; /* Faz o contêiner ocupar toda a altura da viewport */
   text-align: center; /* Alinha o texto no centro do parágrafo */
 }
   /* Estilos para telas menores */
