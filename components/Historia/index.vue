@@ -56,7 +56,7 @@
   flex-direction: column; /* Deixa os itens (que são o título e as linhas) um em baixo do outro*/
 }
 .titulo {
-  margin-top: 4vh;
+  margin-top: 3%;
 }
 .titulo_historia {
   font-size: 10vh; 

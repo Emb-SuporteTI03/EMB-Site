@@ -98,7 +98,7 @@ export default {
           <p class="about-us-paragraph" v-motion-slide-visible-once-bottom>
             A EMBALARTE nasceu do sonho de Fernando Alves Vieira em criar uma empresa forte e sólida, para oferecer 
             ao mercado soluções completas e personalizadas. Fundada em 1999 e com mais de 25 anos de experiência, vem conquistado 
-            seu espaço como uma das melhores empresas no segmento. Situada na Cidade de Santana de Parnaíba no Estado de 
+            seu espaço como uma das melhores empresas no segmento. Situada na Cidade de Santana de Paranaíba no Estado de 
             São Paulo, dispõe em sua planta própria, 4.000m2 de área. Localizada próximo as rodovias Anhanguera e Bandeirantes 
             e de fácil acesso ao Rodoanel, possibilita agilidade no processo de distribuição e transporte dos materiais. 
             Equipamentos de ponta, funcionários treinados e qualificados, gestão e tecnologia completam a estrutura voltada para 
@@ -119,7 +119,7 @@ export default {
           Your browser does not support the video tag.
         </video>
         <div class="volume-video">
-        <i class="bi bi-volume-down" style="font-size: 4vh;"></i>
+        <i class="bi bi-volume-down" style="font-size: 2.4rem;"></i>
             <input 
             type="range" 
             min="0" 
@@ -136,7 +136,7 @@ export default {
         <div class="map-box">
           <iframe class="mapa"
             v-if="mapAtual == 1"
-            src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d766.7468449803669!2d-46.88539066807566!3d-23.4031794034974!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94cf1c60570bde1f%3A0x5aa53ca281712703!2sGRUPO%20EMBALARTE!5e1!3m2!1spt-BR!2sbr!4v1725996958922!5m2!1spt-BR!2sbr"
+            src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d14646.357919884578!2d-46.8853484!3d-23.4030639!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94cf1c60570bde1f%3A0x5aa53ca281712703!2sGRUPO%20EMBALARTE!5e0!3m2!1spt-BR!2sbr!4v1720455342886!5m2!1spt-BR!2sbr"
             allowfullscreen loading="lazy"
             referrerpolicy="no-referrer-when-downgrade"
             draggable="false"
@@ -176,14 +176,14 @@ export default {
         <strong class="filiais-txt" id="about-us-nos">NÓS, DO GRUPO EMBALARTE</strong>
         <strong class="filiais-txt" id="localTexto">TEMOS NOSSA MATRIZ EM<br> </strong>
           <ul class="lista-cidades">
-            <li><a @click.prevent="updateMapValue('1', $event)">📌 Santana de Parnaíba</a></li>
+            <li><a @click.prevent="updateMapValue('1', $event)" style="font-size: 1.6rem;">📌 Santana de Parnaíba</a></li>
           </ul>
            <strong class="filiais-txt" id="localTexto">
           E ESTAMOS PRESENTES EM OUTRAS 3 CIDADES <br> NO ESTADO DE SÃO PAULO!</strong>
         <ul class="lista-cidades">
-          <li><a @click.prevent="updateMapValue('2', $event)">📌 São Paulo</a></li>
-          <li><a @click.prevent="updateMapValue('3', $event)">📌 São José dos Campos</a></li>
-          <li><a @click.prevent="updateMapValue('4', $event)">📌 Cajamar</a></li>
+          <li><a @click.prevent="updateMapValue('2', $event)" style="font-size: 1.6rem;">📌 São Paulo</a></li>
+          <li><a @click.prevent="updateMapValue('3', $event)" style="font-size: 1.6rem;">📌 São José dos Campos</a></li>
+          <li><a @click.prevent="updateMapValue('4', $event)" style="font-size: 1.6rem;">📌 Cajamar</a></li>
         </ul>
     <hr class="custom-hr">
     <hr class="custom-hr">
@@ -237,7 +237,7 @@ export default {
            <strong class="filiais-txt" id="localTexto">
           E ESTAMOS PRESENTES EM OUTRAS 3 CIDADES NO ESTADO DE SÃO PAULO!</strong>
         <ul class="lista-cidades-cllr">
-          <li><a>📌 Osasco</a></li>
+          <li><a>📌 São Paulo</a></li>
           <li><a>📌 São José dos Campos</a></li>
           <li><a>📌 Cajamar</a></li>
         </ul>
@@ -255,7 +255,7 @@ export default {
 .grid-container {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 3%;
+  gap: 4%;
 }
 
 /* Grid Item */
@@ -263,9 +263,9 @@ export default {
   background: #e2e2e2;
   border: 1px solid #ddd;
   border-radius: 8px;
-  padding: 4%;
+  padding: 2%;
   text-align: center;
-  font-size: 3vh;         /* Ajuste o tamanho da fonte conforme necessário */
+  font-size: 1.6rem;         /* Ajuste o tamanho da fonte conforme necessário */
 
 }
 
@@ -298,16 +298,17 @@ export default {
 }
 
 .lista-cidades li {
-  margin: 4% 0; /* Space between items */
+  margin: 6% 0; /* Space between items */
 }
 
 .lista-cidades a {
   text-decoration: none; /* Remove underline from links */
-  font-size: 1vh; /* Slightly larger font size */
   color: #007bff; /* Blue color for links */
   font-weight: bold; /* Bold text */
   display: inline-block; /* Make the entire list item clickable */
-  padding: 1vh 2vh; /* More responsive padding */
+  font-size: 0.8rem; /* Slightly larger font size */
+  padding: 5% 5%; /* More responsive padding */
+  margin-left: -10%;
   border-radius: 5px; /* Rounded corners */
   transition: transform 0.3s ease-in-out, background-color 0.3s, color 0.3s; /* Smooth transition effects */
   border: 2px solid #86acca; /* Blue border */
@@ -347,31 +348,34 @@ export default {
   font-family: "Outfit", sans-serif; /* Fonte */ 
   text-align: center; /* Centraliza o texto */
   flex: 1;
-  margin-top: 5%;
+  margin-top: 0%;
 }
 
 #about-us-nos {
-  font-size: 3rem;
+  font-size: 2.5rem;
   top: 10px; /* Valor positivo para mover o texto para baixo */
 }
   .video-container {
     width: 80vh;
-    max-width: 40%
+  }
+  .video-container video{
+    width: 50%;
+    max-width: 600px
   }
   .video-container video{
   width: 85%;
-  margin-top: 30%;
+  margin-top: 20%;
   }
 .about-us-divider {
   border: 0;
 }
 .about-us-title {
-  font-size: 8vh;
+  font-size: 4rem;
   color: black;
 }
 .about-us-paragraph {
-  padding: 0px 7vh 0px 7vh;
-  font-size: 2.4vh;
+  padding: 0px 7% 0px 7%;
+  font-size: 1.3rem;
 }
 #ImgTexto {
   max-width: 100%;
@@ -412,19 +416,20 @@ export default {
 }
 
 #localTexto {
-  font-size: 3vh;
-  margin-bottom: 6vh;
-  margin-top: 5vh;
+  font-size: 1.8rem;
+  margin-bottom: 6%;
+  margin-top: 5%;
 }
 .caixa-mapa {
   background: rgb(58, 106, 141);
   border-radius: 10px;
   padding: 15px;
-  width: 70vh; /* Aumenta a largura da caixa do mapa */
-  height: 70vh;
-  margin-top: 10vh;
-  margin-left: 25vh;
+  width: 35%; /* A largura será 70% da largura do elemento pai */
+  aspect-ratio: 1 / 1; /* Mantém a proporção quadrada */
+  margin-top: 10%;
+  margin-left: 11%;
 }
+
 .map-box {
   background: #ffffff;
   padding: 12px; /* Ajuste conforme necessário */
@@ -443,8 +448,8 @@ export default {
 .lista-cidades {
   list-style-type: none;
   padding-left: 0;
-  margin-bottom: -5vh;
-  margin-top: -5vh;
+  margin-bottom: -5%;
+  margin-top: -5%;
 }
 .text-overlay {
   font-family: 'Mulish', sans-serif; /* Aplica a fonte 'Mulish' */
@@ -454,25 +459,25 @@ export default {
   justify-content: center;
   align-items: center;
   text-align: center;
-  margin-left: 10vh;
-  margin-top: 5vh;
+  margin-left: 0%;
+  margin-top: 5%;
 }
 
 .text-overlay a {
-font-size: 3vh;
+font-size: 1.8rem;
 }
 
 .diferenciais {
   margin-left: 15%;
   margin-right: 15%;
-  margin-top: 2vh;
+  margin-top: 7.5%;
 }
 .diferenciais-titulo {
   align-items: center;
   justify-content: center;
   align-items: center;
   text-align: center;
-  font-size: 6vh;
+  font-size: 3rem;
   font-weight: bold;
 }
 /* --------------------------------------------------------------------------/ */
@@ -519,7 +524,7 @@ font-size: 3vh;
   display: flex;
   justify-content: center; /* Centraliza horizontalmente */
   align-items: center; /* Centraliza verticalmente */
-  height: 10vh; /* Faz o contêiner ocupar toda a altura da viewport */
+  height: 10%; /* Faz o contêiner ocupar toda a altura da viewport */
   text-align: center; /* Alinha o texto no centro do parágrafo */
 }
   /* Estilos para telas menores */

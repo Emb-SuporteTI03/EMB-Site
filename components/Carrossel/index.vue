@@ -66,13 +66,13 @@ body {
 
 .mySwiper3 {
   width: 100%;
-  height: 100vh; /* Define uma altura fixa para o carrossel */
+  height: 100%; /* Define uma altura fixa para o carrossel */
 }
 
 
 .swiper-slide {
   display: flex;
-  height: 60vh;
+  height: 60%;
   justify-content: center;
   align-items: center;
   height: 100%; /* Ajusta a altura do slide para 100% do contêiner do Swiper */
@@ -85,7 +85,7 @@ body {
 .swiper-image {
   width: auto;
   width: 100%;
-  height: 100vh;
+  height: 100%;
   display: block;
 
 }
@@ -95,7 +95,7 @@ body {
 }
 
 .text-justify {
-  font-size: 3vh;
+  font-size: 2rem;
 }
 
 .text-center {
@@ -132,6 +132,7 @@ body {
   background-color: rgba(255, 255, 255, 0.8);
   padding: 20px;
   border-radius: 10px;
+  max-width: 80vw; /* Limita a largura do texto em telas maiores */
 }
 
 
