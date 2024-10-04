@@ -116,7 +116,7 @@
                       Distribuição em Nível Nacional
                       </router-link>
 
-                      <hr class="custom-hr2">
+                      <hr class="custom-hr2" style="height: 1px;">
                       <router-link 
                         :to="{ path: '/Nossos-Servicos', hash: '#Secao_Tecnologia' }" 
                         style="color: black; text-decoration: none;"

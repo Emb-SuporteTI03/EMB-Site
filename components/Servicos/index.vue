@@ -682,7 +682,7 @@ export default {
   color:#01395E;
   justify-content: center; /* Centraliza os parágrafos dentro do contêiner */
   align-items: center; /* Alinha verticalmente os parágrafos no centro */
-  margin-top: 12vh;
+  margin-top: 70px;
 }
 
 .paragrafo-nossos-servicos_esquerda {

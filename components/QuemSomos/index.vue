@@ -136,7 +136,7 @@ export default {
         <div class="map-box">
           <iframe class="mapa"
             v-if="mapAtual == 1"
-            src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d14646.357919884578!2d-46.8853484!3d-23.4030639!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94cf1c60570bde1f%3A0x5aa53ca281712703!2sGRUPO%20EMBALARTE!5e0!3m2!1spt-BR!2sbr!4v1720455342886!5m2!1spt-BR!2sbr"
+            src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d460.678557502492!2d-46.88537203440607!3d-23.403045692778065!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94cf1c60570bde1f%3A0x5aa53ca281712703!2sGRUPO%20EMBALARTE!5e1!3m2!1spt-BR!2sbr!4v1727880282949!5m2!1spt-BR!2sbr"
             allowfullscreen loading="lazy"
             referrerpolicy="no-referrer-when-downgrade"
             draggable="false"

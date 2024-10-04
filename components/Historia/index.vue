@@ -1,9 +1,7 @@
 <template>
     <div> 
       <div class="container-historia">
-        <hr class="custom-hr">    
-      <hr class="custom-hr">   
-      <hr class="custom-hr">   
+      <div style="height: 40px;"></div>
         <div class="titulo">
         <h1 class="titulo_historia" style="font-family: 'Outfit', sans-serif;" v-motion-slide-visible-once-bottom>
           NOSSA HISTÓRIA
