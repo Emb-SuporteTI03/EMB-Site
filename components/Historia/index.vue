@@ -30,25 +30,12 @@
           <div class="Linha"></div>
           <img draggable="false" src="../../assets/images/2021.png" v-motion-fade-visible-once class="imagens_historia-img">
         </div>
-
-        <div v-motion-fade-visible-once class="imagens_historia" style="margin-left: 12%;">
-          <img draggable="false" src="../../assets/images/2024.png" v-motion-fade-visible-once class="imagens_historia-img"
-          style="
-          width: 22%;
-          ">
+        <hr class="custom-hr">   
+        <img draggable="false" src="../../assets/images/seta_ligacao (1).png" v-motion-fade-visible-once class="ligacao"style="margin-top: -2%;">
+        <div v-motion-fade-visible-once class="imagens_historia" style="margin-top: 0%; margin-left: -40%;">
+          <img draggable="false" src="../../assets/images/2024.png" v-motion-fade-visible-once class="imagens_historia-img" style="width: 15%;">
           <div class="Linha"></div>
-          <img draggable="false" src="../../assets/images/2023.png" v-motion-fade-visible-once class="imagens_historia-img"
-          style="
-          width: 22%;
-          ">
-
-          <img draggable="false" src="../../assets/images/seta2.png" v-motion-fade-visible-once class="imagens_historia-img"
-          style="
-          width: 10%;
-          height: auto;
-          margin-top: -5%;
-          margin-left: 2%;
-          ">
+          <img draggable="false" src="../../assets/images/2023.png" v-motion-fade-visible-once class="imagens_historia-img" style="width: 15%;">
         </div>
       </div>
     </div>
