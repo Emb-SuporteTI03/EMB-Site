@@ -145,7 +145,7 @@ export default {
         <div class="nossos_servicos">
           <img draggable="false" src="../../assets/images/bisnaga.png" v-motion-fade-visible-once class = "nossos_servicos-img"> 
           <p class="paragrafo-nossos-servicos_direita" style="font-family: 'Outfit', sans-serif;" v-motion-slide-visible-once-bottom>
-        <h2>Envaze e Blister</h2>
+        <h2>Envase e Blister</h2>
 
         Envase e Blister
         Oferecemos envase automático em bisnagas ou frascos, utilizando equipamentos de última geração para garantir precisão e eficiência no processo. Além disso, realizamos o processo de blisterização em cartelas com nossa avançada máquina Carrossel, proporcionando um acabamento profissional e seguro para seus produtos.
