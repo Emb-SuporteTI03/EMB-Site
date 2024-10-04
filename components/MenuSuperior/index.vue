@@ -85,7 +85,7 @@
                         :to="{ path: '/Nossos-Servicos', hash: '#Envaze_e_Blister' }" 
                         style="color: black; text-decoration: none;"
                       >
-                      Envaze e Blister
+                      Envase e Blister
                       </router-link>
 
                       <router-link 
