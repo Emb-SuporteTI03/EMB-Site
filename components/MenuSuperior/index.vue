@@ -36,6 +36,8 @@
                       <router-link :to="{ path: '/Nossa-Historia' }" style="color: black; text-decoration: none;">História</router-link>
                       <hr class="custom-hr2">
                       <router-link :to="{ path: '/Nossa-Cultura' }" style="color: black; text-decoration: none;">Cultura</router-link>
+                      <hr class="custom-hr2">
+                      <router-link :to="{ path: '/Governanca' }" style="color: black; text-decoration: none;">Governança</router-link>
                     </div>
                   </div>
                   <hr class="custom-hr2">
@@ -45,6 +47,13 @@
                       <i class="bi" :class="{'bi-caret-right-fill': !isSubDropdown2Active, 'bi-caret-down-fill': isSubDropdown2Active}"></i>
                     </a>
                     <div class="sub-drop" id= "subDrop2" v-show="isSubDropdown2Active">
+                      <router-link 
+                        :to="{ path: '/Nossos-Servicos' }" 
+                        style="color: black; text-decoration: none;"
+                      >
+                        Início
+                      </router-link>
+
                       <router-link 
                         :to="{ path: '/Nossos-Servicos', hash: '#Armazenagem' }" 
                         style="color: black; text-decoration: none;"

@@ -10,9 +10,10 @@
           <div class="text-content">
             <h2 class="valores_titulo2">Nossa MISSÃO:</h2>
             <ul class="styled-list">
-              <li><strong>Oferecer inovação:</strong> em processos e soluções logísticas respeitando a </li>
-              <li>necessidade e individualidade de <strong>cada cliente:</strong>, visando o equilíbrio</li>
-              <li>sustentável em todos os seus quatro alicerces: <strong>Ambiental, Social, Governança e Econômico/Financeiro.</strong></li>
+              <li><strong>Oferecer inovação</strong> em processos e soluções logísticas respeitando a </li>
+              <li>necessidade e individualidade de <strong>cada cliente</strong>, visando o equilíbrio</li>
+              <li>sustentável em todos os seus quatro alicerces: <strong>Ambiental, Social,</strong></li>
+              <li><strong>Governança e Econômico/Financeiro.</strong></li>
             </ul>
           </div>
           <div class="image-content">

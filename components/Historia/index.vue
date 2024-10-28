@@ -4,7 +4,7 @@
       <div style="height: 40px;"></div>
         <div class="titulo">
         <h1 class="titulo_historia" style="font-family: 'Outfit', sans-serif;" v-motion-slide-visible-once-bottom>
-          NOSSA HISTÓRIA
+          NOSSA TRAJETÓRIA
         </h1>
         <hr class="custom-hr">     
         <hr class="custom-hr">     
@@ -33,9 +33,9 @@
         <hr class="custom-hr">   
         <img draggable="false" src="../../assets/images/seta_ligacao (1).png" v-motion-fade-visible-once class="ligacao"style="margin-top: -2%;">
         <div v-motion-fade-visible-once class="imagens_historia" style="margin-top: 0%; margin-left: -40%;">
-          <img draggable="false" src="../../assets/images/2024.png" v-motion-fade-visible-once class="imagens_historia-img" style="width: 15%;">
-          <div class="Linha"></div>
           <img draggable="false" src="../../assets/images/2023.png" v-motion-fade-visible-once class="imagens_historia-img" style="width: 15%;">
+          <div class="Linha"></div>
+          <img draggable="false" src="../../assets/images/2024.png" v-motion-fade-visible-once class="imagens_historia-img" style="width: 15%;">
         </div>
       </div>
     </div>

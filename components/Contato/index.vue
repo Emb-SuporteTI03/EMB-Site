@@ -10,7 +10,7 @@
         <h1 style="font-size: 3vh;" class="texto-contato">
           Entre em contato para as <strong class="negrito">melhores</strong> 
           <br>
-          soluções em <strong class="negrito">logística</strong> e embalamento
+          soluções em <strong class="negrito">logística</strong> e <strong class="negrito">embalamento</strong>
         </h1>
         <img data-bs-toggle="modal" data-bs-target="#contatoModal" href="" src="../../assets/images/contato.png" alt="Contact Icon" class="contact-icon" />
       </div>
