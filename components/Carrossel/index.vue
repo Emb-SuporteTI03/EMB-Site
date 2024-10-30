@@ -8,14 +8,12 @@
         <img id="imagemNadiv" src="../../assets/images/logo-embalarte-sem-fundo.jpg" class="logo">
         <hr class="custom-hr2">
       </div>
-      <p class="text-justify texto-justificado" style="padding: 0px 10px;">O <strong>Grupo EMBALARTE</strong> oferece as mais diversas soluções logísticas de acordo com cada necessidade. Atendimento personalizado, suporte e gestão são nossos maiores diferenciais. Solicite um orçamento para o seu projeto sem compromisso.</p>
+      <p class="text-justify texto-justificado" style="padding: 0px 10px;">O <strong>Grupo EMBALARTE</strong> oferece as mais diversas soluções logísticas de acordo com cada necessidade. Atendimento personalizado, suporte e gestão são nossos maiores diferenciais. Solicite um orçamento para o seu projeto, sem compromisso.</p>
     </div>
   </div>
     <div>
 
     </div>
-    <!-- FIM DO TEXTO BOAS VINDAS -->
-    <!-- Carrossel de imagens -->
     <swiper
       :grabCursor="true"
       :effect="'creative'"
@@ -95,7 +93,7 @@ body {
 }
 
 .text-justify {
-  font-size: 2rem;
+  font-size: 30px;
 }
 
 .text-center {
@@ -132,8 +130,11 @@ body {
   background-color: rgba(255, 255, 255, 0.8);
   padding: 20px;
   border-radius: 10px;
-  max-width: 80vw; /* Limita a largura do texto em telas maiores */
+  max-width: 1500px; 
+  max-height: 1500px; 
+  width: 50%; 
 }
+
 
 
 .custom-carousel1-control {
