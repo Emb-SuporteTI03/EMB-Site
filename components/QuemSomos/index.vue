@@ -29,7 +29,6 @@ export default {
     updateVolume() {
       const video = this.$refs.autoPlayVideo;
       video.volume = this.volume / 100; // Convert volume to 0.0 - 1.0 range
-      console.log('o volume agora é: ', video.volume)
     },
     toggleDropdown() {
       this.isDropdownActive = !this.isDropdownActive;
@@ -47,10 +46,8 @@ export default {
       entries.forEach(entry => {
         const video = this.$refs.autoPlayVideo;
         if (entry.isIntersecting) {
-          // Video enters the viewport - play the video
           video.play();
         } else {
-          // Video leaves the viewport - pause the video
           video.pause();
         }
       });
@@ -67,16 +64,13 @@ export default {
   mounted() {
     document.addEventListener('mousemove', this.handleMouseMove);
 
-    this.updateVolume(); // Define o volume inicial
-
-    // Verifica se o navegador suporta IntersectionObserver
+    this.updateVolume();
+    
     if ('IntersectionObserver' in window) {
       const observer = new IntersectionObserver(this.handleIntersection, { threshold: 0.5 });
 
-      // Inicia a observação do elemento de vídeo
       observer.observe(this.$refs.autoPlayVideo);
     } else {
-      // Fallback: Se o IntersectionObserver não for suportado, reproduz o vídeo sem verificar a visibilidade
       this.$refs.autoPlayVideo.play();
     }
   },
@@ -107,7 +101,6 @@ export default {
           </p>
         </div>
         <div class="video-container">
-          <!-- Add ref to video element -->
           <video 
           ref="autoPlayVideo" 
           preload="auto" 
@@ -374,6 +367,7 @@ export default {
   color: black;
 }
 .about-us-paragraph {
+  text-align: justify;
   padding: 0px 7% 0px 7%;
   font-size: 1.3rem;
 }

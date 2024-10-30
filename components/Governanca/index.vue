@@ -40,7 +40,7 @@
             </ul>
           </div>
           <div class="image-content">
-            <img draggable="false" src="../../assets/images/esg2.png" v-motion-fade-visible-once class="gov_imagem" style="width: 80%;">
+            <img draggable="false" src="../../assets/images/esg2.png" class="gov_imagem" style="width: 80%;">
           </div>
         </div>
 
