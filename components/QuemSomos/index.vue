@@ -93,7 +93,7 @@ export default {
             <h1 class="about-us-title" v-motion-slide-visible-once-bottom>QUEM SOMOS</h1>
             <hr class="about-us-divider">
             <p class="about-us-paragraph" v-motion-slide-visible-once-bottom>
-              A EMBALARTE nasceu do sonho de Fernando Alves Vieira em criar uma empresa forte e sólida, para oferecer 
+              A EMBALARTE nasceu do sonho de Fernando Alves Vieira em criar uma empresa forte e sólida para oferecer 
               ao mercado soluções completas e personalizadas. Fundada em 1999 e com mais de 25 anos de experiência, vem conquistado 
               seu espaço como uma das melhores empresas no segmento. Situada na Cidade de Santana de Paranaíba no Estado de 
               São Paulo, dispõe em sua planta própria, 4.000m2 de área. Localizada próximo as rodovias Anhanguera e Bandeirantes 
@@ -364,7 +364,7 @@ export default {
   }
   .video-container video{
   width: 85%;
-  margin-top: 20%;
+  margin-top: 17.5%;
   }
 .about-us-divider {
   border: 0;
@@ -376,7 +376,7 @@ export default {
 .about-us-paragraph {
   text-align: justify;
   padding: 0px 7% 0px 7%;
-  font-size: 1.3rem;
+  font-size: 1rem;
 }
 #ImgTexto {
   max-width: 100%;
@@ -465,7 +465,7 @@ export default {
 }
 
 .text-overlay a {
-font-size: 1.8rem;
+font-size: 1.5rem;
 }
 
 .diferenciais {
