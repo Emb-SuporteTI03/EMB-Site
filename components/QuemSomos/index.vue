@@ -93,14 +93,17 @@ export default {
             <h1 class="about-us-title" v-motion-slide-visible-once-bottom>QUEM SOMOS</h1>
             <hr class="about-us-divider">
             <p class="about-us-paragraph" v-motion-slide-visible-once-bottom>
-              A EMBALARTE nasceu do sonho de Fernando Alves Vieira em criar uma empresa forte e sólida para oferecer 
-              ao mercado soluções completas e personalizadas. Fundada em 1999 e com mais de 25 anos de experiência, vem conquistado 
-              seu espaço como uma das melhores empresas no segmento. Situada na Cidade de Santana de Paranaíba no Estado de 
-              São Paulo, dispõe em sua planta própria, 4.000m2 de área. Localizada próximo as rodovias Anhanguera e Bandeirantes 
-              e de fácil acesso ao Rodoanel, possibilita agilidade no processo de distribuição e transporte dos materiais. 
-              Equipamentos de ponta, funcionários treinados e qualificados, gestão e tecnologia completam a estrutura voltada para 
-              atingir excelência em todas as operações realizadas. Tudo isto atrelado ao atendimento personalizado dos gestores que 
-              são treinados para buscar a melhor solução de acordo com a necessidade dos nossos clientes.
+              O GRUPO EMBALARTE foi fundado em 1999 pelo sonho de Fernando Alves 
+              Vieira, um exímio empresário que criou essa empresa para oferecer ao 
+              mercado soluções completas e personalizadas. Com mais de 25 anos de 
+              experiência, vem conquistando seu espaço como uma das melhores empresas 
+              no segmento. Situada na Cidade de Santana de Paranaíba no Estado de São 
+              Paulo, dispõe em sua planta própria de 4.000m². Localizada próximo as 
+              rodovias Anhanguera e Bandeirantes, de fácil acesso ao Rodoanel, 
+              possibilitando agilidade no processo de distribuição e transporte dos materiais. 
+              Equipamentos de ponta, atendimento personalizado, funcionários treinados e 
+              qualificados, gestão, tecnologia completam a estrutura voltada para atingir 
+              excelência em todas as operações realizadas.
             </p>
           </div>
 
@@ -173,8 +176,8 @@ export default {
             referrerpolicy="no-referrer-when-downgrade"
       ></iframe>
       <div class="text-overlay">
-        <strong class="filiais-txt" id="about-us-nos">NÓS, DO GRUPO EMBALARTE</strong>
-        <strong class="filiais-txt" id="localTexto">TEMOS NOSSA MATRIZ EM<br> </strong>
+        <strong class="filiais-txt" id="about-us-nos">LOCALIZAÇÃO:</strong>
+        <strong class="filiais-txt" id="localTexto">MATRIZ:<br> </strong>
           <ul class="lista-cidades">
             <li><a @click.prevent="updateMapValue('1', $event)" style="font-size: 1.6rem;">📌 Santana de Parnaíba</a></li>
           </ul>

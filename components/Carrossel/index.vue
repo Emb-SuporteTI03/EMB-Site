@@ -8,7 +8,11 @@
         <img id="imagemNadiv" src="../../assets/images/logo-embalarte-sem-fundo.jpg" class="logo">
         <hr class="custom-hr2">
       </div>
-      <p class="text-justify texto-justificado" style="padding: 0px 10px;">O <strong>Grupo EMBALARTE</strong> oferece as mais diversas soluções logísticas de acordo com cada necessidade. Atendimento personalizado, suporte e gestão são nossos maiores diferenciais. Solicite um orçamento para o seu projeto, sem compromisso.</p>
+      <p class="text-justify texto-justificado" style="padding: 0px 10px;">O <strong>Grupo EMBALARTE</strong> oferece soluções logísticas 
+        adaptadas às necessidades específicas de cada cliente. Nosso atendimento 
+        personalizado, suporte dedicado e gestão eficiente são os principais 
+        diferenciais que garantem a qualidade e a excelência de nossos 
+        serviços. Solicite um orçamento sem compromisso para o seu projeto.</p>
     </div>
   </div>
     <div>

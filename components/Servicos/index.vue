@@ -235,10 +235,10 @@ export default {
       </div>
       <div class="item-tecnologia">
         <p class="paragrafo-tecnologias-intro" style="font-family: 'Outfit', sans-serif;" v-motion-slide-visible-once-bottom>
-          Bem-vindo à Embalarte, uma empresa inovadora e versátil 
-          no setor de embalagens. Com um portfólio diversificado de produtos, 
-          nos dedicamos a fornecer soluções de embalagem de alta qualidade 
-          que atendem às necessidades específicas de cada cliente. <br>
+          Bem-vindo a Embalarte, uma empresa inovadora e versátil no setor 
+          de embalagens, logística e tecnologia. Com um portfólio 
+          diversificado de produtos, nos dedicamos a fornecer soluções que 
+          atendem às necessidades especificas de cada cliente  <br>
         </p>
       </div>
       <div class="item-tecnologia">
@@ -263,7 +263,7 @@ export default {
       <img draggable="false" src="../../assets/images/solucoes.jpg" v-motion-fade-visible-once class="nossas_tecnologias-img">  
       <p class="paragrafo-nossas-tecnologias_direita" style="font-family: 'Outfit', sans-serif;" v-motion-slide-visible-once-bottom>
       <strong>DESENVOLVIMENTO DE SOLUÇÕES MOBILE</strong> <br>
-      Estamos na vanguarda do uso de tablets e outras tecnologias avançadas para otimizar nossos processos e operações. A integração de dispositivos móveis em nosso fluxo de trabalho permite uma gestão mais ágil e eficiente das tarefas diárias, desde o controle de inventário até a comunicação interna.
+      Estamos na vanguarda do uso desses dispositivo para otimizar nossos processos e operações. A integração de dispositivos móveis em nosso fluxo de trabalho permite uma gestão mais ágil e eficiente das tarefas diárias, desde o controle de inventário até a comunicação interna.
       <br>
       <br>
       Nossos sistemas são projetados para aproveitar ao máximo a tecnologia disponível, oferecendo uma experiência mais conectada e produtiva. A adoção de tecnologias inovadoras garante que possamos atender às demandas do mercado com rapidez e precisão, mantendo-nos sempre à frente nas melhores práticas de gestão e operação.
