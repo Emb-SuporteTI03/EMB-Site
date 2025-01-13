@@ -13,7 +13,7 @@
           <div class="text-content">
             <ul class="styled-list">
               <li style="font-size: 2rem;">Em 2022 reforçamos nosso compromisso com os <strong>padrões de Governança Corporativa</strong>, 
-                tomamos diversas medidas que impactaram positivamente a empresa para a conformidade da Agenda ESG</li>
+                tomamos diversas medidas que impactaram positivamente a empresa para a conformidade da Agenda ESG.</li>
             </ul>
           </div>
         </div>
@@ -25,15 +25,15 @@
               <li style="font-size: 1.5rem;"><br> • Criamos o conselho de Administração onde suas
               principais funções são: fixar a orientação geral dos
               negócios, decidir sobre temas de relevância estratégica,
-              entre outras competências</li>
+              entre outras competências.</li>
               <li><br></li>
 
-              <li style="font-size: 1.5rem;">A nossa empresa possui um serviço personalizado de consultoria, desde 2020, 
+              <li style="font-size: 1.5rem;"> • A nossa empresa possui um serviço personalizado de consultoria, desde 2020, 
                 realizado pela MS Rezende.</li>
               <li><br></li>
               
               <li style="font-size: 1.5rem;">• Promovemos reuniões períodicas de conselho para
-              analisar resultados, impactos e estratégias
+              analisar resultados, impactos e estratégias.
               </li>
               <li><br></li>
 

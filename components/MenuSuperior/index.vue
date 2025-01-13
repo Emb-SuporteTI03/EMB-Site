@@ -224,7 +224,7 @@
             <form @submit.prevent="insertContato()">
               <div class="mb-3">
                 <label for="nome" class="form-label">Com que setor deseja falar?</label>
-                <select class="form-control" id="nome" v-model="contato.area" required>
+                <select class="form-control" id="nomeSelect" v-model="contato.area" required>
                   <option value="" disabled selected>Selecione uma opção</option>
                   <option value="opcao1">RH</option>
                   <option value="opcao2">Financeiro</option>

@@ -40,7 +40,7 @@
             <ul class="styled-list">
               <li>O relacionamento no <strong>GRUPO EMBALARTE</strong> é baseado na <strong>valorização</strong> </li>
               <li>do ser humano, na <strong>confiança</strong>, no <strong>respeito mútuo</strong> no <strong>senso de justiça</strong>,</li>
-              <li> na <strong>transparência</strong>, e no <strong>compartilhamento de responsabilidades</strong></li>
+              <li> na <strong>transparência</strong>, e no <strong>compartilhamento de responsabilidades.</strong></li>
             </ul>
           </div>
           <div class="image-content">

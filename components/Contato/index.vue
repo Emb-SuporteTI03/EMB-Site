@@ -88,55 +88,6 @@
           senha: '',
         };
       },
-      fetchInfoContato(callback) {
-        axios.get('https://localhost:7266/api/v1/SITE_Contato'
-        ).then((res) => {
-          this.infoContato = res.data;
-          if (callback) callback();
-        }).catch((error) => {
-          console.log(error);
-        });
-      },
-      insertContato() {
-        axios.post('https://localhost:7266/api/v1/SITE_Contato',
-          {
-            nome: this.contato.nome,
-            email: this.contato.email,
-            assunto: this.contato.assunto,
-            mensagem: this.contato.mensagem
-          }
-        ).then((res) => {
-          toast.success("Enviado com sucesso!", {
-            autoClose: 10000,
-          });
-        }).catch((error) => {
-          toast.error("Erro", {
-            autoClose: 1000,
-          });
-          console.error('Erro ao inserir contato:', error);
-        });
-        this.clearData();     
-      },
-      fetchInfoAcessoClientes(callback) {
-        axios.get('https://localhost:7266/api/v1/SITE_AcessoClientes'
-        ).then((res) => {
-          this.infoAcessoClientes = res.data;
-          if (callback) callback();
-        }).catch((error) => {
-          console.log(error);
-        });
-      },
-      insertAcessoCliente() {
-        axios.post('https://localhost:7266/api/v1/SITE_AcessoClientes',
-        {
-            Nome: this.acessoCliente.nome,
-            Senha: this.acessoCliente.senha
-        }).then((res) => {
-        }).catch((error) => {
-          console.error('Erro ao inserir contato:', error);
-        });
-        this.clearData();
-      },
       verificarLogin() {
         let encontrouCombinacaoValida = false;
         for (let i = 0; i < this.infoAcessoClientes.length; i++) {
@@ -154,7 +105,6 @@
       },
     },
     mounted() {
-      this.fetchInfoAcessoClientes(() => {});
     }
   }
   </script>
