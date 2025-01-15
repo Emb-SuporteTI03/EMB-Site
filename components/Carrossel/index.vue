@@ -33,7 +33,7 @@
       :simulateTouch="true"
       :modules="modules"
       :autoplay="{
-        delay: 2000,           
+        delay: 10000,           
         disableOnInteraction: false 
       }"
       class="mySwiper3"
