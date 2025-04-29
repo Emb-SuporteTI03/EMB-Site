@@ -138,7 +138,7 @@
               </li>
 
               <!-- Login Cliente -->
-              <li><a data-bs-toggle="modal" data-bs-target="#acessoClienteModal" href="" style="color: black; text-decoration: none;">LOGIN CLIENTE</a></li>
+              <li><a data-bs-toggle="modal" data-bs-target="#acessoClienteModal" href="" style="color: black; text-decoration: none;">ACESSO CLIENTE</a></li>
 
               <!-- Contato -->
               <li><a data-bs-toggle="modal" data-bs-target="#contatoModal" href="" style="color: black; text-decoration: none;">CONTATO</a></li>
@@ -258,9 +258,12 @@
             <h5 class="modal-title" id="acessoClienteModalLabel">Acesso Cliente</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
-          <div class="modal-body">
-            <p>Entre com suas credenciais para acessar sua conta de cliente.</p>
-            <form @submit.prevent="verificarLogin()">
+          <div class="modal-body" style="display: flex; justify-content: center;">
+            <a href="https://forms.office.com/r/1maudxn8pQ" target="_blank" class="btn btn-primary" style="width: 90%;">
+              AGENDAMENTO
+            </a>
+
+            <!-- <form @submit.prevent="verificarLogin()">
               <div class="mb-3">
                 <label for="usuario" class="form-label">Usuário</label>
                 <input type="text" class="form-control" id="usuario" v-model="login.usuario" required>
@@ -270,7 +273,8 @@
                 <input type="password" class="form-control" id="senha" v-model="login.senha" required>
               </div>
               <button type="submit" class="btn btn-primary">Entrar</button>
-            </form>
+            </form> -->
+            
           </div>
         </div>
       </div>
@@ -415,7 +419,7 @@ export default {
     },
     verificarLogin() {
       // Lógica para verificar o login do cliente
-      console.log('Verificando login do cliente:', this.login);
+      
       // Aqui você pode implementar o código para verificar as credenciais do cliente no backend
       // Resetar o formulário após o envio
       this.login = {
