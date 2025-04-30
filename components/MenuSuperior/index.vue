@@ -259,8 +259,11 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body" style="display: flex; justify-content: center;">
-            <a href="https://forms.office.com/r/1maudxn8pQ" target="_blank" class="btn btn-primary" style="width: 90%;">
+            <a href="https://forms.office.com/r/1maudxn8pQ" target="_blank" class="btn btn-primary" style="width: 45%; margin-right: 2%;">
               AGENDAMENTO
+            </a>
+            <a @click="downloadPop1810()" type="application/vnd.openxmlformats-officedocument.wordprocessingml.document" class="btn btn-warning" style="width: 45%;">
+              DOWNLOAD POP 18 01
             </a>
 
             <!-- <form @submit.prevent="verificarLogin()">
@@ -319,8 +322,15 @@ export default {
     window.addEventListener('touchmove', this.handleTouchMove);
   },
   methods: {
+    downloadPop1810() {
+      const link = document.createElement('a');
+      link.href = '/POP 18 01 - Agendamento Recebimento e Expedição.docx';
+      link.download = 'POP 18 01 - Agendamento Recebimento e Expedição.docx';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    },
     handleTouchMove() {
-      console.log('Tela está sendo deslizada!');
       // Adicione aqui a lógica para ocultar o menu ou qualquer outra ação
       if (this.isMenuVisible) {
         this.isMenuVisible = false; // Fecha o menu ao deslizar a tela
