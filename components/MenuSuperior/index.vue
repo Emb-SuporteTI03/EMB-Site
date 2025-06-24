@@ -21,6 +21,7 @@
       <ul class="ul-header">
             <!-- Textos -->
             <div class="textos">
+
               <li class="drop-hover" ref="dropdownToggle" @mouseenter="mouseMainDrop" @mouseleave="handleMouseLeave">
                 <a id="sobre-nos-txt" style="color: black; text-decoration: none;">
                   SOBRE NÓS
@@ -137,8 +138,22 @@
                 </div>
               </li>
 
-              <!-- Login Cliente -->
-              <li><a data-bs-toggle="modal" data-bs-target="#acessoClienteModal" href="" style="color: black; text-decoration: none;">ACESSO CLIENTE</a></li>
+              <li class="drop-hover" ref="dropdownToggle2" @mouseenter="mouseAcessoDrop" @mouseleave="handleMouseLeaveAcesso">
+                <a id="acessos-txt" style="color: black; text-decoration: none;">
+                  ACESSOS
+                  <i class="bi" :class="{'bi-caret-right-fill': !isDropdownACESSOActive, 'bi-caret-down-fill': isDropdownACESSOActive}"></i>
+                </a>
+                <div class="drop" v-show="isDropdownACESSOActive">
+                  <div class="drop-hover" ref="dropdownToggle2">
+                    <a id="qmSomos-sub" data-bs-toggle="modal" data-bs-target="#acessoClienteModal" style="color: black; text-decoration: none;">
+                      CLIENTES
+                    </a>
+                    <a id="qmSomos-sub" href="https://ts-embalarte-fin.skydocs.com.br/login" style="color: black; text-decoration: none;">
+                      COLABORADORES
+                    </a> 
+                  </div>
+                </div>
+              </li>
 
               <!-- Contato -->
               <li><a data-bs-toggle="modal" data-bs-target="#contatoModal" href="" style="color: black; text-decoration: none;">CONTATO</a></li>
@@ -291,6 +306,7 @@ export default {
   data() {
     return {
       isDropdownActive: false,
+      isDropdownACESSOActive: false,
       isSubDropdownActive: false,
       isSubDropdown2Active: false,
       isMenuVisible: false,
@@ -349,6 +365,10 @@ export default {
     mouseMainDrop() {
       this.isDropdownActive = true;
     },
+    // Dropdown principal
+    mouseAcessoDrop() {
+      this.isDropdownACESSOActive = true;
+    },
     // Subdropdown 1
     mouseSubDrop() {
       this.isSubDropdownActive = true;
@@ -356,6 +376,9 @@ export default {
     handleMouseLeave() {
       this.isDropdownActive = false;
       this.isSubDropdownActive = false; // Fecha o submenu quando o mouse sai do dropdown principal
+    },
+    handleMouseLeaveAcesso() {
+      this.isDropdownACESSOActive = false;
     },
     mouseSubLeave() {
       this.isSubDropdownActive = false; // Fecha o submenu quando o mouse sai do submenu
@@ -378,17 +401,14 @@ export default {
       this.isSubDropdown2Active = !this.isSubDropdown2Active; // Alterna a visibilidade do submenu
     },
     toggleMenu() {
-      console.log('foi clicado')
       this.isSubDrop1Cllr = false;
       this.isSubDrop2Cllr = false;
       this.isMenuVisible = !this.isMenuVisible;
-      console.log('agora o menu está: ', this.isMenuVisible)
     },
     closeMenu() {
       this.isMenuVisible = false;
     },
     toggleSubDropCllr1 () {
-      console.log('clicou o submenu 1')
       this.isSubDrop1Cllr = !this.isSubDrop1Cllr; // Alterna a visibilidade do submenu
     },
     toggleSubDropCllr2 () {
@@ -416,7 +436,6 @@ export default {
     // MODAIS  ------------\
     insertContato() {
       // Lógica para inserir o contato
-      console.log('Enviando mensagem de contato:', this.contato);
       // Aqui você pode implementar o código para enviar os dados do formulário para o backend
       // Resetar o formulário após o envio
       this.contato = {
