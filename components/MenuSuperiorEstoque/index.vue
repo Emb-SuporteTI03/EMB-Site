@@ -47,14 +47,6 @@ export default {
         title="Grupo Embalarte"
       /> -->
 
-      <!-- Botão de Voltar -->
-      <NuxtLink
-        class="TEXTDECO-none WIDTH-2"
-        :to="this.destinoVoltar"
-        title="Voltar"
-      > <IconsSetaArrowEsquerda corProp="black" alturaProp="2" larguraProp="2" />
-      </NuxtLink>
-
       <NuxtLink
         class="TEXTDECO-none WIDTH-3"
         to="/"

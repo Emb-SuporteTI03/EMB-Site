@@ -281,13 +281,13 @@
               <!-- Campo Usuário -->
               <div class="form-group">
                 <label for="usuario">Usuário</label>
-                <input type="text" id="usuario" class="form-control" placeholder="Digite seu usuário" />
+                <input v-model="login.usuario" type="text" id="usuario" class="form-control" placeholder="Digite seu usuário" />
               </div>
 
               <!-- Campo Senha -->
               <div class="form-group">
                 <label for="senha">Senha</label>
-                <input type="password" id="senha" class="form-control" placeholder="Digite sua senha" />
+                <input v-model="login.senha" type="password" id="senha" class="form-control" placeholder="Digite sua senha" />
               </div>
 
             </form>
@@ -314,12 +314,12 @@
 
             <!-- Botão à direita -->
             <div>
-              <a href="https://forms.office.com/r/1maudxn8pQ"
-                target="_blank"
+              <button
+                @click="fecharModalERedirecionar"
                 class="btn btn-success"
                 style="padding: 0.5rem 1.5rem; text-align: center;">
                 ENTRAR
-              </a>
+              </button>
             </div>
 
           </div>
@@ -332,14 +332,20 @@
 </template>
 
 <script>
+import { useRouter } from 'vue-router'
+import { ToastError } from '~/composables/toasts';
+import { useAuthStore } from '~/stores/auth'
+
 export default {
   data() {
     return {
+      urlProd: useUrlProd(),
       isDropdownActive: false,
       isDropdownACESSOActive: false,
       isSubDropdownActive: false,
       isSubDropdown2Active: false,
       isMenuVisible: false,
+      router: useRouter(),
 
       isSubDrop1Cllr: false,
       isSubDrop2Cllr: false,
@@ -368,6 +374,72 @@ export default {
     window.addEventListener('touchmove', this.handleTouchMove);
   },
   methods: {
+    async confereLogin() {
+      try {
+        const payload = {
+          usuario: this.login.usuario,
+          senha: this.login.senha
+        }
+
+        const response = await $fetch(`${this.urlProd}/usuario-externo/login`, {
+          method: 'POST',
+          body: payload
+        })
+
+        return(response.token)
+
+      } catch (error) {
+        ToastError('Usuário ou senha inválidos. Tente novamente.');
+
+        return null;
+      }
+    },
+    async validaToken(token){
+      try {
+        const respostaProtegida = await $fetch(`${this.urlProd}/usuario-externo/dados-protegidos`, {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
+
+      } catch (error) {
+
+        console.error('❌ Acesso negado:', error)
+
+      }
+    },
+    async fecharModalERedirecionar(){
+
+      // 1. Guarda a resposta de confereLogin
+      const token = await this.confereLogin(); // <-- aguarda o resultado
+
+      if (!token) {
+        return; // login falhou
+      } 
+      
+      // 1. Armazena o token no estado global
+      // const authStore = useAuthStore();
+      // authStore.setToken(token);
+
+      // 
+      await this.validaToken(token);
+
+      // 2. Salva o token no localStorage
+      localStorage.setItem('token', token);
+
+      // 2. Fecha o modal
+      const modalElement = document.getElementById('acessoClienteModal')
+      if (modalElement) {
+        const modalInstance = bootstrap.Modal.getInstance(modalElement) || new bootstrap.Modal(modalElement)
+        modalInstance.hide()
+      }
+
+      // Redireciona após pequeno delay para garantir que o modal fechou suavemente
+      setTimeout(() => {
+        this.router.push('/sla')
+      }, 50)
+    },
     downloadPop1810() {
       const link = document.createElement('a');
       link.href = '/POP 18 01 - Agendamento Recebimento e Expedição.docx';
@@ -442,7 +514,6 @@ export default {
       this.isSubDrop1Cllr = !this.isSubDrop1Cllr; // Alterna a visibilidade do submenu
     },
     toggleSubDropCllr2 () {
-      console.log('clicou o submenu 2')
       this.isSubDrop2Cllr = !this.isSubDrop2Cllr; // Alterna a visibilidade do submenu
     },
     // -----------------------------------------------------------------/

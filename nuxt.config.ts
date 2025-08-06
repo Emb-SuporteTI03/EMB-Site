@@ -36,7 +36,10 @@ export default defineNuxtConfig({
   // css:['~/assets/main.css'],
   css:['~/assets/main.css'],
   devtools: { enabled: true },
-  modules: ['@vueuse/motion/nuxt'],
+  modules: [
+    '@vueuse/motion/nuxt',
+    '@pinia/nuxt'        // <--- Adicione aqui
+  ],
   // Eu obrigo a funcionar como uma aplicação normal
   // de 'Client Side Rendering'. Mas seria legal aprender
   // a usar o 'Server Side Rendering'.

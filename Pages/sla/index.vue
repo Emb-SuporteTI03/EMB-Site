@@ -9,7 +9,7 @@ export default {
     return {
       // Variáveis estáticas: ----------------------------\
       ID_ComponenteState: useIDComponente(),
-      token: useToken(),
+      token: localStorage.getItem('token'), // <-- Recupera o token salvo
       urlProd: useUrlProd(),
       hoje: formatarData(new Date()),
       hojeEUA: formatarDataEUA(new Date()),
@@ -130,7 +130,7 @@ export default {
 
         this.tabelaCarregada(true);
       } catch (error) {
-        console.log(error);
+        console.error(error);
         this.tabelaCarregada(true);
       } finally {
         this.tabelaCarregada(true);
@@ -151,7 +151,7 @@ export default {
 
         this.tabelaCarregada(true);
       } catch (error) {
-        console.log(error);
+        console.error(error);
         this.tabelaCarregada(true);
       } finally {
         this.tabelaCarregada(true);
@@ -361,7 +361,7 @@ export default {
         // Libera recursos do URL de objeto:
         window.URL.revokeObjectURL(url);
 
-      } catch (error) { console.log(error) }
+      } catch (error) { console.error(error) }
     },
     async fetchPDFEstoqueSintetico() {
       try {
@@ -392,7 +392,7 @@ export default {
         // Libera recursos do URL de objeto:
         window.URL.revokeObjectURL(url);
 
-      } catch (error) { console.log(error) }
+      } catch (error) { console.error(error) }
     },
     async fetchEXCELEstoqueAnalitico() {
       try {
@@ -430,7 +430,6 @@ export default {
     },
     async fetchEXCELEstoqueSintetico() {
       try {
-      console.log(this.infoEstoque)
         // Faz a requisição para o endpoint configurando o responseType como 'blob':
         let response = await axios.post(`${this.urlProd}/estoque/componente/estoque-sintetico-EXCEL`,
           this.infoEstoque,
@@ -484,7 +483,7 @@ export default {
     clickComponentOnTheList(iD_Componente) {
       this.ID_ComponenteState = iD_Componente;
       this.$router.push({
-        path: '/logistica/estoque',
+        path: '/',
         query: { ID_Componente: iD_Componente }
       });
     },
@@ -677,7 +676,7 @@ export default {
       <!-- Menu Superior -->
       <MenuSuperiorEstoque
         funcionalidadeProp="CONSULTA DO ESTOQUE"
-        destinoVoltarProp="/logistica/estoque"
+        destinoVoltarProp="/"
       />
 
       <!-- Tabela de COMPONENTES -->
