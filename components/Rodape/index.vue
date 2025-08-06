@@ -94,7 +94,7 @@
 .rodape {
   display: flex;
   justify-content: center;
-  height: 5vh;
+  height: 4vh;
 }
 
 .rodape p {

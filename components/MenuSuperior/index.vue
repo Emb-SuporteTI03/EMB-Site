@@ -23,62 +23,62 @@
             <div class="textos">
 
               <li class="drop-hover" ref="dropdownToggle" @mouseenter="mouseMainDrop" @mouseleave="handleMouseLeave">
-                <a id="sobre-nos-txt" style="color: black; text-decoration: none;">
+                <a id="sobre-nos-txt" style="color: black; text-decoration: none; cursor: pointer;">
                   SOBRE NÓS
                   <i class="bi" :class="{'bi-caret-right-fill': !isDropdownActive, 'bi-caret-down-fill': isDropdownActive}"></i>
                 </a>
                 <div class="drop" v-show="isDropdownActive">
                   <div class="drop-hover" ref="subDropdownToggle" @mouseenter="mouseSubDrop" @mouseleave="mouseSubLeave">
-                    <a id="qmSomos-sub" style="color: black; text-decoration: none;">
+                    <a id="qmSomos-sub" style="color: black; text-decoration: none; cursor: pointer;">
                       QUEM SOMOS
                       <i class="bi" :class="{'bi-caret-right-fill': !isSubDropdownActive, 'bi-caret-down-fill': isSubDropdownActive}"></i>
                     </a>
                     <div class="sub-drop" v-show="isSubDropdownActive">
-                      <router-link :to="{ path: '/Nossa-Historia' }" style="color: black; text-decoration: none;">História</router-link>
+                      <router-link :to="{ path: '/Nossa-Historia' }" style="color: black; text-decoration: none; cursor: pointer;">História</router-link>
                       <hr class="custom-hr2">
-                      <router-link :to="{ path: '/Nossa-Cultura' }" style="color: black; text-decoration: none;">Cultura</router-link>
+                      <router-link :to="{ path: '/Nossa-Cultura' }" style="color: black; text-decoration: none; cursor: pointer;">Cultura</router-link>
                       <hr class="custom-hr2">
-                      <router-link :to="{ path: '/Governanca' }" style="color: black; text-decoration: none;">Governança</router-link>
+                      <router-link :to="{ path: '/Governanca' }" style="color: black; text-decoration: none; cursor: pointer;">Governança</router-link>
                     </div>
                   </div>
                   <hr class="custom-hr2">
                   <div class="drop-hover" ref="subDropdownToggle" @mouseenter="mouseSub2Drop" @mouseleave="mouseSub2Leave">
-                    <a id="servicos-sub" style="color: black; text-decoration: none;">
+                    <a id="servicos-sub" style="color: black; text-decoration: none; cursor: pointer;">
                       NOSSOS SERVIÇOS
                       <i class="bi" :class="{'bi-caret-right-fill': !isSubDropdown2Active, 'bi-caret-down-fill': isSubDropdown2Active}"></i>
                     </a>
                     <div class="sub-drop" id= "subDrop2" v-show="isSubDropdown2Active">
                       <router-link 
                         :to="{ path: '/Nossos-Servicos' }" 
-                        style="color: black; text-decoration: none;"
+                        style="color: black; text-decoration: none; cursor: pointer;"
                       >
                         Início
                       </router-link>
 
                       <router-link 
                         :to="{ path: '/Nossos-Servicos', hash: '#Armazenagem' }" 
-                        style="color: black; text-decoration: none;"
+                        style="color: black; text-decoration: none; cursor: pointer;"
                       >
                         Armazenagem
                       </router-link>
 
                       <router-link 
                         :to="{ path: '/Nossos-Servicos', hash: '#Picking_Packing' }" 
-                        style="color: black; text-decoration: none;"
+                        style="color: black; text-decoration: none; cursor: pointer;"
                       >
                       Picking e Packing e Cross-Docking
                       </router-link>
 
                       <router-link 
                         :to="{ path: '/Nossos-Servicos', hash: '#Atendimento_E-Commerce' }" 
-                        style="color: black; text-decoration: none;"
+                        style="color: black; text-decoration: none; cursor: pointer;"
                       >
                       Atendimento E-commerce
                       </router-link>
 
                       <router-link 
                         :to="{ path: '/Nossos-Servicos', hash: '#Manuseio_e_Kits' }" 
-                        style="color: black; text-decoration: none;"
+                        style="color: black; text-decoration: none; cursor: pointer;"
                       >
                       Manuseios Diversos e Montagem de Kits
 
@@ -86,42 +86,42 @@
 
                       <router-link 
                         :to="{ path: '/Nossos-Servicos', hash: '#Logistica_Promocional' }" 
-                        style="color: black; text-decoration: none;"
+                        style="color: black; text-decoration: none; cursor: pointer;"
                       >
                       Logistica Promocional
                       </router-link>
 
                       <router-link 
                         :to="{ path: '/Nossos-Servicos', hash: '#Envaze_e_Blister' }" 
-                        style="color: black; text-decoration: none;"
+                        style="color: black; text-decoration: none; cursor: pointer;"
                       >
                       Envase e Blister
                       </router-link>
 
                       <router-link 
                         :to="{ path: '/Nossos-Servicos', hash: '#Encadernacao' }" 
-                        style="color: black; text-decoration: none;"
+                        style="color: black; text-decoration: none; cursor: pointer;"
                       >
                       Encadernações em Espiral
                       </router-link>
 
                       <router-link 
                         :to="{ path: '/Nossos-Servicos', hash: '#Etiquetagem' }" 
-                        style="color: black; text-decoration: none;"
+                        style="color: black; text-decoration: none; cursor: pointer;"
                       >
                       Etiquetagem e Rótulagem
                       </router-link>
 
                       <router-link 
                         :to="{ path: '/Nossos-Servicos', hash: '#Gravacao' }" 
-                        style="color: black; text-decoration: none;"
+                        style="color: black; text-decoration: none; cursor: pointer;"
                       >
                       Gravação Inkjet
                       </router-link>
 
                       <router-link 
                         :to="{ path: '/Nossos-Servicos', hash: '#Distribuicao' }" 
-                        style="color: black; text-decoration: none;"
+                        style="color: black; text-decoration: none; cursor: pointer;"
                       >
                       Distribuição em Nível Nacional
                       </router-link>
@@ -129,7 +129,7 @@
                       <hr class="custom-hr2" style="height: 1px;">
                       <router-link 
                         :to="{ path: '/Nossos-Servicos', hash: '#Secao_Tecnologia' }" 
-                        style="color: black; text-decoration: none;"
+                        style="color: black; text-decoration: none; cursor: pointer;"
                       >
                         Soluções em Tecnologia
                       </router-link>
@@ -139,16 +139,16 @@
               </li>
 
               <li class="drop-hover" ref="dropdownToggle2" @mouseenter="mouseAcessoDrop" @mouseleave="handleMouseLeaveAcesso">
-                <a id="acessos-txt" style="color: black; text-decoration: none;">
+                <a id="acessos-txt" style="color: black; text-decoration: none; cursor: pointer;">
                   ACESSOS
                   <i class="bi" :class="{'bi-caret-right-fill': !isDropdownACESSOActive, 'bi-caret-down-fill': isDropdownACESSOActive}"></i>
                 </a>
                 <div class="drop" v-show="isDropdownACESSOActive">
                   <div class="drop-hover" ref="dropdownToggle2">
-                    <a id="qmSomos-sub" data-bs-toggle="modal" data-bs-target="#acessoClienteModal" style="color: black; text-decoration: none;">
+                    <a id="qmSomos-sub" data-bs-toggle="modal" data-bs-target="#acessoClienteModal" style="color: black; text-decoration: none; cursor: pointer;">
                       CLIENTES
                     </a>
-                    <a id="qmSomos-sub" href="https://ts-embalarte-fin.skydocs.com.br/login" style="color: black; text-decoration: none;">
+                    <a id="qmSomos-sub" href="https://ts-embalarte-fin.skydocs.com.br/login" style="color: black; text-decoration: none; cursor: pointer;">
                       COLABORADORES
                     </a> 
                   </div>
@@ -156,7 +156,7 @@
               </li>
 
               <!-- Contato -->
-              <li><a data-bs-toggle="modal" data-bs-target="#contatoModal" href="" style="color: black; text-decoration: none;">CONTATO</a></li>
+              <li><a data-bs-toggle="modal" data-bs-target="#contatoModal" href="" style="color: black; text-decoration: none; cursor: pointer;">CONTATO</a></li>
             </div>
 
             <!-- Íxones -->
@@ -268,32 +268,62 @@
     <!-- Modal de acesso cliente -->
     <div class="modal fade" id="acessoClienteModal" tabindex="-1" aria-labelledby="acessoClienteModalLabel" aria-hidden="true">
       <div class="modal-dialog">
-        <div class="modal-content">
+        <div class="modal-content" style="width: 150%; left: -25%;">
+        
           <div class="modal-header">
             <h5 class="modal-title" id="acessoClienteModalLabel">Acesso Cliente</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
+          
           <div class="modal-body" style="display: flex; justify-content: center;">
-            <a href="https://forms.office.com/r/1maudxn8pQ" target="_blank" class="btn btn-primary" style="width: 45%; margin-right: 2%;">
-              AGENDAMENTO
-            </a>
-            <a @click="downloadPop1810()" type="application/vnd.openxmlformats-officedocument.wordprocessingml.document" class="btn btn-warning" style="width: 45%;">
-              DOWNLOAD POP 18 01
-            </a>
+            <form style="display: flex; flex-direction: column; gap: 1rem; width: 100%; max-width: 300px;">
+              
+              <!-- Campo Usuário -->
+              <div class="form-group">
+                <label for="usuario">Usuário</label>
+                <input type="text" id="usuario" class="form-control" placeholder="Digite seu usuário" />
+              </div>
 
-            <!-- <form @submit.prevent="verificarLogin()">
-              <div class="mb-3">
-                <label for="usuario" class="form-label">Usuário</label>
-                <input type="text" class="form-control" id="usuario" v-model="login.usuario" required>
+              <!-- Campo Senha -->
+              <div class="form-group">
+                <label for="senha">Senha</label>
+                <input type="password" id="senha" class="form-control" placeholder="Digite sua senha" />
               </div>
-              <div class="mb-3">
-                <label for="senha" class="form-label">Senha</label>
-                <input type="password" class="form-control" id="senha" v-model="login.senha" required>
-              </div>
-              <button type="submit" class="btn btn-primary">Entrar</button>
-            </form> -->
-            
+
+            </form>
           </div>
+
+          <div class="modal-footer" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+
+            <!-- Botões à esquerda -->
+            <div style="display: flex; gap: 0.5rem;">
+              <a href="https://forms.office.com/r/1maudxn8pQ"
+                target="_blank"
+                class="btn btn-primary"
+                style="padding: 0.5rem 1.5rem; text-align: center;">
+                AGENDAMENTO
+              </a>
+
+              <a @click="downloadPop1810()"
+                type="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                class="btn btn-warning"
+                style="padding: 0.5rem 1.5rem; text-align: center;">
+                DOWNLOAD POP 18 01
+              </a>
+            </div>
+
+            <!-- Botão à direita -->
+            <div>
+              <a href="https://forms.office.com/r/1maudxn8pQ"
+                target="_blank"
+                class="btn btn-success"
+                style="padding: 0.5rem 1.5rem; text-align: center;">
+                ENTRAR
+              </a>
+            </div>
+
+          </div>
+          
         </div>
       </div>
     </div>
