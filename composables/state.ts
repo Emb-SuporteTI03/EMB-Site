@@ -4,9 +4,8 @@
 const url = "https://grupoembalarte-slaclientes.skydocs.com.br/api";
 // -------------------------------------------------------------------------------------/
 
-export const useToken = () => 
-    useState<string>("tokenProd", () => localStorage.getItem("authToken") || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIlQEAxMDEwRW1iNDRTVVAzIiwibmFtZSI6IkVtYmFsYXJ0ZSIsImlhdCI6MTcyMDUzNjUyNX0.Z0YYfxzFYgf5AnTE4M14uDqFmd18YLTOHoOoC1y9HkE");
-  
+export const useToken = () => useState<string | null>("tokenProd", () => null);
+
 export const useUrlProd = () => useState<string>("urlProd", () => url);
 
 export const useUrlProdSistema = () => useState<string>("urlProdSistema", () => `${url}/sistema`);

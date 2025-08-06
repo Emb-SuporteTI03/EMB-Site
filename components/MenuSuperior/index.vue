@@ -331,237 +331,228 @@
   </main>
 </template>
 
-<script>
+<script setup lang="ts">
+import { ref, reactive, onMounted, onUnmounted } from 'vue'
+import { createPinia } from 'pinia'
 import { useRouter } from 'vue-router'
-import { ToastError } from '~/composables/toasts';
+import { ToastError } from '~/composables/toasts'
 import { useAuthStore } from '~/stores/auth'
+import { createApp } from 'vue'
+import App from '../../app.vue'
 
-export default {
-  data() {
-    return {
-      urlProd: useUrlProd(),
-      isDropdownActive: false,
-      isDropdownACESSOActive: false,
-      isSubDropdownActive: false,
-      isSubDropdown2Active: false,
-      isMenuVisible: false,
-      router: useRouter(),
+const pinia = createPinia()
+const app = createApp(App)
+app.use(pinia)
 
-      isSubDrop1Cllr: false,
-      isSubDrop2Cllr: false,
+const authStore = useAuthStore()
+const router = useRouter()
+const urlProd = useUrlProd()
+const tokenState = useToken()
 
-      contato: {
-        nome: '',
-        email: '',
-        mensagem: ''
-      },
-      login: {
-        usuario: '',
-        senha: ''
-      }
-    };
-  },
-  mounted() {
-    window.addEventListener('scroll', this.handleScroll);
-    document.addEventListener('click', this.handleClickOutside);
-    document.addEventListener('mousemove', this.handleMouseMove);
-    window.addEventListener('touchmove', this.handleTouchMove); 
-  },
-  unmounted() {
-    document.removeEventListener('click', this.handleClickOutside);
-    document.removeEventListener('scroll', this.handleScroll);
-    document.removeEventListener('mousemove', this.handleMouseMove);
-    window.addEventListener('touchmove', this.handleTouchMove);
-  },
-  methods: {
-    async confereLogin() {
-      try {
-        const payload = {
-          usuario: this.login.usuario,
-          senha: this.login.senha
-        }
+// Estados reativos
+const isDropdownActive = ref(false)
+const isDropdownACESSOActive = ref(false)
+const isSubDropdownActive = ref(false)
+const isSubDropdown2Active = ref(false)
+const isMenuVisible = ref(false)
+const isSubDrop1Cllr = ref(false)
+const isSubDrop2Cllr = ref(false)
 
-        const response = await $fetch(`${this.urlProd}/usuario-externo/login`, {
-          method: 'POST',
-          body: payload
-        })
+const contato = reactive({ nome: '', email: '', mensagem: '', area: '' })
+const login = reactive({ usuario: '', senha: '' })
 
-        return(response.token)
+// Funções de autenticação
+interface LoginResponse {
+  token: string;
+}
 
-      } catch (error) {
-        ToastError('Usuário ou senha inválidos. Tente novamente.');
+async function confereLogin(): Promise<string | null> {
+  try {
+    const payload = { ...login }
 
-        return null;
-      }
-    },
-    async validaToken(token){
-      try {
-        const respostaProtegida = await $fetch(`${this.urlProd}/usuario-externo/dados-protegidos`, {
-          method: 'GET',
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        })
+    const response = await $fetch<LoginResponse>(`${urlProd.value}/usuario-externo/login`, {
+      method: 'POST',
+      body: payload
+    })
 
-      } catch (error) {
+    return response.token
 
-        console.error('❌ Acesso negado:', error)
+  } catch (error) {
 
-      }
-    },
-    async fecharModalERedirecionar(){
+    ToastError('Usuário ou senha inválidos. Tente novamente.')
+    return null
 
-      // 1. Guarda a resposta de confereLogin
-      const token = await this.confereLogin(); // <-- aguarda o resultado
-
-      if (!token) {
-        return; // login falhou
-      } 
-      
-      // 1. Armazena o token no estado global
-      // const authStore = useAuthStore();
-      // authStore.setToken(token);
-
-      // 
-      await this.validaToken(token);
-
-      // 2. Salva o token no localStorage
-      localStorage.setItem('token', token);
-
-      // 2. Fecha o modal
-      const modalElement = document.getElementById('acessoClienteModal')
-      if (modalElement) {
-        const modalInstance = bootstrap.Modal.getInstance(modalElement) || new bootstrap.Modal(modalElement)
-        modalInstance.hide()
-      }
-
-      // Redireciona após pequeno delay para garantir que o modal fechou suavemente
-      setTimeout(() => {
-        this.router.push('/sla')
-      }, 50)
-    },
-    downloadPop1810() {
-      const link = document.createElement('a');
-      link.href = '/POP 18 01 - Agendamento Recebimento e Expedição.docx';
-      link.download = 'POP 18 01 - Agendamento Recebimento e Expedição.docx';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    },
-    handleTouchMove() {
-      // Adicione aqui a lógica para ocultar o menu ou qualquer outra ação
-      if (this.isMenuVisible) {
-        this.isMenuVisible = false; // Fecha o menu ao deslizar a tela
-      }
-    },
-    handleClickOutside(event) {
-    const menu = this.$refs.menu;
-    const toggleButton = this.$refs.toggleButton;
-
-    if (menu && !menu.contains(event.target) && toggleButton && !toggleButton.contains(event.target)) {
-      this.closeMenu();
-    }
-  },
-    // Operação do dropdown -------------------------------------------\
-    // Dropdown principal
-    mouseMainDrop() {
-      this.isDropdownActive = true;
-    },
-    // Dropdown principal
-    mouseAcessoDrop() {
-      this.isDropdownACESSOActive = true;
-    },
-    // Subdropdown 1
-    mouseSubDrop() {
-      this.isSubDropdownActive = true;
-    },
-    handleMouseLeave() {
-      this.isDropdownActive = false;
-      this.isSubDropdownActive = false; // Fecha o submenu quando o mouse sai do dropdown principal
-    },
-    handleMouseLeaveAcesso() {
-      this.isDropdownACESSOActive = false;
-    },
-    mouseSubLeave() {
-      this.isSubDropdownActive = false; // Fecha o submenu quando o mouse sai do submenu
-    },
-    toggleSubDropdown() {
-      this.isSubDropdownActive = !this.isSubDropdownActive; // Alterna a visibilidade do submenu
-    },
-    //Dropdown 2
-    mouseSub2Drop() {
-      this.isSubDropdown2Active = true;
-    },
-    handleMouseLeave2() {
-      this.isDropdownActive = false;
-      this.isSubDropdown2Active = false; // Fecha o submenu quando o mouse sai do dropdown principal
-    },
-    mouseSub2Leave() {
-      this.isSubDropdown2Active = false; // Fecha o submenu quando o mouse sai do submenu
-    },
-    toggleSubDropdown2() {
-      this.isSubDropdown2Active = !this.isSubDropdown2Active; // Alterna a visibilidade do submenu
-    },
-    toggleMenu() {
-      this.isSubDrop1Cllr = false;
-      this.isSubDrop2Cllr = false;
-      this.isMenuVisible = !this.isMenuVisible;
-    },
-    closeMenu() {
-      this.isMenuVisible = false;
-    },
-    toggleSubDropCllr1 () {
-      this.isSubDrop1Cllr = !this.isSubDrop1Cllr; // Alterna a visibilidade do submenu
-    },
-    toggleSubDropCllr2 () {
-      this.isSubDrop2Cllr = !this.isSubDrop2Cllr; // Alterna a visibilidade do submenu
-    },
-    // -----------------------------------------------------------------/
-
-    // -----------------------------------------------------------------/
-
-    // Site fica opaco quando scrolla ----------------------------------\
-    handleScroll() {
-      const header = document.querySelector('.header');
-      if (window.scrollY > 50) { // Ajuste o valor conforme a altura do seu header ou preferências
-        header.classList.add('header-scrolled');
-        header.classList.remove('header-initial');
-      } else {
-        header.classList.add('header-initial');
-        header.classList.remove('header-scrolled');
-      }
-    },
-    // -----------------------------------------------------------------/
-
-    
-    // MODAIS  ------------\
-    insertContato() {
-      // Lógica para inserir o contato
-      // Aqui você pode implementar o código para enviar os dados do formulário para o backend
-      // Resetar o formulário após o envio
-      this.contato = {
-        nome: '',
-        email: '',
-        mensagem: ''
-      };
-      // Fechar o modal
-      $('#contatoModal').modal('hide');
-    },
-    verificarLogin() {
-      // Lógica para verificar o login do cliente
-      
-      // Aqui você pode implementar o código para verificar as credenciais do cliente no backend
-      // Resetar o formulário após o envio
-      this.login = {
-        usuario: '',
-        senha: ''
-      };
-      // Fechar o modal
-      $('#acessoClienteModal').modal('hide');
-    }
-    // --------------------/
   }
-};
+}
+
+async function validaToken(token: string): Promise<void> {
+  try {
+    await $fetch(`${urlProd.value}/usuario-externo/dados-protegidos`, {
+      method: 'GET',
+      headers: { Authorization: `Bearer ${token}` }
+    })
+  } catch (error) {
+    console.error('❌ Acesso negado:', error)
+  }
+}
+
+declare const bootstrap: any;
+
+async function fecharModalERedirecionar() {
+
+  const token = await confereLogin()
+  if (!token) return
+
+  await validaToken(token)
+
+  // Salva no estado global (Pinia)
+  authStore.setToken(token)
+  tokenState.value = token
+
+  // Fecha o modal
+  const modalElement = document.getElementById('acessoClienteModal')
+  if (modalElement) {
+    const modalInstance = bootstrap.Modal.getInstance(modalElement) || new bootstrap.Modal(modalElement)
+    modalInstance.hide()
+  }
+
+  setTimeout(() => router.push('/sla'), 50)
+}
+
+// Dropdowns e menus
+function toggleMenu() {
+  isSubDrop1Cllr.value = false
+  isSubDrop2Cllr.value = false
+  isMenuVisible.value = !isMenuVisible.value
+}
+
+function closeMenu() {
+  isMenuVisible.value = false
+}
+
+function toggleSubDropCllr1() {
+  isSubDrop1Cllr.value = !isSubDrop1Cllr.value
+}
+
+function toggleSubDropCllr2() {
+  isSubDrop2Cllr.value = !isSubDrop2Cllr.value
+}
+
+function mouseMainDrop() {
+  isDropdownActive.value = true
+}
+
+function mouseAcessoDrop() {
+  isDropdownACESSOActive.value = true
+}
+
+function mouseSubDrop() {
+  isSubDropdownActive.value = true
+}
+
+function mouseSub2Drop() {
+  isSubDropdown2Active.value = true
+}
+
+function handleMouseLeave() {
+  isDropdownActive.value = false
+  isSubDropdownActive.value = false
+}
+
+function handleMouseLeaveAcesso() {
+  isDropdownACESSOActive.value = false
+}
+
+function handleMouseLeave2() {
+  isDropdownActive.value = false
+  isSubDropdown2Active.value = false
+}
+
+function mouseSubLeave() {
+  isSubDropdownActive.value = false
+}
+
+function mouseSub2Leave() {
+  isSubDropdown2Active.value = false
+}
+
+function toggleSubDropdown() {
+  isSubDropdownActive.value = !isSubDropdownActive.value
+}
+
+function toggleSubDropdown2() {
+  isSubDropdown2Active.value = !isSubDropdown2Active.value
+}
+
+// Scroll e interações
+function handleScroll() {
+  const header = document.querySelector('.header')
+  if (window.scrollY > 50) {
+    header?.classList.add('header-scrolled')
+    header?.classList.remove('header-initial')
+  } else {
+    header?.classList.add('header-initial')
+    header?.classList.remove('header-scrolled')
+  }
+}
+
+function handleTouchMove() {
+  if (isMenuVisible.value) isMenuVisible.value = false
+}
+
+function handleClickOutside(event: MouseEvent) {
+  const menu = document.querySelector('[ref=menu]')
+  const toggleButton = document.querySelector('[ref=toggleButton]')
+  if (menu && !menu.contains(event.target as Node) && toggleButton && !toggleButton.contains(event.target as Node)) {
+    closeMenu()
+  }
+}
+
+onMounted(() => {
+  window.addEventListener('scroll', handleScroll)
+  document.addEventListener('click', handleClickOutside)
+  document.addEventListener('mousemove', handleScroll)
+  window.addEventListener('touchmove', handleTouchMove)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', handleScroll)
+  document.removeEventListener('click', handleClickOutside)
+  document.removeEventListener('mousemove', handleScroll)
+  window.removeEventListener('touchmove', handleTouchMove)
+})
+
+function insertContato() {
+  contato.nome = ''
+  contato.email = ''
+  contato.mensagem = ''
+
+  const modalElement = document.getElementById('contatoModal')
+  if (modalElement) {
+    const modalInstance = bootstrap.Modal.getInstance(modalElement) || new bootstrap.Modal(modalElement)
+    modalInstance.hide()
+  }
+}
+
+function verificarLogin() {
+  login.usuario = ''
+  login.senha = ''
+
+  const modalElement = document.getElementById('acessoClienteModal')
+  if (modalElement) {
+    const modalInstance = bootstrap.Modal.getInstance(modalElement) || new bootstrap.Modal(modalElement)
+    modalInstance.hide()
+  }
+}
+
+function downloadPop1810() {
+  const link = document.createElement('a')
+  link.href = '/POP 18 01 - Agendamento Recebimento e Expedição.docx'
+  link.download = 'POP 18 01 - Agendamento Recebimento e Expedição.docx'
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
+}
 </script>
 
 <style scoped>

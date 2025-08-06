@@ -9,7 +9,7 @@ export default {
     return {
       // Variáveis estáticas: ----------------------------\
       ID_ComponenteState: useIDComponente(),
-      token: localStorage.getItem('token'), // <-- Recupera o token salvo
+      token: useToken(),
       urlProd: useUrlProd(),
       hoje: formatarData(new Date()),
       hojeEUA: formatarDataEUA(new Date()),

@@ -38,7 +38,7 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: [
     '@vueuse/motion/nuxt',
-    '@pinia/nuxt'        // <--- Adicione aqui
+    '@pinia/nuxt',
   ],
   // Eu obrigo a funcionar como uma aplicação normal
   // de 'Client Side Rendering'. Mas seria legal aprender
