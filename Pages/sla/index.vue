@@ -11,15 +11,6 @@ export default {
       ID_ComponenteState: useIDComponente(),
       token: useToken(),
       urlProd: useUrlProd(),
-      hoje: formatarData(new Date()),
-      hojeEUA: formatarDataEUA(new Date()),
-      senhaDelete: 'tp190980*',
-      senhaDeleteInputadaUsuario: '',
-      // Verifica o tamanho do mês:
-      mesAtual: (new Date().getMonth() + 1).toString().length === 1 ? `0${(new Date().getMonth() + 1)}` : (new Date().getMonth() + 1),
-      anoAtual: new Date().getFullYear(),
-      informacaoIncorreta: 'Informação inválida para este campo.',
-      userNome: localStorage.getItem('nome'),
       // //////////////////////////////////////////////////
 
       infoEstoque: [],

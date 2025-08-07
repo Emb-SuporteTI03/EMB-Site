@@ -144,19 +144,40 @@
                   <i class="bi" :class="{'bi-caret-right-fill': !isDropdownACESSOActive, 'bi-caret-down-fill': isDropdownACESSOActive}"></i>
                 </a>
                 <div class="drop" v-show="isDropdownACESSOActive">
-                  <div class="drop-hover" ref="dropdownToggle2">
-                    <a id="qmSomos-sub" data-bs-toggle="modal" data-bs-target="#acessoClienteModal" style="color: black; text-decoration: none; cursor: pointer;">
+                  <div class="drop-hover" ref="subDropdownToggle" @mouseenter="mouseSubDrop" @mouseleave="mouseSubLeave">
+                    <a id="qmSomos-sub" style="color: black; text-decoration: none; cursor: pointer; font-size: 18px;">
                       CLIENTES
+                      <i class="bi" :class="{'bi-caret-right-fill': !isSubDropdownActive, 'bi-caret-down-fill': isSubDropdownActive}"></i>
                     </a>
-                    <a id="qmSomos-sub" href="https://ts-embalarte-fin.skydocs.com.br/login" style="color: black; text-decoration: none; cursor: pointer;">
+                    <div class="sub-drop" v-show="isSubDropdownActive">
+                      <a @click="downloadPop1810()"
+                        type="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                        style="font-size: 18px; cursor: pointer;">
+                        POP 18 01
+                      </a>
+                      <hr class="custom-hr2">
+                      <a href="https://forms.office.com/r/1maudxn8pQ"
+                        target="_blank"
+                        style="font-size: 18px; cursor: pointer;">
+                        AGENDAMENTO
+                      </a>
+                      <hr class="custom-hr2">
+                      <a id="qmSomos-sub" data-bs-toggle="modal" data-bs-target="#acessoClienteModal" 
+                        style="color: black; text-decoration: none; cursor: pointer; font-size: 18px;">
+                        ENTRAR
+                      </a>
+                    </div>
+                  </div>
+                    <a id="qmSomos-sub" href="https://ts-embalarte-fin.skydocs.com.br/login" style="color: black; text-decoration: none; cursor: pointer; font-size: 18px;">
                       COLABORADORES
                     </a> 
-                  </div>
                 </div>
               </li>
 
               <!-- Contato -->
-              <li><a data-bs-toggle="modal" data-bs-target="#contatoModal" href="" style="color: black; text-decoration: none; cursor: pointer;">CONTATO</a></li>
+              <li><a data-bs-toggle="modal" data-bs-target="#contatoModal" href="" 
+                style="color: black; text-decoration: none; cursor: pointer; font-size: 18px;"
+                >CONTATO</a></li>
             </div>
 
             <!-- Íxones -->
@@ -268,7 +289,7 @@
     <!-- Modal de acesso cliente -->
     <div class="modal fade" id="acessoClienteModal" tabindex="-1" aria-labelledby="acessoClienteModalLabel" aria-hidden="true">
       <div class="modal-dialog">
-        <div class="modal-content" style="width: 150%; left: -25%;">
+        <div class="modal-content" style="width: 75%; left: 12.5%; margin-top: 20%;">
         
           <div class="modal-header">
             <h5 class="modal-title" id="acessoClienteModalLabel">Acesso Cliente</h5>
@@ -295,29 +316,13 @@
 
           <div class="modal-footer" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
 
-            <!-- Botões à esquerda -->
-            <div style="display: flex; gap: 0.5rem;">
-              <a href="https://forms.office.com/r/1maudxn8pQ"
-                target="_blank"
-                class="btn btn-primary"
-                style="padding: 0.5rem 1.5rem; text-align: center;">
-                AGENDAMENTO
-              </a>
-
-              <a @click="downloadPop1810()"
-                type="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-                class="btn btn-warning"
-                style="padding: 0.5rem 1.5rem; text-align: center;">
-                DOWNLOAD POP 18 01
-              </a>
-            </div>
-
+            <div></div>
             <!-- Botão à direita -->
             <div>
               <button
                 @click="fecharModalERedirecionar"
-                class="btn btn-success"
-                style="padding: 0.5rem 1.5rem; text-align: center;">
+                class="btn btn-sm btn-success"
+                style="padding: 0.25rem 1rem; text-align: center;">
                 ENTRAR
               </button>
             </div>
@@ -635,7 +640,7 @@ function downloadPop1810() {
 
 /* Trata do dropdown */
 .drop {
-  margin-top: 0.06%;
+  margin-top: 0.05%;
   width: 25vh; /* Defina uma largura para o dropdown */
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
   background-color: #ececec;
