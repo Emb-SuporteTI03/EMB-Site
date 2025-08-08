@@ -32,7 +32,6 @@ export default {
 
       // PARA O MODAL ----\
       urlEstoque: useUrlEstoque(),
-      currentTabMovimentacoes: 'tableEntradas',
       componenteAtual: {},
       componenteAtualEstatico: {},
       entradas: [],
@@ -46,6 +45,10 @@ export default {
       tableContainerStyle: {
         width: '100%',
         maxHeight: '0px', // Inicializa com valor padrão até que o cálculo seja feito
+      },
+      cliente: {
+        iD_Cliente: '',
+        cNmFantasia: '',
       },
       // -----------------/
     };
@@ -156,6 +159,23 @@ export default {
         this.aplicarFiltros();
       } catch (error) {
 
+      }
+    },
+    async fetchCliente() {
+      try {
+        const response = await axios.get(`${this.urlProd}/usuario-externo/cliente`, {
+          headers: { Authorization: `Bearer ${this.token}` }
+        });
+        
+        const data = response.data;
+
+        this.cliente.iD_Cliente = data.iD_Cliente;
+        this.cliente.cNmFantasia = data.cNmFantasia;
+        this.cliente.iD_Lote = data.iD_Lote;
+        this.cliente.cLote = data.cLote;
+
+      } catch (error) {
+        console.error('Erro ao buscar cliente:', error);
       }
     },
     // -------------------------------------------------------------------------------------------/
@@ -495,11 +515,9 @@ export default {
 		},
     async fillUpdateDeleteModal(IDComponente) {
 			this.modalAberto = true;
-			this.currentTabMovimentacoes = 'tableEntradas';
 			
 			await this.getComponenteByID(IDComponente);
 			await this.getImagemComponente(IDComponente);
-			await this.GetTop50Movimentacoes(this.componenteAtual.iD_Componente, this.currentTabMovimentacoes);
 
 			await nextTick(); // Aguarda Vue atualizar o DOM
 
@@ -529,27 +547,6 @@ export default {
 				saldoOutros: this.componenteAtual.saldoOutros,
 			};
 		},
-		async GetTop50Movimentacoes(ID_Componente) {
-			this.tabelaEntradasCarregada = false;
-			this.tabelaSaidasCarregada = false;
-			const entradaURL = `${this.urlEstoque}/movimentacao-entrada/top50-movimentacoes/${ID_Componente}`;
-			const totalEntradasURL = `${this.urlEstoque}/movimentacao-entrada/quantidade-total/${ID_Componente}`;
-			const saidaURL = `${this.urlEstoque}/movimentacao-saidas/top50-movimentacoes/${ID_Componente}`;
-			const totalSaidasURL = `${this.urlEstoque}/movimentacao-saidas/quantidade-total/${ID_Componente}`;
-		 
-			this.totalSaidas = '';
-			this.totalEntradas = '';
-			this.entradas = await this.getGenerico(entradaURL);
-			this.totalEntradas = await this.getGenerico(totalEntradasURL);
-			this.saidas = await this.getGenerico(saidaURL);
-			this.totalSaidas = await this.getGenerico(totalSaidasURL);
-		 
-			await nextTick(); 
-
-			this.tabelaEntradasCarregada = true;
-			this.tabelaSaidasCarregada = true;
-
-		},
     async adjustTableHeight() {
 			await nextTick(); // Aguarda Vue atualizar o DOM
 			// Altura total do modal (91% da altura da tela)
@@ -561,14 +558,8 @@ export default {
 			// Altura do formulário (se presente)
 			const formHeight = document.getElementById('update-form-componente') ? document.getElementById('update-form-componente').offsetHeight : 0;
 
-			// Altura da nova movimentação (se presente)
-			const novaMovHeight = document.getElementById('nova-mov') ? document.getElementById('nova-mov').offsetHeight : 0;
-
-			// Altura dos botões (se presente)
-			const buttonsHeight = document.querySelector('.abas-movimentacoes') ? document.querySelector('.abas-movimentacoes').offsetHeight : 0;
-
 			// Calcular altura disponível para a tabela
-				const bodyHeight = modalHeight - headerHeight - formHeight - novaMovHeight - buttonsHeight - 30;
+				const bodyHeight = modalHeight - headerHeight - formHeight - 30;
 
 			// Ajusta a altura máxima da tabela
 			this.tableContainerStyle = {
@@ -617,19 +608,6 @@ export default {
 			this.entradas = [];
 			this.saidas = [];
 		},
-    async showTab (tabName) {
-			await this.GetTop50Movimentacoes(this.componenteAtual.iD_Componente, tabName)
-
-			this.currentTabMovimentacoes = tabName;
-
-			await nextTick();
-
-			if(this.currentTabMovimentacoes === 'tableEntradas') {
-				this.ativarBotoesTabelaEntrada();
-			} else {
-				this.ativarBotoesTabelaSaida();
-			}
-		},
     escolheIconePelaExtensao(caminho) {
 			const extensaoMap = {
 				'jpeg': 'jpg',
@@ -653,6 +631,7 @@ export default {
 
   async mounted() {
     await this.fetchEstoqueAnalitico();
+    await this.fetchCliente(); 
   },
 };
 </script>
@@ -702,12 +681,13 @@ export default {
                         class="form-label BGC-branco BORRAD-5 FWEIGHT-bold FSIZE-14px MARGIN-T-15-L7 PADDING-R2-L2"
                       >Cliente</label>
                       <input
+                        disabled
                         id="filtro-cliente-input"
                         autocomplete="off"
                         type="text"
                         class="form-control BOR-grey MARGIN-T-10"
-                        style="text-transform: uppercase;"
-                        @keyup="this.onKeyupFiltroCliente()">
+                        v-model="this.cliente.cNmFantasia"
+                        >
                     </div>
                     
                     <!-- Família -->
@@ -787,7 +767,16 @@ export default {
                         for="filtro-lote-input"
                         class="form-label BGC-branco BORRAD-5 FWEIGHT-bold FSIZE-14px MARGIN-T-15-L7 PADDING-R2-L2"
                       >Lote</label>
-                      <input
+                      <input v-if="cliente.cLote || cliente.iD_Lote"
+                        disabled
+                        id="filtro-lote-input"
+                        type="text"
+                        autocomplete="off"
+                        style="text-transform: uppercase;"
+                        class="form-control BOR-grey MARGIN-T-10"
+                        v-model="cliente.cLote"
+                        >
+                        <input v-else
                         id="filtro-lote-input"
                         type="text"
                         autocomplete="off"
@@ -795,6 +784,7 @@ export default {
                         class="form-control BOR-grey MARGIN-T-10"
                         @keyup="this.onKeyupFiltroLote()">
                     </div>
+                    
                   </div>
 
                   <!-- EDIÇÃO -->
@@ -1011,7 +1001,7 @@ export default {
 						<form id="update-form-componente" class="PADDING-T5-R10-B5-L10 mb-1 BGC-cinza-9 D-flex D-flex JC-space-between" style="flex-shrink: 0;">
 
 							<!-- DIV da esquerda com as informações -->
-							<div class="WIDTH-75 MARGIN-R5">
+							<div class="WIDTH-60 MARGIN-R5">
 								<!-- Linha 1 -->
 								<div class="mb-1 row">
 									<!-- ID -->
@@ -1050,7 +1040,7 @@ export default {
 										<label
 											id="update-data-componente-label"
 											for="update-data-componente-select"
-											class="form-label BGC-input-disabled BORRAD-5 FWEIGHT-bold MARGIN-T-15-L7 PADDING-R5-L5 update-label-componente"
+											class="form-label BGC-input-disabled BORRAD-5 FWEIGHT-bold MARGIN-T-15-L7 FSIZE-12px PADDING-R5-L5 update-label-componente"
 										>DATA CRIAÇÃO</label>
 										<input
 											id="update-data-componente-select"
@@ -1146,11 +1136,11 @@ export default {
 								<div class="mb-2 row">
 
 									<!-- Padrão caixa -->
-									<div class="col-1 WIDTH-12-5 input-group-sm">
+									<div class="col-1 WIDTH-15 input-group-sm">
 										<label
 											id="update-padraoCaixa-componente-label"
 											for="update-padraoCaixa-componente-input"
-											class="form-label BGC-input-disabled BORRAD-5 FWEIGHT-bold MARGIN-T-15-L7 FSIZE-13px PADDING-R5-L5 update-label-OS-dataCriacao"
+											class="form-label BGC-input-disabled BORRAD-5 FWEIGHT-bold MARGIN-T-15-L7 FSIZE-11px PADDING-R5-L5 update-label-OS-dataCriacao"
 										>PADRÃO CAIXA</label>
 										<input
 											id="update-padraoCaixa-componente-input"
@@ -1178,10 +1168,10 @@ export default {
 									</div>
 
 									<!-- Ajustar visualização -->
-									<div class="col-5 WIDTH-45 input-group-sm"></div>
+									<div class="col-1 WIDTH-27-5 input-group-sm"></div>
 
 									<!-- Quantidade -->
-									<div class="col-1 WIDTH-10 input-group-sm">
+									<div class="col-1 WIDTH-15 input-group-sm">
 										<label
 											id="update-quantidade-componente-label"
 											for="update-quantidade-componente-input"
@@ -1196,7 +1186,7 @@ export default {
 									</div>
 
 									<!-- Saldo Bom -->
-									<div class="col-1 WIDTH-10 input-group-sm">
+									<div class="col-1 WIDTH-15 input-group-sm">
 										<label
 											id="update-saldoBom-componente-label"
 											for="update-saldoBom-componente-input"
@@ -1211,7 +1201,7 @@ export default {
 									</div>
 
 									<!-- Saldo Outros -->
-									<div class="col-1 WIDTH-10 input-group-sm">
+									<div class="col-1 WIDTH-15 input-group-sm">
 										<label
 											id="update-saldoOutros-componente-label"
 											for="update-saldoOutros-componente-input"
@@ -1229,7 +1219,7 @@ export default {
 							</div>
 
 							<!-- DIV da direita com a FOTO -->
-							<div class="WIDTH-20 D-flex JC-center ALITEM-center BGC-cinza-8 BORRAD-5">
+							<div class="WIDTH-40 D-flex JC-center ALITEM-center BGC-cinza-8 BORRAD-5">
 								<!-- Se a imagem estiver carregada, mostra-a. Caso contrário, exibe um texto alternativo -->
 								<a v-if="imagemComponente" :href="imagemComponente" target="_blank" class="text-decoration-none">
 									<img 
@@ -1243,243 +1233,6 @@ export default {
 							</div>
 
 						</form>
-							
-						<!-- Movimentações -->
-						<div class="PADDING-L5 d-flex flex-column" style="flex-grow: 1; overflow-y: auto;">
-
-							<!-- Botões de navegação -->
-							<div class="abas-movimentacoes BOR-none d-flex" style="flex-shrink: 0;">
-									<button id="tab-button-entradas" class="aba-movimentacoes-button"
-													@click="showTab('tableEntradas')" 
-													:class="{ active: currentTabMovimentacoes === 'tableEntradas' }">
-											ENTRADAS
-									</button>
-									<button id="tab-button-saidas" class="aba-movimentacoes-button"
-													@click="showTab('tableSaidas')" 
-													:class="{ active: currentTabMovimentacoes === 'tableSaidas' }">
-											SAÍDAS
-									</button>
-							</div>
-
-							<!-- Contêiner da Tabela -->
-							<div class="d-flex flex-column" id="table-container" style="flex-grow: 1; overflow-y: auto; margin-bottom: 10px; margin-right: 10px;">
-							
-								<!-- Tabela com scroll ativado quando necessário -->
-								<div v-if="currentTabMovimentacoes === 'tableEntradas'" :style="tableContainerStyle">
-									
-									<div v-if="entradas.length > 0">
-
-										<table class="table table-striped table-sm">
-										
-											<thead>
-												<tr class="table-primary">
-													<th style="font-size: 12px; text-align: center; width: 6%; min-width: 30px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">DATA</th>
-													<th style="font-size: 12px; text-align: center; width: 6%; min-width: 30px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">HORA</th>
-													<th style="font-size: 12px; text-align: center; width: 8%; min-width: 50px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">USUÁRIO</th>
-													<th style="font-size: 12px; text-align: center; width: 4%; min-width: 30px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">QTDE.</th>
-													<th style="font-size: 12px; text-align: center; width: 4%; min-width: 30px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">SALDO</th>
-													<th style="font-size: 12px; text-align: center; width: 6%; min-width: 40px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">DESTINO</th>
-													<th style="font-size: 12px; text-align: center; width: 3%; min-width: 25px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">ESTADO</th>
-													<th style="font-size: 12px; text-align: center; width: 7%; min-width: 40px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">LOTE</th>
-													<th style="font-size: 12px; text-align: center; width: 8%; min-width: 50px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">TIPO MOVTO</th>
-													<th style="font-size: 12px; text-align: center; width: 12%; min-width: 60px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">MOTIVO MOVTO</th>
-													<th style="font-size: 12px; text-align: center; width: 15%; min-width: 80px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">INFORMAÇÕES ADICIONAIS</th>
-													<th style="font-size: 12px; text-align: center; width: 14%; min-width: 70px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">COMPLEMENTO MOVTO</th>
-												</tr>
-											</thead>
-
-											<LayoutTabelaCarregarEsqueleto :Linhas=20 :Colunas=14 v-if="!tabelaEntradasCarregada" />
-											<tbody v-else>
-												<tr v-for="(entrada, index) in entradas" :key="'filled-' + index">
-												
-													<td style="font-size: 0.8rem; text-align: center; width: 6%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" 
-														:title="entrada.data">{{ entrada.data }}</td>
-												
-													<td style="font-size: 0.8rem; text-align: center; width: 6%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" 
-														:title="entrada.hora">{{ entrada.hora }}</td>
-												
-													<td style="font-size: 0.8rem; text-align: center; width: 8%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" 
-														:title="entrada.usuario">{{ entrada.usuario }}</td>
-												
-													<td style="font-size: 0.8rem; text-align: right; width: 4%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" 
-														:title="entrada.quantidade">{{ entrada.quantidade }}</td>
-												
-													<td style="font-size: 0.8rem; text-align: right; width: 4%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" 
-														:title="entrada.saldo">{{ entrada.saldo }}</td>
-												
-													<td style="font-size: 0.8rem; text-align: center; width: 6%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" 
-														:title="entrada.destino">{{ entrada.destino }}</td>
-													
-													<td style="font-size: 0.8rem; text-align: center; width: 3%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" 
-														:title="entrada.estado">{{ entrada.estado }}</td>
-													
-													<td style="font-size: 0.8rem; text-align: center; width: 7%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" 
-														:title="entrada.lote">{{ entrada.lote }}</td>
-													
-													<td style="font-size: 0.8rem; text-align: center; width: 8%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" 
-														:title="entrada.tipoMovimento">{{ entrada.tipoMovimento }}</td>
-													
-													<td style="font-size: 0.8rem; text-align: center; width: 12%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" 
-														:title="entrada.motivoMovimento">{{ entrada.motivoMovimento }}</td>
-
-													<!-- QUANDO AMBOS ESTÃO NO ESTADO NORMAL ----------------------------------\ -->
-													<!-- O conteúdo do Informações adicionais (Troca pelo INPUT) -->
-													<td style="width: 15%; font-size: 14px; text-align: center;">
-														<span :title="entrada.informacoesAdicionais" class="tamanhoMaxTextocelulaTable">
-															{{ shortenInfo(entrada.informacoesAdicionais, 15) }}
-														</span>
-													</td>
-
-													<!-- O conteúdo do COMPLEMENTOMOVIMENTO (Troca pelo INPUT) -->
-													<td style="font-size: 0.8rem; width: 14%; text-align: center;" :title="entrada.complementoMovimento">
-														{{ shortenInfo(entrada.complementoMovimento, 15) }}
-													</td>
-													<!-- ----------------------------------------------------------------------/ -->
-												</tr>
-
-											</tbody>
-
-										</table>
-										
-										<!-- Botões fixos -->
-										<div class="botoes-fixos" v-if="entradas.length >= 50">
-											<button v-if="entradas.length <= 50 && totalEntradas > 50"
-												class="btn btn-secondary" 
-												style="font-size: 12px; width: 30%;"
-												@click="GetAllMovimentacoes(componenteAtual.iD_Componente, currentTabMovimentacoes)">
-												VER TODOS (+1)
-											</button>
-
-											<button v-if="entradas.length > 50"
-												class="btn btn-secondary"
-												style="font-size: 12px; width: 30%;"
-												@click="GetTop50Movimentacoes(componenteAtual.iD_Componente, currentTabMovimentacoes)">
-												VER MENOS (PRIMEIROS 50)
-											</button>
-										</div>
-
-									</div>
-
-									<span v-else>
-										Não existem entradas
-									</span>
-
-								</div>
-
-								<div v-if="currentTabMovimentacoes === 'tableSaidas'" :style="tableContainerStyle">
-									
-									<div v-if="entradas.length > 0">
-
-									<table class="table table-striped table-sm">
-										<thead >
-											<tr class="table-primary">
-												<th style="font-size: 12px; text-align: center; width: 6%;">DATA</th>  
-												<!-- 6% -->
-												<th style="font-size: 12px; text-align: center; width: 6%;">HORA</th>
-												<!-- 12% -->
-												<th style="font-size: 12px; text-align: center; width: 8%;">USUÁRIO</th>
-												<!-- 20% -->
-												<th style="font-size: 12px; text-align: center; width: 4%;">QTDE.</th>
-												<!-- 24% -->
-												<th style="font-size: 12px; text-align: center; width: 8%; ">ORIGEM</th>
-												<!-- 30% -->
-												<th style="font-size: 12px; text-align: center; width: 6%; ">ESTADO</th>
-												<!-- 40% -->
-												<th style="font-size: 12px; text-align: center; width: 10%;">LOTE</th>
-												<!-- 50% -->
-												<th style="font-size: 12px; text-align: center; width: 10%;">TIPO MOVTO</th>
-												<!-- 58% -->
-												<th style="font-size: 12px; text-align: center; width: 16%;">MOTIVO MOVTO</th>
-												<!-- 72% -->
-												<th style="font-size: 12px; text-align: center; width: 22%;">COMPLEMENTO MOVTO</th>
-												<!-- 94% -->
-												<th style="font-size: 12px; text-align: center; width: 3%;"></th>
-												<!-- 97% -->
-												<th style="font-size: 12px; text-align: center; width: 1%;"></th>
-
-											</tr>
-										</thead>
-
-										<LayoutTabelaCarregarEsqueleto :Linhas=20 :Colunas=14 v-if="!tabelaSaidasCarregada" />
-										<tbody v-else>
-											<tr v-for="(saida, index) in saidas" :key="'filled-' + index">
-									
-												<td style="font-size: 0.8rem; text-align: center; width: 6%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" 
-												:title="saida.data">{{ saida.data }}</td>
-
-												<td style="font-size: 0.8rem; text-align: center; width: 6%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" 
-												:title="saida.hora">{{ saida.hora }}</td>
-												
-												<td style="font-size: 0.8rem; text-align: center; width: 8%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" 
-												:title="saida.usuario">{{ saida.usuario }}</td>
-
-												<td style="font-size: 0.8rem; text-align: right; width: 4%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" 
-												:title="saida.quantidade">{{ saida.quantidade }}</td>
-
-												<td style="font-size: 0.8rem; text-align: center; width: 8%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" 
-												:title="saida.origem">{{ saida.origem }}</td>
-
-												<td style="font-size: 0.8rem; text-align: center; width: 6%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" 
-												:title="saida.estado">{{ saida.estado }}</td>
-
-												<td style="font-size: 0.8rem; text-align: left; width: 10%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" 
-												:title="saida.lote">{{ saida.lote }}</td>
-
-												<td style="font-size: 0.8rem; text-align: center; width: 10%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" 
-												:title="saida.tipoMovimento">{{ saida.tipoMovimento }}</td>
-
-												<td style="font-size: 0.8rem; text-align: center; width: 16%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" 
-												:title="saida.motivoMovimento">{{ saida.motivoMovimento }}</td>
-
-												<!-- O conteúdo do COMPLEMENTOMOVIMENTO (Troca pelo INPUT) -->
-												<td v-if="saida.complementoMovimento.startsWith(`E:`)" style="font-size: 0.8rem; width: 22%; text-align:right;">
-											
-													<button v-if="saida.complementoMovimento.startsWith(`E:`)" id="botao-complemento-motivo" class="BOR-none BGC-transparent" @click="this.clickAbreArquivoButton(saida.idSaida)">
-														<IconsPDF v-if="this.escolheIconePelaExtensao(saida.complementoMovimento) === 'pdf'" corProp="red" alturaProp="1.5" larguraProp="1.5" />
-														<IconsExcel v-if="this.escolheIconePelaExtensao(saida.complementoMovimento) === 'csv'" corProp="green" alturaProp="1.5" larguraProp="1.5" />
-														<IconsFoto v-if="this.escolheIconePelaExtensao(saida.complementoMovimento) === 'jpg'" corProp="#00aaff" alturaProp="1.5" larguraProp="1.5" />
-														<IconsOutlook v-if="this.escolheIconePelaExtensao(saida.complementoMovimento) === 'eml'" corProp="blue" alturaProp="1.5" larguraProp="1.5" />
-														<IconsOutlook v-if="this.escolheIconePelaExtensao(saida.complementoMovimento) === 'msg'" corProp="blue" alturaProp="1.5" larguraProp="1.5" />
-														<IconsArquivo v-if="this.escolheIconePelaExtensao(saida.complementoMovimento) === 'outro'" corProp="gray" alturaProp="1.5" larguraProp="1.5" />
-													</button>
-												</td>
-
-												<td v-if="!saida.complementoMovimento.startsWith(`E:`)"
-														style="font-size: 0.8rem; width: 22%; text-align:left;" :title="saida.complementoMovimento">
-													<span style="font-size: 0.8rem; text-align: left; width: 22%;">{{ shortenInfo(saida.complementoMovimento, 15) }}</span>
-												</td>
-
-                      </tr>
-										</tbody>
-									</table>
-
-									<!-- Botões fixos -->
-									<div class="botoes-fixos" v-if="saidas.length >= 50">
-										<button v-if="saidas.length <= 50 && totalSaidas > 50"
-											class="btn btn-secondary" 
-											style="font-size: 12px; width: 30%;"
-											@click="GetAllMovimentacoes(componenteAtual.iD_Componente, currentTabMovimentacoes)">
-											VER TODOS (+1)
-										</button>
-
-										<button v-if="saidas.length > 50"
-											class="btn btn-secondary"
-											style="font-size: 12px; width: 30%;"
-											@click="GetTop50Movimentacoes(componenteAtual.iD_Componente, currentTabMovimentacoes)">
-											VER MENOS (PRIMEIROS 50)
-										</button>
-									</div>
-
-									</div>
-
-									<span v-else>
-										Não existem saídas
-									</span>
-
-								</div>
-
-							</div>
-						</div>
 						
 					</div>
 
@@ -1581,47 +1334,6 @@ background-color: rgb(255, 255, 255);
 	background-color: #dad9d9; /* Muda a cor de fundo ao passar o mouse */
 }
 
-/* Relativo à estilização das abas-movimentacoes */
-.abas-movimentacoes-container {
-display: flex;
-justify-content: flex-start;
-flex-direction: column;
-width: 100%;
-padding: 10px;
-margin: 0 auto; 
-}
-.abas-movimentacoes {
-display: flex;
-justify-content: flex-start;
-}
-.aba-movimentacoes-button {
-width: 80px; /* Ajuste conforme necessário */
-height: 30px;
-font-size: 12px;
-padding: 2px 5px;
-border: none; /* Remove todas as bordas inicialmente */
-background-color: #dfdfdf;
-cursor: pointer; /* Define o cursor como pointer para indicar que é clicável */
-border-top-left-radius: 8px; /* Arredonda o canto superior esquerdo */
-border-top-right-radius: 8px; /* Arredonda o canto superior direito */
-border-left: 1px solid rgb(177, 177, 177); /* Define a cor da borda esquerda */
-border-right: 1px solid rgb(177, 177, 177); /* Define a cor da borda direita */
-border-top: 1px solid rgb(177, 177, 177); /* Define a cor da borda superior */
-border-bottom: none; /* Remove a borda inferior */
-}
-.aba-movimentacoes-button.active {
-background-color: #01395E;
-color: #fff;
-}
-.aba-movimentacoes-content {
-width: 100%;
-padding: 0.5%;
-background-color: #ffffff;
-border-radius: 8px;
-border-top-left-radius: 0px; /* Arredonda o canto superior esquerdo */
-border: 2px solid rgb(190, 190, 190);
-}
-
 .disabled-button {
 	cursor: default;
 	opacity: 0.5;
@@ -1631,8 +1343,6 @@ border: 2px solid rgb(190, 190, 190);
 .modal-content {
 	display: flex;
 	flex-direction: column;
-	height: 91vh;
-	max-height: 91vh;
 }
 
 /* Cabeçalho do modal */

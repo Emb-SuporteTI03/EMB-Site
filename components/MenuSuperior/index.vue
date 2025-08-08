@@ -139,36 +139,36 @@
               </li>
 
               <li class="drop-hover" ref="dropdownToggle2" @mouseenter="mouseAcessoDrop" @mouseleave="handleMouseLeaveAcesso">
-                <a id="acessos-txt" style="color: black; text-decoration: none; cursor: pointer;">
+                <a id="acessos-txt" style="color: black; text-decoration: none; cursor: pointer; font-size: 16px;">
                   ACESSOS
                   <i class="bi" :class="{'bi-caret-right-fill': !isDropdownACESSOActive, 'bi-caret-down-fill': isDropdownACESSOActive}"></i>
                 </a>
                 <div class="drop" v-show="isDropdownACESSOActive">
                   <div class="drop-hover" ref="subDropdownToggle" @mouseenter="mouseSubDrop" @mouseleave="mouseSubLeave">
-                    <a id="qmSomos-sub" style="color: black; text-decoration: none; cursor: pointer; font-size: 18px;">
+                    <a id="qmSomos-sub" style="color: black; text-decoration: none; cursor: pointer;  font-size: 16px;">
                       CLIENTES
                       <i class="bi" :class="{'bi-caret-right-fill': !isSubDropdownActive, 'bi-caret-down-fill': isSubDropdownActive}"></i>
                     </a>
                     <div class="sub-drop" v-show="isSubDropdownActive">
                       <a @click="downloadPop1810()"
                         type="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-                        style="font-size: 18px; cursor: pointer;">
+                        style="font-size: 186x; cursor: pointer;">
                         POP 18 01
                       </a>
                       <hr class="custom-hr2">
                       <a href="https://forms.office.com/r/1maudxn8pQ"
                         target="_blank"
-                        style="font-size: 18px; cursor: pointer;">
+                        style="font-size: 16px; cursor: pointer;">
                         AGENDAMENTO
                       </a>
                       <hr class="custom-hr2">
                       <a id="qmSomos-sub" data-bs-toggle="modal" data-bs-target="#acessoClienteModal" 
-                        style="color: black; text-decoration: none; cursor: pointer; font-size: 18px;">
+                        style="color: black; text-decoration: none; cursor: pointer; font-size: 16px;">
                         ENTRAR
                       </a>
                     </div>
                   </div>
-                    <a id="qmSomos-sub" href="https://ts-embalarte-fin.skydocs.com.br/login" style="color: black; text-decoration: none; cursor: pointer; font-size: 18px;">
+                    <a id="qmSomos-sub" href="https://ts-embalarte-fin.skydocs.com.br/login" style="color: black; text-decoration: none; cursor: pointer; font-size: 16px;">
                       COLABORADORES
                     </a> 
                 </div>
@@ -176,7 +176,7 @@
 
               <!-- Contato -->
               <li><a data-bs-toggle="modal" data-bs-target="#contatoModal" href="" 
-                style="color: black; text-decoration: none; cursor: pointer; font-size: 18px;"
+                style="color: black; text-decoration: none; cursor: pointer; font-size: 16px;"
                 >CONTATO</a></li>
             </div>
 
@@ -410,9 +410,10 @@ async function fecharModalERedirecionar() {
 
   await validaToken(token)
 
-  // Salva no estado global (Pinia)
+  // Salva no estado global
   authStore.setToken(token)
   tokenState.value = token
+  sessionStorage.setItem('tokenProd', token)
 
   // Fecha o modal
   const modalElement = document.getElementById('acessoClienteModal')
