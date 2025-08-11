@@ -71,7 +71,7 @@ export default {
         ><IconsMedioAjuda /></button> -->
         
         <!-- Botão LOGOUT -->
-        <div>
+        <!-- <div>
            <span v-if="isLogoutButtonShowing"><strong>{{ this.nomeAbrevUser }}</strong></span>
          </div>
 
@@ -84,20 +84,20 @@ export default {
           corProp="black"
           alturaProp="2"
           larguraProp="2"
-        /></button>
+        /></button> -->
 
         <!-- Opção para confirmar Logout -->
-        <div v-if="!isLogoutButtonShowing" class="D-flex ANIMATION-OPA-0-1 FD-column BORRAD-10 MARGIN-T-5"
+        <!-- <div v-if="!isLogoutButtonShowing" class="D-flex ANIMATION-OPA-0-1 FD-column BORRAD-10 MARGIN-T-5"
           :class="{ 'show': !isLogoutButtonShowing }"
         >
           <p class="FSIZE-11px">Confirma o Logout?</p>
           <div class="MARGIN-T-22 WIDTH-100 HEIGHT-70">
-            <!-- Botão 'NÃO' -->
+     
             <button
               class="btn btn-danger BORRAD-0 WIDTH-50 HEIGHT-20px FSIZE-10px PADDING-T3-B18 BOR-B-L-RAD-10"
               @click="hideShowLogoutButton"
             >Não</button>
-            <!-- Botão 'SIM' -->
+         
             <NuxtLink to="/login" >
               <button
                 class="btn btn-success BORRAD-0 WIDTH-50 HEIGHT-20px FSIZE-10px PADDING-T3-B18 BOR-B-R-RAD-10"
@@ -105,7 +105,7 @@ export default {
               >Sim</button>
             </NuxtLink>
           </div>
-        </div>
+        </div> -->
 
       </div>
 

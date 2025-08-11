@@ -1020,3 +1020,9 @@ input[type="number"]::-webkit-inner-spin-button {
   background-color: #d0d0d0; /* Muda a cor de fundo ao clicar */
   transform: scale(0.95); /* Reduz o botão um pouco para efeito de clique */
 }
+
+.no-wrap-text {
+  white-space: nowrap;  /* Impede quebra de linha */
+  overflow: hidden;     /* Oculta excesso de texto */
+  text-overflow: ellipsis; /* Adiciona "..." se cortar */
+}

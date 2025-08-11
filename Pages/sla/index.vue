@@ -608,6 +608,7 @@ export default {
       this.modalAberto = false;
 			this.entradas = [];
 			this.saidas = [];
+      this.imagemComponente = null;
 		},
     escolheIconePelaExtensao(caminho) {
 			const extensaoMap = {
@@ -679,7 +680,7 @@ export default {
                       <label
                         id="filtro-cliente-label"
                         for="filtro-cliente-input"
-                        class="form-label BGC-branco BORRAD-5 FWEIGHT-bold FSIZE-14px MARGIN-T-15-L7 PADDING-R2-L2"
+                        class="form-label BGC-input-disabled BORRAD-5 FWEIGHT-bold FSIZE-14px MARGIN-T-15-L7 PADDING-R2-L2"
                       >Cliente</label>
                       <input
                         disabled
@@ -763,7 +764,12 @@ export default {
 
                     <!-- LOTE -->
                     <div class="col-6 input-group-sm" style="margin-top: -2px;">
-                      <label
+                      <label v-if="cliente.cLote || cliente.iD_Lote"
+                        id="filtro-lote-label"
+                        for="filtro-lote-input"
+                        class="form-label BGC-input-disabled BORRAD-5 FWEIGHT-bold FSIZE-14px MARGIN-T-15-L7 PADDING-R2-L2"
+                      >Lote</label>
+                      <label v-else
                         id="filtro-lote-label"
                         for="filtro-lote-input"
                         class="form-label BGC-branco BORRAD-5 FWEIGHT-bold FSIZE-14px MARGIN-T-15-L7 PADDING-R2-L2"
@@ -894,15 +900,15 @@ export default {
 									@click="this.fillUpdateDeleteModal(comp.iD_Componente)"
                   >
                   <!-- @click="this.clickComponentOnTheList(comp.iD_Componente)" -->
-                  <td class="HEIGHT-5px WIDTH-8 TEXTALI-center" scope="row" :title="comp.cNmFantasia" >{{ comp.cNmFantasia }}</td>
-                  <td class="HEIGHT-5px WIDTH-10 TEXTALI-center" :title="comp.cCodComponente" >{{ comp.cCodComponente }}</td>
-                  <td class="HEIGHT-5px WIDTH-30 TEXTALI-left" :title="comp.cDescricao" >{{ shortenInfo(comp.cDescricao, 45) }}</td>
-                  <td class="HEIGHT-5px WIDTH-9 TEXTALI-center" :title="comp.cFamilia" >{{ shortenInfo(comp.cFamilia, 10) }}</td>
-                  <td class="HEIGHT-5px WIDTH-9 TEXTALI-center" :title="comp.cEdicao" >{{ shortenInfo(comp.cEdicao, 10) }}</td>
-                  <td class="HEIGHT-5px WIDTH-10 TEXTALI-center" :title="comp.cLote" >{{ shortenInfo(comp.cLote, 10) }}</td>
-                  <td class="HEIGHT-5px WIDTH-8 TEXTALI-right" >{{ comp.iQuantidade }}</td>
-                  <td class="HEIGHT-5px WIDTH-6 TEXTALI-center" :class="this.aplicaCorAoEstado(comp.cEstadoMaterial)" >{{ comp.cEstadoMaterial }}</td>
-                  <td class="HEIGHT-5px WIDTH-10 TEXTALI-center BGC-amarelo-intenso-3" style="padding-top: 1px;">{{ comp.cVao }}</td>
+                  <td class="HEIGHT-5px WIDTH-8 TEXTALI-center no-wrap-text" scope="row" :title="comp.cNmFantasia" >{{ comp.cNmFantasia }}</td>
+                  <td class="HEIGHT-5px WIDTH-10 TEXTALI-center no-wrap-text" :title="comp.cCodComponente" >{{ comp.cCodComponente }}</td>
+                  <td class="HEIGHT-5px WIDTH-30 TEXTALI-left no-wrap-text" :title="comp.cDescricao" >{{ comp.cDescricao, 45 }}</td>
+                  <td class="HEIGHT-5px WIDTH-9 TEXTALI-center no-wrap-text" :title="comp.cFamilia" >{{ shortenInfo(comp.cFamilia, 10) }}</td>
+                  <td class="HEIGHT-5px WIDTH-9 TEXTALI-center no-wrap-text" :title="comp.cEdicao" >{{ shortenInfo(comp.cEdicao, 10) }}</td>
+                  <td class="HEIGHT-5px WIDTH-10 TEXTALI-center no-wrap-text" :title="comp.cLote" >{{ shortenInfo(comp.cLote, 10) }}</td>
+                  <td class="HEIGHT-5px WIDTH-8 TEXTALI-right no-wrap-text" >{{ comp.iQuantidade }}</td>
+                  <td class="HEIGHT-5px WIDTH-6 TEXTALI-center no-wrap-text" :class="this.aplicaCorAoEstado(comp.cEstadoMaterial)" >{{ comp.cEstadoMaterial }}</td>
+                  <td class="HEIGHT-5px WIDTH-10 TEXTALI-center no-wrap-text BGC-amarelo-intenso-3" style="padding-top: 1px;">{{ comp.cVao }}</td>
                 </tr>
               </tbody>
             </table>
@@ -996,17 +1002,17 @@ export default {
 					</div>
 
           <!-- Corpo MODAL -->
-					<div class="BOR-B-grey-2" style="flex-grow: 1; display: flex; flex-direction: column;">
+					<div class="BOR-B-grey-2" style="flex-grow: 1; display: flex; flex-direction: column; height: 75vh;">
 
 						<!-- Formulário Componente -->
 						<form id="update-form-componente" class="PADDING-T5-R10-B5-L10 mb-1 BGC-cinza-9 D-flex D-flex JC-space-between" style="flex-shrink: 0;">
 
 							<!-- DIV da esquerda com as informações -->
-							<div class="WIDTH-60 MARGIN-R5">
+							<div class="WIDTH-40 MARGIN-R5" style="height: 75vh;">
 								<!-- Linha 1 -->
 								<div class="mb-1 row">
 									<!-- ID -->
-									<div class="col-1 input-group-sm">
+									<div class="col-2 input-group-sm">
 										<label
 											id="update-ID-componente-label"
 											for="update-ID-componente-input"
@@ -1020,7 +1026,7 @@ export default {
 											v-model="componenteAtual.iD_Componente">
 									</div>
 
-                  <div class="col-2 input-group-sm">
+                  <div class="col-3 input-group-sm">
 										<label
 											id="update-cliente-componente-label"
 											for="update-cliente-componente-input"
@@ -1035,7 +1041,7 @@ export default {
 									</div>
 
 									<!-- Data -->
-									<div class="col-2 input-group-sm">
+									<div class="col-3 input-group-sm">
 										<label
 											id="update-data-componente-label"
 											for="update-data-componente-select"
@@ -1068,7 +1074,13 @@ export default {
 										</input>
 
 									</div>
+									
+								</div>
 
+								<!-- Linha 2 -->
+								<div class="mb-1 row">
+
+                  
                   <!-- Edição -->
 									<div class="col-3 input-group-sm">
 										<label
@@ -1087,11 +1099,6 @@ export default {
 											v-model="componenteAtual.edicao"
 											@keyup="this.onKeyupEditarComponentePesoIndividualInput()">
 									</div>
-									
-								</div>
-
-								<!-- Linha 2 -->
-								<div class="mb-1 row">
 
 									<!-- Código Componente -->
 									<div class="col-3 input-group-sm">
@@ -1110,8 +1117,45 @@ export default {
 											@keyup="this.confereCampoTemInformacaoEAplicaBordaVermelha('update-codigo-componente-input', componenteAtual.codComponente)">
 									</div>
 
+                  <!-- Padrão caixa -->
+									<div class="col-3 input-group-sm">
+										<label
+											id="update-padraoCaixa-componente-label"
+											for="update-padraoCaixa-componente-input"
+											class="form-label BGC-input-disabled BORRAD-5 FWEIGHT-bold MARGIN-T-15-L7 FSIZE-11px PADDING-R5-L5 update-label-OS-dataCriacao"
+										>PADRÃO CAIXA</label>
+										<input
+											id="update-padraoCaixa-componente-input"
+											class="form-control BOR-grey MARGIN-T-10 no-calendar-date-input input-OS-dataCriacao"
+											type="number"
+											disabled
+											v-model="componenteAtual.padraoCaixa"
+											@keyup="this.confereCampoTemInformacaoEAplicaBordaVermelha('update-padraoCaixa-componente-input', componenteAtual.padraoCaixa)">
+									</div>
+
+									<!-- Peso Individual -->
+									<div class="col-3 input-group-sm">
+										<label
+											id="update-pesoIndividual-componente-label"
+											for="update-pesoIndividual-componente-input"
+											class="form-label BGC-input-disabled BORRAD-5 FWEIGHT-bold MARGIN-T-15-L7 FSIZE-14px PADDING-R5-L5 update-label-OS-dataCriacao"
+										>PESO (KG.)</label>
+										<input
+											id="update-pesoIndividual-componente-input"
+											class="form-control BOR-grey MARGIN-T-10 no-calendar-date-input input-OS-dataCriacao"
+											type="number"
+											disabled
+											v-model="componenteAtual.pesoIndividual"
+											@keyup="this.onKeyupEditarComponentePesoIndividualInput()">
+									</div>
+
+								</div>
+
+								<div class="mb-1 row">
+
+
 										<!-- Descrição -->
-									<div class="col-9 input-group-sm">
+									<div class="col-12 input-group-sm">
 										<label
 											id="update-descricao-componente-label"
 											for="update-descricao-componente-input"
@@ -1134,43 +1178,10 @@ export default {
 								<!-- Linha 3 -->
 								<div class="mb-2 row">
 
-									<!-- Padrão caixa -->
-									<div class="col-1 WIDTH-15 input-group-sm">
-										<label
-											id="update-padraoCaixa-componente-label"
-											for="update-padraoCaixa-componente-input"
-											class="form-label BGC-input-disabled BORRAD-5 FWEIGHT-bold MARGIN-T-15-L7 FSIZE-11px PADDING-R5-L5 update-label-OS-dataCriacao"
-										>PADRÃO CAIXA</label>
-										<input
-											id="update-padraoCaixa-componente-input"
-											class="form-control BOR-grey MARGIN-T-10 no-calendar-date-input input-OS-dataCriacao"
-											type="number"
-											disabled
-											v-model="componenteAtual.padraoCaixa"
-											@keyup="this.confereCampoTemInformacaoEAplicaBordaVermelha('update-padraoCaixa-componente-input', componenteAtual.padraoCaixa)">
-									</div>
-
-									<!-- Peso Individual -->
-									<div class="col-1 WIDTH-12-5 input-group-sm">
-										<label
-											id="update-pesoIndividual-componente-label"
-											for="update-pesoIndividual-componente-input"
-											class="form-label BGC-input-disabled BORRAD-5 FWEIGHT-bold MARGIN-T-15-L7 FSIZE-14px PADDING-R5-L5 update-label-OS-dataCriacao"
-										>PESO (KG.)</label>
-										<input
-											id="update-pesoIndividual-componente-input"
-											class="form-control BOR-grey MARGIN-T-10 no-calendar-date-input input-OS-dataCriacao"
-											type="number"
-											disabled
-											v-model="componenteAtual.pesoIndividual"
-											@keyup="this.onKeyupEditarComponentePesoIndividualInput()">
-									</div>
-
 									<!-- Ajustar visualização -->
-									<div class="col-1 WIDTH-27-5 input-group-sm"></div>
 
 									<!-- Quantidade -->
-									<div class="col-1 WIDTH-15 input-group-sm">
+									<div class="col-4 input-group-sm">
 										<label
 											id="update-quantidade-componente-label"
 											for="update-quantidade-componente-input"
@@ -1185,7 +1196,7 @@ export default {
 									</div>
 
 									<!-- Saldo Bom -->
-									<div class="col-1 WIDTH-15 input-group-sm">
+									<div class="col-4 input-group-sm">
 										<label
 											id="update-saldoBom-componente-label"
 											for="update-saldoBom-componente-input"
@@ -1200,7 +1211,7 @@ export default {
 									</div>
 
 									<!-- Saldo Outros -->
-									<div class="col-1 WIDTH-15 input-group-sm">
+									<div class="col-4 input-group-sm">
 										<label
 											id="update-saldoOutros-componente-label"
 											for="update-saldoOutros-componente-input"
@@ -1218,14 +1229,14 @@ export default {
 							</div>
 
 							<!-- DIV da direita com a FOTO -->
-							<div class="WIDTH-40 D-flex JC-center ALITEM-center BGC-cinza-8 BORRAD-5">
+							<div class="WIDTH-60 D-flex JC-center ALITEM-center BGC-cinza-8 BORRAD-5" style="height: 75vh;">
 								<!-- Se a imagem estiver carregada, mostra-a. Caso contrário, exibe um texto alternativo -->
-								<a v-if="imagemComponente" :href="imagemComponente" target="_blank" class="text-decoration-none">
+								<a v-if="imagemComponente" :href="imagemComponente" target="_blank">
 									<img 
 										:src="imagemComponente" 
 										alt="Imagem do componente" 
-										class="MAX-WIDTH-100 MAX-HEIGHT-150px MIN-HEIGHT-150px BORRAD-5" 
-										style="cursor: pointer;"
+										class="MIN-HEIGHT-150px BORRAD-5 rb" 
+										style="cursor: pointer; height: 60vh;"
 									/>
 								</a>
 								<p v-else>Imagem não disponível</p>
