@@ -530,7 +530,8 @@ export default {
 		},
     async getComponenteByID (IDComponente) {
 			this.componenteAtual = await this.getGenerico(`${this.urlEstoque}/componente/get-componente/${IDComponente}`);
-			this.componenteAtualEstatico = {
+	
+      this.componenteAtualEstatico = {
 				iD_Componente: this.componenteAtual.iD_Componente,
 				data: this.componenteAtual.data,
 				codigoCliente: this.componenteAtual.codigoCliente,
@@ -1019,20 +1020,18 @@ export default {
 											v-model="componenteAtual.iD_Componente">
 									</div>
 
-									<!-- Cliente -->
-									<div class="col-2 input-group-sm">
-									<label
-										id="update-cliente-componente-label"
-										for="update-cliente-componente-select"
-										class="form-label BGC-input-disabled BORRAD-5 FWEIGHT-bold MARGIN-T-15-L7 PADDING-R5-L5 update-label-componente"
-									>CLIENTE</label>
-										<select
-											id="update-cliente-componente-select"
-											class="form-control BOR-grey MARGIN-T-10 update-input-componente"
-											v-model="componenteAtual.codigoCliente"
+                  <div class="col-2 input-group-sm">
+										<label
+											id="update-cliente-componente-label"
+											for="update-cliente-componente-input"
+											class="form-label BGC-input-disabled BORRAD-5 FWEIGHT-bold MARGIN-T-15-L7 PADDING-R5-L5 update-label-OS"
+										>CLIENTE</label>
+										<input
+											id="update-cliente-componente-input"
+											type="text"
+											class="form-control BOR-grey MARGIN-T-10 update-input-OS"
 											disabled
-											>
-										</select>
+											v-model="cliente.cNmFantasia">
 									</div>
 
 									<!-- Data -->

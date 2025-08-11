@@ -319,11 +319,18 @@
             <div></div>
             <!-- Botão à direita -->
             <div>
-              <button
+              <button v-if="!aguardandoReqEntrar"
                 @click="fecharModalERedirecionar"
                 class="btn btn-sm btn-success"
-                style="padding: 0.25rem 1rem; text-align: center;">
+                style="padding: 0.25rem 1rem; text-align: center;"
+                :disabled="aguardandoReqEntrar">
                 ENTRAR
+              </button>
+              <button v-else
+                class="btn btn-sm btn-secondary"
+                style="padding: 0.25rem 1rem; text-align: center;"
+                disabled>
+                AGUARDE ...
               </button>
             </div>
 
@@ -355,6 +362,7 @@ const urlProd = useUrlProd()
 const tokenState = useToken()
 
 // Estados reativos
+const aguardandoReqEntrar = ref(false)
 const isDropdownActive = ref(false)
 const isDropdownACESSOActive = ref(false)
 const isSubDropdownActive = ref(false)
@@ -373,6 +381,8 @@ interface LoginResponse {
 
 async function confereLogin(): Promise<string | null> {
   try {
+
+    console.log(`${urlProd.value}/usuario-externo/login`)
     const payload = { ...login }
 
     const response = await $fetch<LoginResponse>(`${urlProd.value}/usuario-externo/login`, {
@@ -405,8 +415,14 @@ declare const bootstrap: any;
 
 async function fecharModalERedirecionar() {
 
+  aguardandoReqEntrar.value = true
+
   const token = await confereLogin()
-  if (!token) return
+  if (!token) 
+  {
+    aguardandoReqEntrar.value = false
+    return
+  }
 
   await validaToken(token)
 
@@ -421,6 +437,8 @@ async function fecharModalERedirecionar() {
     const modalInstance = bootstrap.Modal.getInstance(modalElement) || new bootstrap.Modal(modalElement)
     modalInstance.hide()
   }
+
+    aguardandoReqEntrar.value = false
 
   setTimeout(() => router.push('/sla'), 50)
 }
