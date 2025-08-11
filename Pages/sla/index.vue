@@ -1002,10 +1002,10 @@ export default {
 					</div>
 
           <!-- Corpo MODAL -->
-					<div class="BOR-B-grey-2" style="flex-grow: 1; display: flex; flex-direction: column; height: 75vh;">
+					<div class="BOR-B-grey-2" style="flex-grow: 1; display: flex; flex-direction: column; height: 77.5vh;">
 
 						<!-- Formulário Componente -->
-						<form id="update-form-componente" class="PADDING-T5-R10-B5-L10 mb-1 BGC-cinza-9 D-flex D-flex JC-space-between" style="flex-shrink: 0;">
+						<form id="update-form-componente" class="PADDING-T5-R10-B5-L10 mb-1 BGC-cinza-9 D-flex D-flex JC-space-between" style="flex-shrink: 0; margin-bottom: 1%;">
 
 							<!-- DIV da esquerda com as informações -->
 							<div class="WIDTH-40 MARGIN-R5" style="height: 75vh;">
@@ -1229,13 +1229,13 @@ export default {
 							</div>
 
 							<!-- DIV da direita com a FOTO -->
-							<div class="WIDTH-60 D-flex JC-center ALITEM-center BGC-cinza-8 BORRAD-5" style="height: 75vh;">
+							<div class="WIDTH-60 D-flex JC-center ALITEM-center BGC-cinza-8 BORRAD-5" style="height: 75vh; ">
 								<!-- Se a imagem estiver carregada, mostra-a. Caso contrário, exibe um texto alternativo -->
 								<a v-if="imagemComponente" :href="imagemComponente" target="_blank">
 									<img 
 										:src="imagemComponente" 
 										alt="Imagem do componente" 
-										class="MIN-HEIGHT-150px BORRAD-5 rb" 
+										class="MIN-HEIGHT-150px BORRAD-5" 
 										style="cursor: pointer; height: 60vh;"
 									/>
 								</a>
