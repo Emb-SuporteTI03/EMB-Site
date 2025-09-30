@@ -377,12 +377,11 @@ const login = reactive({ usuario: '', senha: '' })
 // Funções de autenticação
 interface LoginResponse {
   token: string;
+  idFuncao: number;
 }
 
-async function confereLogin(): Promise<string | null> {
+async function confereLogin(): Promise<LoginResponse | null> {
   try {
-
-    console.log(`${urlProd.value}/usuario-externo/login`)
     const payload = { ...login }
 
     const response = await $fetch<LoginResponse>(`${urlProd.value}/usuario-externo/login`, {
@@ -390,13 +389,11 @@ async function confereLogin(): Promise<string | null> {
       body: payload
     })
 
-    return response.token
+    return response
 
   } catch (error) {
-
     ToastError('Usuário ou senha inválidos. Tente novamente.')
     return null
-
   }
 }
 
@@ -414,15 +411,15 @@ async function validaToken(token: string): Promise<void> {
 declare const bootstrap: any;
 
 async function fecharModalERedirecionar() {
-
   aguardandoReqEntrar.value = true
 
-  const token = await confereLogin()
-  if (!token) 
-  {
+  const response = await confereLogin()
+  if (!response) {
     aguardandoReqEntrar.value = false
     return
   }
+
+  const { token, idFuncao } = response
 
   await validaToken(token)
 
@@ -430,6 +427,7 @@ async function fecharModalERedirecionar() {
   authStore.setToken(token)
   tokenState.value = token
   sessionStorage.setItem('tokenProd', token)
+  sessionStorage.setItem('idFuncao', idFuncao.toString()) // agora salva o valor certo
 
   // Fecha o modal
   const modalElement = document.getElementById('acessoClienteModal')
@@ -438,9 +436,18 @@ async function fecharModalERedirecionar() {
     modalInstance.hide()
   }
 
-    aguardandoReqEntrar.value = false
+  aguardandoReqEntrar.value = false
 
-  setTimeout(() => router.push('/sla'), 50)
+  if(idFuncao == 3) {
+   setTimeout(() => router.push('/sla/consulta-estoque'), 50)
+  }
+  if(idFuncao == 2) {
+   setTimeout(() => router.push('/sla'), 50)
+  }
+    if(idFuncao == 1) {
+   setTimeout(() => router.push('/sla/informar-entrega'), 50)
+  }
+
 }
 
 // Dropdowns e menus
