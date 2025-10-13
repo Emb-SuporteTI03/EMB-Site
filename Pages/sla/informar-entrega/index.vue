@@ -338,8 +338,8 @@ onMounted(async () => {
         </div>
       </div>
       
+      <Rodape />
     </div>
-    <Rodape />
 
   </main>
 
