@@ -574,6 +574,7 @@ body {
 .WIDTH-47 { width: 47%; }
 .WIDTH-46 { width: 46%; }
 .WIDTH-45 { width: 45%; }
+.WIDTH-44 { width: 44%; }
 .WIDTH-41 { width: 41%; }
 .WIDTH-40 { width: 40%; }
 .WIDTH-39 { width: 39%; }
@@ -1025,4 +1026,32 @@ input[type="number"]::-webkit-inner-spin-button {
   white-space: nowrap;  /* Impede quebra de linha */
   overflow: hidden;     /* Oculta excesso de texto */
   text-overflow: ellipsis; /* Adiciona "..." se cortar */
+}
+
+.upload-area {
+  flex-grow: 1;
+  width: 100%;
+  border: 2px dashed #aaa;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #777;
+  font-size: 14px;
+  text-align: center;
+  transition: border-color 0.3s, color 0.3s;
+  cursor: pointer;
+}
+
+.upload-area:hover {
+  border-color: #28a745;
+  color: #28a745;
+}
+
+.WIDTH-100 {
+  width: 100%;
+}
+
+.FSIZE-14px {
+  font-size: 14px;
 }

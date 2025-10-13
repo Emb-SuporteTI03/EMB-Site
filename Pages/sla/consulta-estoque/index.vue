@@ -1251,6 +1251,8 @@ export default {
     </div>
 
   </main>
+  <Rodape />
+
 </template>
 
 

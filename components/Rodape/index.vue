@@ -9,7 +9,7 @@
     <hr class="custom-hr1">
 
     <footer class="rodape">
-      <p>&copy; 2024 Grupo Embalarte.</p>
+      <p>&copy; 2024 Grupo Embalarte - 03.252.307/0001-78</p>
       <p>&nbsp; </p>
       <p>&nbsp; </p>
       <p>&nbsp; </p>
