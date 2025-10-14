@@ -120,15 +120,34 @@ async function informarEntregaReq(formData) {
 
     ToastSuccess("Entrega informada com sucesso!");
 
-    console.log("Resposta da API:", response.data);
-
     return response.data;
   } catch (error) {
     ToastError("Erro ao informar entrega:");
     console.log(error);
   }
 }
+async function getFotoEntrega(nfEntrega) {
+  try {
+    const response = await axios.get(
+      `${urlProd.value}/entrega/foto-canhoto/${nfEntrega}`, // usa o endpoint correto
+      {
+        headers: { Authorization: `Bearer ${token.value}` },
+        responseType: 'blob' // importante para tratar como arquivo binário
+      }
+    );
 
+    // Cria uma URL de visualização para o blob recebido
+    const imageUrl = URL.createObjectURL(response.data);
+    preview.value = imageUrl; // usa essa URL em um <img :src="preview" />
+
+    console.log("Imagem recebida com sucesso:", imageUrl);
+
+    return imageUrl;
+  } catch (error) {
+    console.error("Erro ao buscar foto de Entrega:", error);
+    ToastError("Erro ao buscar foto de Entrega.");
+  }
+}
 
 // FUNÇÕES DO MODAL
 async function abrirModalInformarEntrega(nfEntrega) {
@@ -168,8 +187,6 @@ async function confirmarEntregaBtnClick() {
 
   const respostaApi = await informarEntregaReq(formData);
 
-  console.log(respostaApi)
-
   if(respostaApi.message == "Entrega atualizada com sucesso!") {
     
     const modalEl = document.getElementById('entregaModal');
@@ -192,6 +209,27 @@ async function confirmarEntregaBtnClick() {
 
   await carregaTabelaNOTAS();
 
+}
+async function abrirModalFotoEntrega(nfEntrega) {
+
+  nfModal.value = nfEntrega;
+
+  const modalEl = document.getElementById('fotoEntregaModal');
+  
+  if (modalEl) {
+    // Verifica se o modal já tem uma instância
+    let modalInstance = bootstrap.Modal.getInstance(modalEl);
+
+    // Se não tiver, cria uma nova instância
+    if (!modalInstance) {
+      modalInstance = new bootstrap.Modal(modalEl);
+    }
+
+    await getFotoEntrega(nfEntrega);
+
+    // Exibe o modal
+    modalInstance.show();
+  }
 }
 
 // FUNÇÕES AUXILIARES
@@ -320,7 +358,7 @@ onMounted(async () => {
                       <td class="HEIGHT-5px WIDTH-8 TEXTALI-center" :title="nota.numeroNFE" >{{ nota.docRecebidor }}</td>
                       <td class="HEIGHT-5px WIDTH-10 TEXTALI-center" :title="nota.codigoComponente" >{{ nota.dataEntrega }}</td>
                       <td class="HEIGHT-5px WIDTH-3 TEXTALI-center" scope="row" :title="nota.dataTramite" >
-                        <button type="button" class="in-table-button" title="Visualizar detalhes do Trâmite" @click="AbrirModalDetalhesTramite(nota.idTramite)">
+                        <button type="button" class="in-table-button" title="Visualizar detalhes do Trâmite" @click="abrirModalFotoEntrega(nota.nfEntrega)">
                           <IconsLupa corProp="currentColor" alturaProp="1" larguraProp="1"/>  
                         </button>
                       </td>
@@ -447,5 +485,37 @@ onMounted(async () => {
       </div>
     </div>
   </div>
+
+<div class="modal fade" id="fotoEntregaModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="fotoEntregaModalLabel">
+  <div class="modal-dialog modal-xl WIDTH-90">
+    <div class="modal-content" id="modalTableClick">
+
+      <div class="d-flex justify-content-between align-items-center border-bottom p-2" style="height: 6%;" id="modal-header">	
+        <h1 class="modal-title fs-5 flex-grow-1 text-center" id="entregaModalLabel">
+          IMAGEM CANHOTO - NF {{ nfModal }}
+        </h1>
+
+        <button title="Fechar (F4)" id="update-modal-close-button" 
+          type="button" class="btn-close" data-bs-dismiss="modal" 
+          aria-label="Close">
+        </button>
+      </div>
+
+      <div class="BOR-B-grey-2 modal-body-custom" style="height: 77.5vh;">
+        <div class="image-container">
+          <img 
+            v-if="preview" 
+            :src="preview" 
+            alt="Imagem da Entrega"
+            class="image-preview"
+          >
+          <p v-else class="no-image-text">Nenhuma imagem disponível</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
 
 </template>
