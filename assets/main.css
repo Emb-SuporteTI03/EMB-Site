@@ -568,6 +568,7 @@ body {
 .WIDTH-57 { width: 57%; }
 .WIDTH-55 { width: 55%; }
 .WIDTH-54 { width: 54%; }
+.WIDTH-53 { width: 53%; }
 .WIDTH-50 { width: 50%; }
 .WIDTH-49 { width: 49%; }
 .WIDTH-48 { width: 48%; }
@@ -1054,4 +1055,46 @@ input[type="number"]::-webkit-inner-spin-button {
 
 .FSIZE-14px {
   font-size: 14px;
+}
+
+.preview-container {
+  position: relative;
+  display: inline-block;
+}
+
+.image-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.image-wrapper img {
+  max-width: 300px;
+  max-height: 200px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  object-fit: cover;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Botão "X" no canto superior direito */
+.delete-button {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 26px;
+  height: 26px;
+  font-size: 18px;
+  font-weight: bold;
+  line-height: 22px;
+  text-align: center;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.delete-button:hover {
+  background: rgba(244, 67, 54, 0.85);
 }

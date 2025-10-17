@@ -32,6 +32,8 @@ const infosTableNotasSLA = ref([]);
 const staticinfosTableNotasSLA = ref([]); // Para manter os dados originais e poder limpar os filtros
 
 const arquivoSelecionado = ref(null);
+const fileInput = ref(null);
+const isDragging = ref(false);
 const preview = ref(null);
 
 const cliente = ref({
@@ -43,6 +45,7 @@ const informarEntregaRequest = ref({
   cDocRecebedor: '',
   cNomeRecebedor: '',
   cNFTransp: '',
+  dDataHoraEntregaDT: '', 
   iIdCliente: null,
 });
 
@@ -92,17 +95,21 @@ async function carregaTabelaNOTAS() {
     ToastError("Erro ao carregar tabela de ENTREGAS.");
   }
 }
-async function buscaNFEntrega(NFEntrega) {
-  try 
-  {
-    const response = await axios.get(`${this.urlProd}/entrega/confere-nota?nfEntrega=${NFEntrega}`, {
-      headers: { Authorization: `Bearer ${this.token}` }
-    });
-  } 
-  catch (error) 
-  {
+async function confereNFEntrega(NFEntrega) {
+  try {
+    const response = await axios.get(
+      `${urlProd.value}/entrega/confere-nota?nfEntrega=${NFEntrega}`,
+      { headers: { Authorization: `Bearer ${token.value}` } }
+    );
+
+    console.log(response.data)
+
+    return response.data
+
+  } catch (error) {
     console.error("Erro ao buscar NF de Entrega:", error);
     ToastError("Erro ao buscar NF de Entrega.");
+    return error;
   }
 }
 async function informarEntregaReq(formData) {
@@ -150,9 +157,13 @@ async function getFotoEntrega(nfEntrega) {
 }
 
 // FUNÇÕES DO MODAL
-async function abrirModalInformarEntrega(nfEntrega) {
+async function abrirModalInformarEntrega(entrega) {
 
-  nfModal.value = nfEntrega;
+  if(entrega.dataEntrega) {
+    informarEntregaRequest.value = await confereNFEntrega(entrega.nfEntrega);
+  }
+
+  nfModal.value = entrega.nfEntrega;
 
   const modalEl = document.getElementById('entregaModal');
   
@@ -231,6 +242,20 @@ async function abrirModalFotoEntrega(nfEntrega) {
     modalInstance.show();
   }
 }
+const clickFechaInformarEntregaModal = () => {
+ 
+  // Reseta os campos do formulário
+  informarEntregaRequest.value.cDocRecebedor = '';
+  informarEntregaRequest.value.cNomeRecebedor = '';
+  informarEntregaRequest.value.dDataHoraEntregaDT = '';
+  arquivoSelecionado.value = null;
+  preview.value = null;
+
+  // Limpa o input file
+  const input = document.getElementById('fileInput');
+  if (input) input.value = '';
+
+};
 
 // FUNÇÕES AUXILIARES
 function handleFileChange(event) {
@@ -246,6 +271,24 @@ function handleFileChange(event) {
   };
   reader.readAsDataURL(file);
 }
+const onDragOver = () => {
+  isDragging.value = true;
+};
+const onDragLeave = () => {
+  isDragging.value = false;
+};
+const onFileDrop = (event) => {
+  isDragging.value = false;
+  const file = event.dataTransfer.files[0];
+  if (file && file.type.startsWith('image/')) {
+    handleFileChange({ target: { files: [file] } });
+  } else {
+    ToastError('Por favor, insira apenas imagens!');
+  }
+};
+const abrirInputArquivo = () => {
+  fileInput.value.click();
+};
 function removerImagem() {
   arquivoSelecionado.value = null;
   preview.value = null;
@@ -254,6 +297,22 @@ function removerImagem() {
   const input = document.getElementById('fileInput');
   if (input) input.value = '';
 }
+const onChangeDataEntrega = () => {
+  const agora = new Date();
+
+  const ano = agora.getFullYear();
+  const mes = String(agora.getMonth() + 1).padStart(2, '0');
+  const dia = String(agora.getDate()).padStart(2, '0');
+  const hora = String(agora.getHours()).padStart(2, '0');
+  const minuto = String(agora.getMinutes()).padStart(2, '0');
+
+  const agoraFormatado = `${ano}-${mes}-${dia}T${hora}:${minuto}`;
+
+  // Se estiver vazio ou inválido, reseta pra hora atual
+  if (!informarEntregaRequest.value.dDataHoraEntregaDT) {
+    informarEntregaRequest.value.dDataHoraEntregaDT = agoraFormatado;
+  }
+};
 
 // MOUNTED DA PÁGINA
 onMounted(async () => {
@@ -346,10 +405,9 @@ onMounted(async () => {
                     :class="applyTableStipedRows(i)"
                     >
                     <td class="HEIGHT-5px WIDTH-3 TEXTALI-center" scope="row" :title="nota.dataTramite" >
-                        <button type="button" class="in-table-button" title="Visualizar detalhes do Trâmite" @click="abrirModalInformarEntrega(nota.nfEntrega)">
+                        <button type="button" class="in-table-button" title="Visualizar detalhes do Trâmite" @click="abrirModalInformarEntrega(nota)">
                           <IconsCaminhao v-if="!nota.dataEntrega" corProp="currentColor" alturaProp="1" larguraProp="1"/>  
                           <IconsLapis v-else corProp="currentColor" alturaProp="1" larguraProp="1"/>  
-
                         </button>
                       </td>
                       <td class="HEIGHT-5px WIDTH-7 TEXTALI-center" scope="row" :title="nota.dataTramite" >{{ nota.dataNF }}</td>
@@ -395,8 +453,8 @@ onMounted(async () => {
           <!-- Botão Fechar -->
           <button title="Fechar (F4)" id="update-modal-close-button" 
             type="button" class="btn-close" data-bs-dismiss="modal" 
+            @click="clickFechaInformarEntregaModal()"
             aria-label="Close">
-              <!-- @click="clickUpdateModalFecharButton()" -->
           </button>
 
         </div>
@@ -424,7 +482,7 @@ onMounted(async () => {
           <div class="D-flex">
             
             <!-- OBS NOTA FISCAL -->
-            <div class="WIDTH-44" style="margin-left: 5%;">
+            <div class="WIDTH-53" style="margin-left: 5%;">
               <label
                 id="adicionais-post-label"
                 for="adicionais-post-input"
@@ -438,16 +496,21 @@ onMounted(async () => {
             </div>
 
             <!-- OBS NOTA FISCAL -->
-            <div class="WIDTH-45" style="margin-left: 1%;">
+            <div class="WIDTH-36" style="margin-left: 1%;">
               <label
                 id="adicionais-post-label"
                 for="adicionais-post-input"
                 class="form-label BGC-branco BORRAD-5 FSIZE-12px FWEIGHT-bold MARGIN-T-15-L7 PADDING-R5-L5 BGC-input-enabled"
-              >DATA ENTREGA</label>
+              >
+                DATA E HORA ENTREGA
+              </label>
               <input
                 id="adicionais-post-input"
-                type="text"
-                class="form-control BOR-grey HEIGHT-70 MARGIN-T-10 FSIZE-12px InputUPPERCASE">
+                type="datetime-local"
+                class="form-control BOR-grey HEIGHT-70 MARGIN-T-10 FSIZE-12px InputUPPERCASE"
+                v-model="informarEntregaRequest.dDataHoraEntregaDT"
+                @change="onChangeDataEntrega"
+              >
             </div>
 
           </div>
@@ -455,26 +518,35 @@ onMounted(async () => {
           <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 60%; border: 1px solid #ccc; border-radius: 8px; padding: 20px; margin: 5%;">
             
             <!-- Se não tiver imagem, mostra a área de upload -->
-            <div v-if="!preview" class="upload-area">
-              <label for="fileInput">
-                <span>Insira um arquivo (aceita imagens)</span>
-                <input id="fileInput" type="file" accept="image/*" @change="handleFileChange" hidden>
-              </label>
+            <div
+              v-if="!preview"
+              class="upload-area"
+              @click="abrirInputArquivo"
+              @dragover.prevent="onDragOver"
+              @dragleave.prevent="onDragLeave"
+              @drop.prevent="onFileDrop"
+            >
+              <span>{{ isDragging ? 'Solte a imagem aqui...' : 'Clique ou arraste uma imagem' }}</span>
+              <input ref="fileInput" type="file" accept="image/*" @change="handleFileChange" hidden>
             </div>
 
             <!-- Se tiver imagem, mostra o preview e botão de excluir -->
             <div v-else class="preview-container">
-              <img :src="preview" alt="Preview da imagem" style="max-width: 300px; max-height: 200px; margin-bottom: 10px; border-radius: 5px; border: 1px solid #ccc;">
-              <button @click="removerImagem" style="padding: 5px 10px; background-color: #f44336; color: white; border: none; border-radius: 5px; cursor: pointer;">
-                Excluir
-              </button>
+              <div class="image-wrapper">
+                <img :src="preview" alt="Preview da imagem">
+                <button class="delete-button" @click="removerImagem">×</button>
+              </div>
             </div>
 
           </div>
 
           <div>
               <!-- Botão fixo na parte inferior -->
-            <button type="button" class="btn btn-success WIDTH-90 FSIZE-14px " style="margin-left: 5%; margin-bottom: 2%; margin-top: 2%;" @click="confirmarEntregaBtnClick()">
+            <button :disabled="!informarEntregaRequest.cNomeRecebedor || !informarEntregaRequest.cDocRecebedor || !informarEntregaRequest.dDataHoraEntregaDT"
+            type="button" 
+            class="btn btn-success WIDTH-90 FSIZE-14px " 
+            style="margin-left: 5%; margin-bottom: 2%; margin-top: 2%;" 
+            @click="confirmarEntregaBtnClick()">
               CONFIRMAR ENTREGA
             </button>
           </div>
