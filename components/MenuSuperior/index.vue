@@ -378,6 +378,7 @@ const login = reactive({ usuario: '', senha: '' })
 interface LoginResponse {
   token: string;
   idFuncao: number;
+  iD_ResponsavelInformaEntrega: number;
 }
 
 async function confereLogin(): Promise<LoginResponse | null> {
@@ -419,15 +420,19 @@ async function fecharModalERedirecionar() {
     return
   }
 
-  const { token, idFuncao } = response
+  const { token, idFuncao, iD_ResponsavelInformaEntrega } = response
 
   await validaToken(token)
 
   // Salva no estado global
   authStore.setToken(token)
   tokenState.value = token
+
+  console.log(response)
+  
   sessionStorage.setItem('tokenProd', token)
-  sessionStorage.setItem('idFuncao', idFuncao.toString()) // agora salva o valor certo
+  sessionStorage.setItem('ID_ResponsavelInformaEntrega', iD_ResponsavelInformaEntrega.toString())
+  sessionStorage.setItem('idFuncao', idFuncao.toString()) 
 
   // Fecha o modal
   const modalElement = document.getElementById('acessoClienteModal')

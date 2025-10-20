@@ -21,9 +21,11 @@ const dataInicial = ref("")
 const dataFinal = ref("")
 dataInicial.value = new Date(new Date().setMonth(new Date().getMonth() - 2)).toISOString().split('T')[0];
 dataFinal.value = new Date().toISOString().split('T')[0];
+const ID_ResponsavelInformaEntrega = sessionStorage.getItem('ID_ResponsavelInformaEntrega')
 
 const nfProcura = ref("");
 const nfModal = ref("");
+const modoAberturaModal = ref("");
 const mostrarTodos = ref(false);
 
 const tabelaNOTASCarregada = ref(false);
@@ -47,11 +49,41 @@ const informarEntregaRequest = ref({
   cNFTransp: '',
   dDataHoraEntregaDT: '', 
   iIdCliente: null,
+  iIdClieiIDUsuarioResponsavel: ID_ResponsavelInformaEntrega,
+});
+
+const editarEntregaRequest = ref({
+  cDocRecebedor: '',
+  cNomeRecebedor: '',
+  cNFTransp: '',
+  dDataHoraEntregaDT: '', 
+  iIdCliente: null,
+});
+
+const editarStaticEntregaRequest = ref({
+  cDocRecebedor: '',
+  cNomeRecebedor: '',
+  cNFTransp: '',
+  dDataHoraEntregaDT: '', 
+  iIdCliente: null,
 });
 
 // FUNÇÕES ---------------------------------------------------------------------------------------------------------------
 // Computeds ----------------\
+const podeEditar = computed(() => {
+  const infoAtual = editarStaticEntregaRequest.value;
+  const infoEditada = editarEntregaRequest.value;
 
+  return (
+    infoEditada.cDocRecebedor &&
+    infoEditada.cNomeRecebedor && 
+    infoEditada.dDataHoraEntregaDT &&
+
+    infoEditada.cDocRecebedor === infoAtual.cDocRecebedor &&
+    infoEditada.cNomeRecebedor === infoAtual.cNomeRecebedor &&
+    infoEditada.dDataHoraEntregaDT === infoAtual.dDataHoraEntregaDT
+  );
+});
 // --------------------------/
 
 // FUNÇÕES DO FILTRO
@@ -102,8 +134,6 @@ async function confereNFEntrega(NFEntrega) {
       { headers: { Authorization: `Bearer ${token.value}` } }
     );
 
-    console.log(response.data)
-
     return response.data
 
   } catch (error) {
@@ -130,7 +160,28 @@ async function informarEntregaReq(formData) {
     return response.data;
   } catch (error) {
     ToastError("Erro ao informar entrega:");
-    console.log(error);
+    console.error(error);
+  }
+}
+async function editarEntregaReq(formData) {
+  try {
+    const response = await axios.put(
+      `${urlProd.value}/entrega/sla-informar-entrega`,
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${token.value}`,
+          "Content-Type": "multipart/form-data"
+        }
+      }
+    );
+
+    ToastSuccess("Entrega informada com sucesso!");
+
+    return response.data;
+  } catch (error) {
+    ToastError("Erro ao informar entrega:");
+    console.error(error);
   }
 }
 async function getFotoEntrega(nfEntrega) {
@@ -143,24 +194,33 @@ async function getFotoEntrega(nfEntrega) {
       }
     );
 
-    // Cria uma URL de visualização para o blob recebido
-    const imageUrl = URL.createObjectURL(response.data);
-    preview.value = imageUrl; // usa essa URL em um <img :src="preview" />
+    if (response.status === 204 || !response.data) {
+      return 204;
+    }
 
-    console.log("Imagem recebida com sucesso:", imageUrl);
-
-    return imageUrl;
+    return URL.createObjectURL(response.data);
   } catch (error) {
-    console.error("Erro ao buscar foto de Entrega:", error);
-    ToastError("Erro ao buscar foto de Entrega.");
+    if (error.response && error.response.status === 204) {
+      return null;
+    }
+    console.error('Erro ao buscar imagem:', error);
+    return null;
   }
 }
 
-// FUNÇÕES DO MODAL
-async function abrirModalInformarEntrega(entrega) {
 
-  if(entrega.dataEntrega) {
-    informarEntregaRequest.value = await confereNFEntrega(entrega.nfEntrega);
+// FUNÇÕES DO MODAL
+async function abrirModalInformarEntrega(entrega, modoModal) {
+
+  modoAberturaModal.value = modoModal;
+
+  if (modoModal === 'edicao') {
+    editarStaticEntregaRequest.value = await confereNFEntrega(entrega.nfEntrega);
+    editarStaticEntregaRequest.value.dDataHoraEntregaDT = atribuiData(editarStaticEntregaRequest.value.dEntrega);
+    editarEntregaRequest.value = { ...editarStaticEntregaRequest.value };
+
+    preview.value = await getFotoEntrega(entrega.nfEntrega);
+
   }
 
   nfModal.value = entrega.nfEntrega;
@@ -198,6 +258,42 @@ async function confirmarEntregaBtnClick() {
 
   const respostaApi = await informarEntregaReq(formData);
 
+  if(respostaApi?.message == "Entrega atualizada com sucesso!") {
+    
+    const modalEl = document.getElementById('entregaModal');
+  
+    if (modalEl) {
+
+      // Verifica se o modal já tem uma instância
+      let modalInstance = bootstrap.Modal.getInstance(modalEl);
+
+      // Se não tiver, cria uma nova instância
+      if (!modalInstance) {
+        modalInstance = new bootstrap.Modal(modalEl);
+      }
+
+      // Fecha o modal
+      modalInstance.hide();
+    }
+
+  }
+
+  await carregaTabelaNOTAS();
+
+}
+async function confirmarEdicaoEntregaBtnClick() {
+  // Atualiza o DTO com os valores do formulário
+  editarEntregaRequest.value.cNFTransp = nfModal.value;
+
+  // Cria FormData
+  const formData = new FormData();
+  // Adiciona campos do DTO
+  for (const key in editarEntregaRequest.value) {
+    formData.append(key, editarEntregaRequest.value[key]);
+  }
+
+  const respostaApi = await editarEntregaReq(formData);
+
   if(respostaApi.message == "Entrega atualizada com sucesso!") {
     
     const modalEl = document.getElementById('entregaModal');
@@ -212,6 +308,8 @@ async function confirmarEntregaBtnClick() {
         modalInstance = new bootstrap.Modal(modalEl);
       }
 
+      clickFechaInformarEntregaModal();
+      
       // Fecha o modal
       modalInstance.hide();
     }
@@ -236,27 +334,36 @@ async function abrirModalFotoEntrega(nfEntrega) {
       modalInstance = new bootstrap.Modal(modalEl);
     }
 
-    await getFotoEntrega(nfEntrega);
+    preview.value = await getFotoEntrega(nfEntrega);
 
     // Exibe o modal
     modalInstance.show();
   }
 }
-const clickFechaInformarEntregaModal = () => {
+  const clickFechaInformarEntregaModal = () => {
+  
+    // Reseta os campos do formulário
+    Object.keys(informarEntregaRequest.value).forEach(k => informarEntregaRequest.value[k] = '');
+    Object.keys(editarEntregaRequest.value).forEach(k => editarEntregaRequest.value[k] = '');
+    Object.keys(editarStaticEntregaRequest.value).forEach(k => editarStaticEntregaRequest.value[k] = '');
+
+    informarEntregaRequest.value.iIdClieiIDUsuarioResponsavel = ID_ResponsavelInformaEntrega;
+
+    modoAberturaModal.value = '';
+    arquivoSelecionado.value = null;
+    preview.value = null;
+
+    // Limpa o input file
+    const input = document.getElementById('fileInput');
+    if (input) input.value = '';
+
+  };
+const clickFechaInformarFotoModal = () => {
  
   // Reseta os campos do formulário
-  informarEntregaRequest.value.cDocRecebedor = '';
-  informarEntregaRequest.value.cNomeRecebedor = '';
-  informarEntregaRequest.value.dDataHoraEntregaDT = '';
-  arquivoSelecionado.value = null;
   preview.value = null;
 
-  // Limpa o input file
-  const input = document.getElementById('fileInput');
-  if (input) input.value = '';
-
 };
-
 // FUNÇÕES AUXILIARES
 function handleFileChange(event) {
   const file = event.target.files[0];
@@ -297,7 +404,7 @@ function removerImagem() {
   const input = document.getElementById('fileInput');
   if (input) input.value = '';
 }
-const onChangeDataEntrega = () => {
+const onChangeDataEntregaCriacao = () => {
   const agora = new Date();
 
   const ano = agora.getFullYear();
@@ -312,6 +419,27 @@ const onChangeDataEntrega = () => {
   if (!informarEntregaRequest.value.dDataHoraEntregaDT) {
     informarEntregaRequest.value.dDataHoraEntregaDT = agoraFormatado;
   }
+};
+const onChangeDataEntregaEdicao = () => {
+  const agora = new Date();
+
+  const ano = agora.getFullYear();
+  const mes = String(agora.getMonth() + 1).padStart(2, '0');
+  const dia = String(agora.getDate()).padStart(2, '0');
+  const hora = String(agora.getHours()).padStart(2, '0');
+  const minuto = String(agora.getMinutes()).padStart(2, '0');
+
+  const agoraFormatado = `${ano}-${mes}-${dia}T${hora}:${minuto}`;
+
+  // Se estiver vazio ou inválido, reseta pra hora atual
+  if (!editarEntregaRequest.value.dDataHoraEntregaDT) {
+    editarEntregaRequest.value.dDataHoraEntregaDT = agoraFormatado;
+  }
+};
+const atribuiData = (data) => {
+  const dataObj = new Date(data);
+  const pad = n => String(n).padStart(2, '0');
+  return `${dataObj.getFullYear()}-${pad(dataObj.getMonth() + 1)}-${pad(dataObj.getDate())}T${pad(dataObj.getHours())}:${pad(dataObj.getMinutes())}`;
 };
 
 // MOUNTED DA PÁGINA
@@ -337,7 +465,7 @@ onMounted(async () => {
       />
       
       <!-- ESPAÇO CORPO -->
-      <div class="D-flex FD-column HEIGHT-90vh WIDTH-100 JC-center ALITEM-center BGC-cinza-9 BOR-branca">
+      <div class="D-flex FD-column HEIGHT-86vh WIDTH-100 JC-center ALITEM-center BGC-cinza-9 BOR-branca">
         <div class="D-flex FD-column ALITEM-center HEIGHT-90 WIDTH-98 BORRAD-5 BGC-branco PADDING-T5-B10">
 
             <!-- Filtros -->
@@ -405,9 +533,11 @@ onMounted(async () => {
                     :class="applyTableStipedRows(i)"
                     >
                     <td class="HEIGHT-5px WIDTH-3 TEXTALI-center" scope="row" :title="nota.dataTramite" >
-                        <button type="button" class="in-table-button" title="Visualizar detalhes do Trâmite" @click="abrirModalInformarEntrega(nota)">
-                          <IconsCaminhao v-if="!nota.dataEntrega" corProp="currentColor" alturaProp="1" larguraProp="1"/>  
-                          <IconsLapis v-else corProp="currentColor" alturaProp="1" larguraProp="1"/>  
+                        <button v-if="!nota.dataEntrega"  type="button" class="in-table-button" title="Visualizar detalhes do Trâmite" @click="abrirModalInformarEntrega(nota, 'criacao')">
+                          <IconsCaminhao corProp="currentColor" alturaProp="1" larguraProp="1"/>  
+                        </button>
+                        <button v-else type="button" class="in-table-button" title="Visualizar detalhes do Trâmite" @click="abrirModalInformarEntrega(nota, 'edicao')">
+                          <IconsLapis corProp="currentColor" alturaProp="1" larguraProp="1"/>  
                         </button>
                       </td>
                       <td class="HEIGHT-5px WIDTH-7 TEXTALI-center" scope="row" :title="nota.dataTramite" >{{ nota.dataNF }}</td>
@@ -416,7 +546,7 @@ onMounted(async () => {
                       <td class="HEIGHT-5px WIDTH-8 TEXTALI-center" :title="nota.numeroNFE" >{{ nota.docRecebidor }}</td>
                       <td class="HEIGHT-5px WIDTH-10 TEXTALI-center" :title="nota.codigoComponente" >{{ nota.dataEntrega }}</td>
                       <td class="HEIGHT-5px WIDTH-3 TEXTALI-center" scope="row" :title="nota.dataTramite" >
-                        <button type="button" class="in-table-button" title="Visualizar detalhes do Trâmite" @click="abrirModalFotoEntrega(nota.nfEntrega)">
+                        <button v-if="nota.dataEntrega" type="button" class="in-table-button" title="Visualizar detalhes do Trâmite" @click="abrirModalFotoEntrega(nota.nfEntrega)">
                           <IconsLupa corProp="currentColor" alturaProp="1" larguraProp="1"/>  
                         </button>
                       </td>
@@ -446,8 +576,12 @@ onMounted(async () => {
         <div class="d-flex justify-content-between align-items-center border-bottom p-2" style="height: 6%;" id="modal-header">	
 
           <!-- Título -->
-          <h1 class="modal-title fs-5 flex-grow-1 text-center" id="entregaModalLabel">
+          <h1 v-if="modoAberturaModal == 'criacao'" class="modal-title fs-5 flex-grow-1 text-center" id="entregaModalLabel">
             INFORMAR ENTREGA - {{ nfModal }}
+          </h1>
+
+          <h1 v-if="modoAberturaModal == 'edicao'" class="modal-title fs-5 flex-grow-1 text-center" id="entregaModalLabel">
+            EDITAR ENTREGA - {{ nfModal }}
           </h1>
 
           <!-- Botão Fechar -->
@@ -470,11 +604,22 @@ onMounted(async () => {
                 for="adicionais-post-input"
                 class="form-label BGC-branco BORRAD-5 FSIZE-12px FWEIGHT-bold MARGIN-T-15-L7 PADDING-R5-L5 BGC-input-enabled"
               >NOME RECEBEDOR</label>
-              <input
+
+              <input v-if="modoAberturaModal == 'criacao'"
                 id="adicionais-post-input"
                 v-model="informarEntregaRequest.cNomeRecebedor"
+                @input="informarEntregaRequest.cNomeRecebedor = informarEntregaRequest.cNomeRecebedor.toUpperCase()"
                 type="text"
                 class="form-control BOR-grey HEIGHT-70 MARGIN-T-10 FSIZE-12px InputUPPERCASE">
+
+              <input v-if="modoAberturaModal == 'edicao'"
+                id="adicionais-post-input"
+                v-model="editarEntregaRequest.cNomeRecebedor"
+                @input="editarEntregaRequest.cNomeRecebedor = editarEntregaRequest.cNomeRecebedor.toUpperCase()"
+                type="text"
+                class="form-control BOR-grey HEIGHT-70 MARGIN-T-10 FSIZE-12px InputUPPERCASE">
+
+
             </div>
 
           </div>
@@ -488,11 +633,19 @@ onMounted(async () => {
                 for="adicionais-post-input"
                 class="form-label BGC-branco BORRAD-5 FSIZE-12px FWEIGHT-bold MARGIN-T-15-L7 PADDING-R5-L5 BGC-input-enabled"
               >DOC. RECEBEDOR</label>
-              <input
+
+              <input v-if="modoAberturaModal == 'criacao'"
                 id="adicionais-post-input"
                 v-model="informarEntregaRequest.cDocRecebedor"
                 type="text"
                 class="form-control BOR-grey HEIGHT-70 MARGIN-T-10 FSIZE-12px InputUPPERCASE">
+
+              <input v-if="modoAberturaModal == 'edicao'"
+                id="adicionais-post-input"
+                v-model="editarEntregaRequest.cDocRecebedor"
+                type="text"
+                class="form-control BOR-grey HEIGHT-70 MARGIN-T-10 FSIZE-12px InputUPPERCASE">
+
             </div>
 
             <!-- OBS NOTA FISCAL -->
@@ -500,17 +653,27 @@ onMounted(async () => {
               <label
                 id="adicionais-post-label"
                 for="adicionais-post-input"
-                class="form-label BGC-branco BORRAD-5 FSIZE-12px FWEIGHT-bold MARGIN-T-15-L7 PADDING-R5-L5 BGC-input-enabled"
+                class="form-label BGC-branco BORRAD-5 FSIZE-12px FWEIGHT-bold MARGIN-T-15-L7 PADDING-R5-L5 BGC-input-disabled"
               >
                 DATA E HORA ENTREGA
               </label>
-              <input
+
+              <input v-if="modoAberturaModal == 'criacao'"
                 id="adicionais-post-input"
                 type="datetime-local"
                 class="form-control BOR-grey HEIGHT-70 MARGIN-T-10 FSIZE-12px InputUPPERCASE"
                 v-model="informarEntregaRequest.dDataHoraEntregaDT"
-                @change="onChangeDataEntrega"
+                @change="onChangeDataEntregaCriacao"
               >
+
+              <input v-if="modoAberturaModal == 'edicao'"
+                id="adicionais-post-input"
+                type="datetime-local"
+                class="form-control BOR-grey HEIGHT-70 MARGIN-T-10 FSIZE-12px InputUPPERCASE"
+                v-model="editarEntregaRequest.dDataHoraEntregaDT"
+                disabled
+                >
+                <!-- @change="onChangeDataEntregaEdicao" -->
             </div>
 
           </div>
@@ -532,22 +695,32 @@ onMounted(async () => {
 
             <!-- Se tiver imagem, mostra o preview e botão de excluir -->
             <div v-else class="preview-container">
-              <div class="image-wrapper">
-                <img :src="preview" alt="Preview da imagem">
-                <button class="delete-button" @click="removerImagem">×</button>
+
+              <div class="image-wrapper" v-if="preview != 204">
+                <img :src="preview" alt="Imagem da entrega">
+                <button v-if="modoAberturaModal == 'criacao'" class="delete-button" @click="removerImagem">×</button>
               </div>
+
+              <div v-else class="sem-imagem">
+                <span>A entrega não possui imagem</span>
+              </div>
+
             </div>
 
           </div>
 
           <div>
-              <!-- Botão fixo na parte inferior -->
-            <button :disabled="!informarEntregaRequest.cNomeRecebedor || !informarEntregaRequest.cDocRecebedor || !informarEntregaRequest.dDataHoraEntregaDT"
-            type="button" 
-            class="btn btn-success WIDTH-90 FSIZE-14px " 
-            style="margin-left: 5%; margin-bottom: 2%; margin-top: 2%;" 
-            @click="confirmarEntregaBtnClick()">
-              CONFIRMAR ENTREGA
+            <button v-if="modoAberturaModal == 'criacao'" :disabled="!informarEntregaRequest.cNomeRecebedor || !informarEntregaRequest.cDocRecebedor || !informarEntregaRequest.dDataHoraEntregaDT"
+              type="button" 
+              class="btn btn-success WIDTH-90 FSIZE-14px " 
+              style="margin-left: 5%; margin-bottom: 2%; margin-top: 2%;" 
+              @click="confirmarEntregaBtnClick()"> CONFIRMAR ENTREGA
+            </button>
+            <button v-if="modoAberturaModal == 'edicao'" :disabled="podeEditar"
+              type="button" 
+              class="btn btn-warning WIDTH-90 FSIZE-14px " 
+              style="margin-left: 5%; margin-bottom: 2%; margin-top: 2%;" 
+              @click="confirmarEdicaoEntregaBtnClick()"> EDITAR ENTREGA
             </button>
           </div>
 
@@ -558,30 +731,50 @@ onMounted(async () => {
     </div>
   </div>
 
-<div class="modal fade" id="fotoEntregaModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="fotoEntregaModalLabel">
+<div
+  class="modal fade"
+  id="fotoEntregaModal"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="fotoEntregaModalLabel"
+>
   <div class="modal-dialog modal-xl WIDTH-90">
-    <div class="modal-content" id="modalTableClick">
+    <div class="modal-content shadow-lg border-0 rounded-4 overflow-hidden" id="modalTableClick">
 
-      <div class="d-flex justify-content-between align-items-center border-bottom p-2" style="height: 6%;" id="modal-header">	
-        <h1 class="modal-title fs-5 flex-grow-1 text-center" id="entregaModalLabel">
+      <!-- Cabeçalho -->
+      <div
+        class="d-flex justify-content-between align-items-center border-bottom p-3 bg-light"
+        id="modal-header"
+      >
+        <h1
+          class="modal-title fs-5 flex-grow-1 text-center text-dark fw-semibold m-0"
+          id="entregaModalLabel"
+        >
           IMAGEM CANHOTO - NF {{ nfModal }}
         </h1>
 
-        <button title="Fechar (F4)" id="update-modal-close-button" 
-          type="button" class="btn-close" data-bs-dismiss="modal" 
-          aria-label="Close">
-        </button>
+        <button
+          title="Fechar (F4)"
+          id="update-modal-close-button"
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+          @click="clickFechaInformarFotoModal"
+        ></button>
       </div>
 
-      <div class="BOR-B-grey-2 modal-body-custom" style="height: 77.5vh;">
-        <div class="image-container">
-          <img 
-            v-if="preview" 
-            :src="preview" 
+      <!-- Corpo -->
+      <div class="modal-body p-0 d-flex align-items-center justify-content-center" style="height: 80vh;">
+        <div class="image-container position-relative w-100 h-100 d-flex justify-content-center align-items-center p-3">
+          <img
+            v-if="preview && preview !== 204"
+            :src="preview"
             alt="Imagem da Entrega"
             class="image-preview"
           >
-          <p v-else class="no-image-text">Nenhuma imagem disponível</p>
+          <p v-else class="no-image-text text-dark fs-5">A entrega não possui imagem</p>
         </div>
       </div>
 
@@ -591,3 +784,57 @@ onMounted(async () => {
 
 
 </template>
+
+<style scoped>
+/* Garante que o modal tenha um design mais elegante */
+#fotoEntregaModal .modal-content {
+  background-color: #fdfdfd;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+/* Área da imagem */
+.image-container {
+  background-color: #d8d8d8;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* Imagem responsiva e centralizada */
+.image-preview {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain; /* Mantém proporção sem cortar */
+  border-radius: 12px;
+  box-shadow: 0 0 25px rgba(240, 240, 240, 0.3);
+  transition: transform 0.3s ease;
+}
+
+/* Efeito suave ao passar o mouse */
+.image-preview:hover {
+  transform: scale(1.02);
+}
+
+/* Texto quando não há imagem */
+.no-image-text {
+  color: #ccc;
+  font-style: italic;
+  text-align: center;
+}
+
+/* Cabeçalho do modal */
+#modal-header {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-bottom: 1px solid #dcdcdc;
+}
+
+/* Botão de fechar com leve destaque */
+.btn-close {
+  filter: brightness(0.6);
+  transition: 0.2s;
+}
+.btn-close:hover {
+  filter: brightness(1);
+  transform: scale(1.1);
+}
+</style>
