@@ -523,7 +523,7 @@ onMounted(async () => {
             </div>
 
             <!-- Tabela -->
-            <div class="OFLOW-auto WIDTH-98 HEIGHT-85 BOR-SensacaoAfundado mb-1">
+            <div class="OFLOW-auto WIDTH-98 HEIGHT-92 BOR-SensacaoAfundado mb-1">
             
               <table class="table-responsive table-sm table-striped WIDTH-100 BORRAD-5 table-fixed">
                 <thead class="BGC-cinza-secondary POSITION-sticky TOP-0">
@@ -569,11 +569,11 @@ onMounted(async () => {
               </table>
 
             </div>
-            <div class="WIDTH-98">
+            <!-- <div class="WIDTH-98">
               <button @click="toggleVerMais()" class="btn btn-secondary WIDTH-100 FSIZE-14px">
                 {{ mostrarTodos ? `Ver menos...` : `Ver mais... (${2})` }}
               </button>
-            </div>
+            </div> -->
 
         </div>
       </div>
