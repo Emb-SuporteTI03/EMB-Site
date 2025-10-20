@@ -73,16 +73,18 @@ const editarStaticEntregaRequest = ref({
 const podeEditar = computed(() => {
   const infoAtual = editarStaticEntregaRequest.value;
   const infoEditada = editarEntregaRequest.value;
+  
+  const camposPreenchidos =
+    infoEditada.cDocRecebedor != null && infoEditada.cDocRecebedor.trim() !== "" && infoEditada.cDocRecebedor.trim() !== ''
+    infoEditada.cNomeRecebedor != null && infoEditada.cNomeRecebedor.trim() !== "" && infoEditada.cNomeRecebedor.trim() !== ''
+    infoEditada.dDataHoraEntregaDT != null && infoEditada.dDataHoraEntregaDT.trim() !== "" && infoEditada.dDataHoraEntregaDT.trim() !== '';
 
-  return (
-    infoEditada.cDocRecebedor &&
-    infoEditada.cNomeRecebedor && 
-    infoEditada.dDataHoraEntregaDT &&
-
+  const camposIguais =
     infoEditada.cDocRecebedor === infoAtual.cDocRecebedor &&
     infoEditada.cNomeRecebedor === infoAtual.cNomeRecebedor &&
-    infoEditada.dDataHoraEntregaDT === infoAtual.dDataHoraEntregaDT
-  );
+    infoEditada.dDataHoraEntregaDT === infoAtual.dDataHoraEntregaDT;
+
+  return (!camposPreenchidos || camposIguais);
 });
 // --------------------------/
 
