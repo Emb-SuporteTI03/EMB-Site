@@ -364,6 +364,7 @@ const clickFechaInformarFotoModal = () => {
   preview.value = null;
 
 };
+
 // FUNÇÕES AUXILIARES
 function handleFileChange(event) {
   const file = event.target.files[0];
@@ -441,6 +442,18 @@ const atribuiData = (data) => {
   const pad = n => String(n).padStart(2, '0');
   return `${dataObj.getFullYear()}-${pad(dataObj.getMonth() + 1)}-${pad(dataObj.getDate())}T${pad(dataObj.getHours())}:${pad(dataObj.getMinutes())}`;
 };
+const onKeyUpNFProcura = () => {
+  const termo = nfProcura.value.trim().toUpperCase();
+
+  if (!termo) {
+    infosTableNotasSLA.value = staticinfosTableNotasSLA.value;
+    return;
+  }
+
+  infosTableNotasSLA.value = staticinfosTableNotasSLA.value.filter(nota =>
+    nota.nfEntrega.toUpperCase().includes(termo)
+  );
+};
 
 // MOUNTED DA PÁGINA
 onMounted(async () => {
@@ -495,6 +508,7 @@ onMounted(async () => {
                           class="form-control BOR-grey"
                           placeholder="Buscar Nota Fiscal de Entrega"
                           v-model="nfProcura"
+                          @keyup="onKeyUpNFProcura"
                           />
                       </div>
                       
@@ -533,10 +547,10 @@ onMounted(async () => {
                     :class="applyTableStipedRows(i)"
                     >
                     <td class="HEIGHT-5px WIDTH-3 TEXTALI-center" scope="row" :title="nota.dataTramite" >
-                        <button v-if="!nota.dataEntrega"  type="button" class="in-table-button" title="Visualizar detalhes do Trâmite" @click="abrirModalInformarEntrega(nota, 'criacao')">
+                        <button v-if="!nota.dataEntrega"  type="button" class="in-table-button" title="Informar entrega" @click="abrirModalInformarEntrega(nota, 'criacao')">
                           <IconsCaminhao corProp="currentColor" alturaProp="1" larguraProp="1"/>  
                         </button>
-                        <button v-else type="button" class="in-table-button" title="Visualizar detalhes do Trâmite" @click="abrirModalInformarEntrega(nota, 'edicao')">
+                        <button v-else type="button" class="in-table-button" title="Editar informação de entrega" @click="abrirModalInformarEntrega(nota, 'edicao')">
                           <IconsLapis corProp="currentColor" alturaProp="1" larguraProp="1"/>  
                         </button>
                       </td>
@@ -546,7 +560,7 @@ onMounted(async () => {
                       <td class="HEIGHT-5px WIDTH-8 TEXTALI-center" :title="nota.numeroNFE" >{{ nota.docRecebidor }}</td>
                       <td class="HEIGHT-5px WIDTH-10 TEXTALI-center" :title="nota.codigoComponente" >{{ nota.dataEntrega }}</td>
                       <td class="HEIGHT-5px WIDTH-3 TEXTALI-center" scope="row" :title="nota.dataTramite" >
-                        <button v-if="nota.dataEntrega" type="button" class="in-table-button" title="Visualizar detalhes do Trâmite" @click="abrirModalFotoEntrega(nota.nfEntrega)">
+                        <button v-if="nota.dataEntrega" type="button" class="in-table-button" title="Conferir imagem" @click="abrirModalFotoEntrega(nota.nfEntrega)">
                           <IconsLupa corProp="currentColor" alturaProp="1" larguraProp="1"/>  
                         </button>
                       </td>
