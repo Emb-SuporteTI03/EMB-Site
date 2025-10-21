@@ -162,10 +162,14 @@
                         AGENDAMENTO
                       </a>
                       <hr class="custom-hr2">
-                      <a id="qmSomos-sub" data-bs-toggle="modal" data-bs-target="#acessoClienteModal" 
-                        style="color: black; text-decoration: none; cursor: pointer; font-size: 16px;">
-                        ENTRAR
-                      </a>
+<a
+  id="qmSomos-sub"
+  data-bs-toggle="modal"
+  data-bs-target="#acessoClienteModal"
+  style="color: black; text-decoration: none; cursor: pointer; font-size: 16px;"
+>
+  ENTRAR
+</a>
                     </div>
                   </div>
                     <a id="qmSomos-sub" href="https://ts-embalarte-fin.skydocs.com.br/login" style="color: black; text-decoration: none; cursor: pointer; font-size: 16px;">
@@ -293,7 +297,7 @@
         
           <div class="modal-header">
             <h5 class="modal-title" id="acessoClienteModalLabel">Acesso Cliente</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <button type="button" @click="clearInfosLogin()" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           
           <div class="modal-body" style="display: flex; justify-content: center;">
@@ -302,13 +306,27 @@
               <!-- Campo Usuário -->
               <div class="form-group">
                 <label for="usuario">Usuário</label>
-                <input v-model="login.usuario" type="text" id="usuario" class="form-control" placeholder="Digite seu usuário" />
+                <input
+                  ref="usuarioInput"
+                  v-model="login.usuario"
+                  type="text"
+                  id="usuario"
+                  class="form-control"
+                  placeholder="Digite seu usuário"
+                />
               </div>
 
               <!-- Campo Senha -->
               <div class="form-group">
                 <label for="senha">Senha</label>
-                <input v-model="login.senha" type="password" id="senha" class="form-control" placeholder="Digite sua senha" />
+                <input
+                  v-model="login.senha"
+                  type="password"
+                  id="senha"
+                  class="form-control"
+                  placeholder="Digite sua senha"
+                  @keyup.enter="fecharModalERedirecionar"
+                />
               </div>
 
             </form>
@@ -370,6 +388,7 @@ const isSubDropdown2Active = ref(false)
 const isMenuVisible = ref(false)
 const isSubDrop1Cllr = ref(false)
 const isSubDrop2Cllr = ref(false)
+const usuarioInput = ref<HTMLInputElement | null>(null)
 
 const contato = reactive({ nome: '', email: '', mensagem: '', area: '' })
 const login = reactive({ usuario: '', senha: '' })
@@ -428,8 +447,6 @@ async function fecharModalERedirecionar() {
   authStore.setToken(token)
   tokenState.value = token
 
-  console.log(response)
-  
   sessionStorage.setItem('tokenProd', token)
   sessionStorage.setItem('ID_ResponsavelInformaEntrega', iD_ResponsavelInformaEntrega.toString())
   sessionStorage.setItem('idFuncao', idFuncao.toString()) 
@@ -447,14 +464,17 @@ async function fecharModalERedirecionar() {
    setTimeout(() => router.push('/sla/consulta-estoque'), 50)
   }
   if(idFuncao == 2) {
-   setTimeout(() => router.push('/sla'), 50)
-  }
-    if(idFuncao == 1) {
    setTimeout(() => router.push('/sla/informar-entrega'), 50)
+  }
+  if(idFuncao == 1) {
+   setTimeout(() => router.push('/sla'), 50)
   }
 
 }
-
+function clearInfosLogin() {
+  login.usuario = ''
+  login.senha = ''
+}
 // Dropdowns e menus
 function toggleMenu() {
   isSubDrop1Cllr.value = false
@@ -549,6 +569,12 @@ onMounted(() => {
   document.addEventListener('click', handleClickOutside)
   document.addEventListener('mousemove', handleScroll)
   window.addEventListener('touchmove', handleTouchMove)
+
+  const modal = document.getElementById('acessoClienteModal')
+  modal?.addEventListener('shown.bs.modal', () => {
+    usuarioInput.value?.focus()
+  })
+
 })
 
 onUnmounted(() => {

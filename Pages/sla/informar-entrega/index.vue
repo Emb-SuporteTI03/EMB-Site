@@ -90,7 +90,6 @@ const podeEditar = computed(() => {
 
 // FUNÇÕES DO FILTRO
 
-
 // REQUISIÇÕES
 async function fetchCliente() {
   
@@ -158,10 +157,20 @@ async function informarEntregaReq(formData) {
     );
 
     ToastSuccess("Entrega informada com sucesso!");
-
     return response.data;
   } catch (error) {
-    ToastError("Erro ao informar entrega:");
+    // ⚙️ se o backend retornar 400, acessa a mensagem personalizada
+    if (error.response && error.response.status === 400) {
+      const msg =
+        error.response.data?.error || // caso venha { error: "mensagem" }
+        error.response.data?.message || // caso venha { message: "mensagem" }
+        "Ocorreu um erro ao processar a entrega.";
+
+      ToastError(msg);
+    } else {
+      // erro genérico ou de rede
+      ToastError("Erro ao informar entrega. Tente novamente.");
+    }
     console.error(error);
   }
 }

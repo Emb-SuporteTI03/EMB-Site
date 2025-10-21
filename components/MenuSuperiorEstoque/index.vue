@@ -1,4 +1,6 @@
 <script>
+import { useRoute } from 'vue-router'
+
 export default {
   // Props:
   props: {
@@ -13,6 +15,9 @@ export default {
       destinoVoltar: this.$props.destinoVoltarProp,
       ///////////////////////////////////////////
       nomeAbrevUser: localStorage.getItem('nomeAbreviado'),
+      idFuncao: sessionStorage.getItem('idFuncao'), 
+      route: useRoute(),
+
       isLogoutButtonShowing: true,
     }
   },
@@ -46,6 +51,12 @@ export default {
         class="WIDTH-2 HEIGHT-2"
         title="Grupo Embalarte"
       /> -->
+      <NuxtLink v-if="idFuncao == 1 && route.path !== '/sla'"
+        class="TEXTDECO-none WIDTH-2"
+        to="/sla"
+        title="Voltar"
+      > <IconsSetaArrowEsquerda corProp="black" alturaProp="2" larguraProp="2" />
+      </NuxtLink>
 
       <NuxtLink
         class="TEXTDECO-none WIDTH-3"
