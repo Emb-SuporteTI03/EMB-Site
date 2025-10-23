@@ -21,7 +21,7 @@ const dataInicial = ref("")
 const dataFinal = ref("")
 dataInicial.value = new Date(new Date().setMonth(new Date().getMonth() - 2)).toISOString().split('T')[0];
 dataFinal.value = new Date().toISOString().split('T')[0];
-const ID_ResponsavelInformaEntrega = sessionStorage.getItem('ID_ResponsavelInformaEntrega')
+const ID_ResponsavelInformaEntregaExterno = sessionStorage.getItem('iD_ResponsavelInformaEntregaExterno')
 
 const nfProcura = ref("");
 const nfModal = ref("");
@@ -49,7 +49,7 @@ const informarEntregaRequest = ref({
   cNFTransp: '',
   dDataHoraEntregaDT: '', 
   iIdCliente: null,
-  iIdClieiIDUsuarioResponsavel: ID_ResponsavelInformaEntrega,
+  iIdClieiIDUsuarioResponsavel: ID_ResponsavelInformaEntregaExterno,
 });
 
 const editarEntregaRequest = ref({
@@ -351,24 +351,24 @@ async function abrirModalFotoEntrega(nfEntrega) {
     modalInstance.show();
   }
 }
-  const clickFechaInformarEntregaModal = () => {
-  
-    // Reseta os campos do formulário
-    Object.keys(informarEntregaRequest.value).forEach(k => informarEntregaRequest.value[k] = '');
-    Object.keys(editarEntregaRequest.value).forEach(k => editarEntregaRequest.value[k] = '');
-    Object.keys(editarStaticEntregaRequest.value).forEach(k => editarStaticEntregaRequest.value[k] = '');
+const clickFechaInformarEntregaModal = () => {
 
-    informarEntregaRequest.value.iIdClieiIDUsuarioResponsavel = ID_ResponsavelInformaEntrega;
+  // Reseta os campos do formulário
+  Object.keys(informarEntregaRequest.value).forEach(k => informarEntregaRequest.value[k] = '');
+  Object.keys(editarEntregaRequest.value).forEach(k => editarEntregaRequest.value[k] = '');
+  Object.keys(editarStaticEntregaRequest.value).forEach(k => editarStaticEntregaRequest.value[k] = '');
 
-    modoAberturaModal.value = '';
-    arquivoSelecionado.value = null;
-    preview.value = null;
+  informarEntregaRequest.value.iIdClieiIDUsuarioResponsavel = ID_ResponsavelInformaEntregaExterno;
 
-    // Limpa o input file
-    const input = document.getElementById('fileInput');
-    if (input) input.value = '';
+  modoAberturaModal.value = '';
+  arquivoSelecionado.value = null;
+  preview.value = null;
 
-  };
+  // Limpa o input file
+  const input = document.getElementById('fileInput');
+  if (input) input.value = '';
+
+};
 const clickFechaInformarFotoModal = () => {
  
   // Reseta os campos do formulário
