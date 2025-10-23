@@ -34,6 +34,7 @@ const infosTableNotasSLA = ref([]);
 const staticinfosTableNotasSLA = ref([]); // Para manter os dados originais e poder limpar os filtros
 
 const arquivoSelecionado = ref(null);
+const excluirFoto = ref(false);
 const fileInput = ref(null);
 const isDragging = ref(false);
 const preview = ref(null);
@@ -73,18 +74,25 @@ const editarStaticEntregaRequest = ref({
 const podeEditar = computed(() => {
   const infoAtual = editarStaticEntregaRequest.value;
   const infoEditada = editarEntregaRequest.value;
-  
-  const camposPreenchidos =
-    infoEditada.cDocRecebedor != null && infoEditada.cDocRecebedor.trim() !== "" && infoEditada.cDocRecebedor.trim() !== ''
-    infoEditada.cNomeRecebedor != null && infoEditada.cNomeRecebedor.trim() !== "" && infoEditada.cNomeRecebedor.trim() !== ''
-    infoEditada.dDataHoraEntregaDT != null && infoEditada.dDataHoraEntregaDT.trim() !== "" && infoEditada.dDataHoraEntregaDT.trim() !== '';
 
+  // Verifica se todos os campos obrigatórios estão preenchidos
+  const camposPreenchidos =
+    infoEditada.cDocRecebedor?.trim() !== "" &&
+    infoEditada.cNomeRecebedor?.trim() !== "" &&
+    infoEditada.dDataHoraEntregaDT?.trim() !== "";
+
+  // Verifica se algum campo foi alterado
   const camposIguais =
     infoEditada.cDocRecebedor === infoAtual.cDocRecebedor &&
     infoEditada.cNomeRecebedor === infoAtual.cNomeRecebedor &&
-    infoEditada.dDataHoraEntregaDT === infoAtual.dDataHoraEntregaDT;
+    infoEditada.dDataHoraEntregaDT === infoAtual.dDataHoraEntregaDT &&
+    // verifica se a foto mudou
+    arquivoSelecionado.value == null &&         // nenhuma nova foto
+    excluirFoto.value === false &&              // não clicou em excluir
+    infoAtual.fotoCanhoto === infoEditada.fotoCanhoto; // foto antiga igual
 
-  return (!camposPreenchidos || camposIguais);
+  // Desabilita se campos não preenchidos ou se não houve alteração
+  return !camposPreenchidos || camposIguais;
 });
 // --------------------------/
 
@@ -187,11 +195,24 @@ async function editarEntregaReq(formData) {
       }
     );
 
-    ToastSuccess("Entrega informada com sucesso!");
-
+    // Mensagem de sucesso
+    ToastSuccess("Entrega atualizada com sucesso!");
     return response.data;
+
   } catch (error) {
-    ToastError("Erro ao informar entrega:");
+    // Se o backend retornar status 400 (regra de negócio)
+    if (error.response && error.response.status === 400) {
+      const msg =
+        error.response.data?.error ||    // caso venha { error: "mensagem" }
+        error.response.data?.message ||  // caso venha { message: "mensagem" }
+        "Ocorreu um erro ao processar a atualização da entrega.";
+
+      ToastError(msg);
+    } else {
+      // Erro genérico ou de rede
+      ToastError("Erro ao atualizar entrega. Tente novamente.");
+    }
+
     console.error(error);
   }
 }
@@ -219,19 +240,17 @@ async function getFotoEntrega(nfEntrega) {
   }
 }
 
-
 // FUNÇÕES DO MODAL
 async function abrirModalInformarEntrega(entrega, modoModal) {
 
   modoAberturaModal.value = modoModal;
 
-  if (modoModal === 'edicao') {
+  if (modoModal === 'edicao' || modoModal === 'visualizacao') {
     editarStaticEntregaRequest.value = await confereNFEntrega(entrega.nfEntrega);
     editarStaticEntregaRequest.value.dDataHoraEntregaDT = atribuiData(editarStaticEntregaRequest.value.dEntrega);
     editarEntregaRequest.value = { ...editarStaticEntregaRequest.value };
 
     preview.value = await getFotoEntrega(entrega.nfEntrega);
-
   }
 
   nfModal.value = entrega.nfEntrega;
@@ -296,39 +315,57 @@ async function confirmarEdicaoEntregaBtnClick() {
   // Atualiza o DTO com os valores do formulário
   editarEntregaRequest.value.cNFTransp = nfModal.value;
 
-  // Cria FormData
   const formData = new FormData();
+
   // Adiciona campos do DTO
   for (const key in editarEntregaRequest.value) {
-    formData.append(key, editarEntregaRequest.value[key]);
+    const val = editarEntregaRequest.value[key];
+    if (val !== null && val !== undefined) {
+      formData.append(key, val);
+    }
   }
 
-  const respostaApi = await editarEntregaReq(formData);
+  // Adiciona arquivo selecionado, se houver
+  if (arquivoSelecionado.value instanceof File) {
+    formData.append('novaFoto', arquivoSelecionado.value, arquivoSelecionado.value.name);
+  }
 
-  if(respostaApi.message == "Entrega atualizada com sucesso!") {
-    
-    const modalEl = document.getElementById('entregaModal');
+  // Adiciona flag de exclusão apenas se o usuário clicou no "×"
+  if (excluirFoto.value) {
+    formData.append('excluirFoto', true);
+  }
+
   
-    if (modalEl) {
+  // DEBUG: mostra o que será enviado
+  for (const pair of formData.entries()) {
+    console.log(pair[0], pair[1]);
+  }
 
-      // Verifica se o modal já tem uma instância
-      let modalInstance = bootstrap.Modal.getInstance(modalEl);
 
-      // Se não tiver, cria uma nova instância
-      if (!modalInstance) {
-        modalInstance = new bootstrap.Modal(modalEl);
+  try {
+    const respostaApi = await editarEntregaReq(formData);
+
+    // Fecha modal se sucesso
+    if (respostaApi?.message === "Entrega atualizada com sucesso!") {
+      const modalEl = document.getElementById('entregaModal');
+      if (modalEl) {
+        const modalInstance = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+        clickFechaInformarEntregaModal();
+        modalInstance.hide();
       }
-
-      clickFechaInformarEntregaModal();
-      
-      // Fecha o modal
-      modalInstance.hide();
     }
 
+    await carregaTabelaNOTAS();
+
+  } catch (error) {
+    // Se o backend retornar 400, exibe mensagem personalizada
+    if (error.response && error.response.status === 400) {
+      ToastError(error.response.data.message);
+    } else {
+      ToastError("Erro ao atualizar entrega!");
+      console.error(error);
+    }
   }
-
-  await carregaTabelaNOTAS();
-
 }
 async function abrirModalFotoEntrega(nfEntrega) {
 
@@ -377,19 +414,35 @@ const clickFechaInformarFotoModal = () => {
 };
 
 // FUNÇÕES AUXILIARES
-function handleFileChange(event) {
-  const file = event.target.files[0];
-  if (!file) return;
+const handleFileChange = (event) => {
+  const files = event.target.files;
 
+  if (!files || files.length === 0) {
+    // Nenhum arquivo selecionado → reseta refs
+    arquivoSelecionado.value = null;
+    preview.value = null;
+    return;
+  }
+
+  const file = files[0];
+
+  // Verifica se é realmente um arquivo de imagem
+  if (!file.type.startsWith("image/")) {
+    alert("Por favor, selecione apenas imagens!");
+    arquivoSelecionado.value = null;
+    preview.value = null;
+    return;
+  }
+
+  // Salva arquivo no ref
   arquivoSelecionado.value = file;
 
-  // Cria preview da imagem
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    preview.value = e.target.result;
-  };
-  reader.readAsDataURL(file);
-}
+  // Cria preview
+  preview.value = URL.createObjectURL(file);
+
+  // Se selecionou algo, não está excluindo a foto antiga
+  excluirFoto.value = false;
+};
 const onDragOver = () => {
   isDragging.value = true;
 };
@@ -411,25 +464,40 @@ const abrirInputArquivo = () => {
 function removerImagem() {
   arquivoSelecionado.value = null;
   preview.value = null;
-
-  // Limpa o input file
+  excluirFoto.value = true; // marca para excluir
   const input = document.getElementById('fileInput');
   if (input) input.value = '';
 }
 const onChangeDataEntregaCriacao = () => {
   const agora = new Date();
 
+  // formata o momento atual para o formato aceito pelo input datetime-local
   const ano = agora.getFullYear();
   const mes = String(agora.getMonth() + 1).padStart(2, '0');
   const dia = String(agora.getDate()).padStart(2, '0');
   const hora = String(agora.getHours()).padStart(2, '0');
   const minuto = String(agora.getMinutes()).padStart(2, '0');
-
   const agoraFormatado = `${ano}-${mes}-${dia}T${hora}:${minuto}`;
 
-  // Se estiver vazio ou inválido, reseta pra hora atual
+  // se estiver vazio, define para o momento atual
   if (!informarEntregaRequest.value.dDataHoraEntregaDT) {
     informarEntregaRequest.value.dDataHoraEntregaDT = agoraFormatado;
+    return;
+  }
+
+  // converte o valor atual do input em um objeto Date
+  const dataSelecionada = new Date(informarEntregaRequest.value.dDataHoraEntregaDT);
+
+  // se a data for inválida, também reseta
+  if (isNaN(dataSelecionada.getTime())) {
+    informarEntregaRequest.value.dDataHoraEntregaDT = agoraFormatado;
+    return;
+  }
+
+  // se a data for futura, ajusta automaticamente para o momento atual
+  if (dataSelecionada > agora) {
+    informarEntregaRequest.value.dDataHoraEntregaDT = agoraFormatado;
+    ToastWarning('A data e hora de entrega não podem ser futuras. Ajustado para o momento atual.');
   }
 };
 const onChangeDataEntregaEdicao = () => {
@@ -465,6 +533,13 @@ const onKeyUpNFProcura = () => {
     nota.nfEntrega.toUpperCase().includes(termo)
   );
 };
+function parseDataBR(dataStr) {
+  if (!dataStr) return null;
+  const [datePart, timePart] = dataStr.split(' ');
+  const [dia, mes, ano] = datePart.split('/').map(Number);
+  const [hora, minuto] = timePart.split(':').map(Number);
+  return new Date(ano, mes - 1, dia, hora, minuto);
+}
 
 // MOUNTED DA PÁGINA
 onMounted(async () => {
@@ -557,12 +632,20 @@ onMounted(async () => {
                     class="BGC-H-cinza-8 HEIGHT-5px CURSOR-pointer"
                     :class="applyTableStipedRows(i)"
                     >
-                    <td class="HEIGHT-5px WIDTH-3 TEXTALI-center" scope="row" :title="nota.dataTramite" >
-                        <button v-if="!nota.dataEntrega"  type="button" class="in-table-button" title="Informar entrega" @click="abrirModalInformarEntrega(nota, 'criacao')">
+                      <td class="HEIGHT-5px WIDTH-3 TEXTALI-center" scope="row" :title="nota.dataTramite">
+                        <button v-if="!nota.dataInput" type="button" class="in-table-button" title="Informar entrega" @click="abrirModalInformarEntrega(nota, 'criacao')">
                           <IconsCaminhao corProp="currentColor" alturaProp="1" larguraProp="1"/>  
                         </button>
-                        <button v-else type="button" class="in-table-button" title="Editar informação de entrega" @click="abrirModalInformarEntrega(nota, 'edicao')">
+
+                        <button v-else-if="nota.dataInput && ((new Date() - parseDataBR(nota.dataInput)) / (1000 * 60 * 60) < 24)" 
+                                type="button" class="in-table-button" title="Editar informação de entrega" 
+                                @click="abrirModalInformarEntrega(nota, 'edicao')">
                           <IconsLapis corProp="currentColor" alturaProp="1" larguraProp="1"/>  
+                        </button>
+
+                        <button v-else type="button" class="in-table-button" title="Visualizar informação de entrega" 
+                                @click="abrirModalInformarEntrega(nota, 'visualizacao')">
+                          <IconsLupa corProp="currentColor" alturaProp="1" larguraProp="1"/>  
                         </button>
                       </td>
                       <td class="HEIGHT-5px WIDTH-7 TEXTALI-center" scope="row" :title="nota.dataTramite" >{{ nota.dataNF }}</td>
@@ -571,7 +654,7 @@ onMounted(async () => {
                       <td class="HEIGHT-5px WIDTH-8 TEXTALI-center" :title="nota.numeroNFE" >{{ nota.docRecebidor }}</td>
                       <td class="HEIGHT-5px WIDTH-10 TEXTALI-center" :title="nota.codigoComponente" >{{ nota.dataEntrega }}</td>
                       <td class="HEIGHT-5px WIDTH-3 TEXTALI-center" scope="row" :title="nota.dataTramite" >
-                        <button v-if="nota.dataEntrega" type="button" class="in-table-button" title="Conferir imagem" @click="abrirModalFotoEntrega(nota.nfEntrega)">
+                        <button v-if="nota.dataInput" type="button" class="in-table-button" title="Conferir imagem" @click="abrirModalFotoEntrega(nota.nfEntrega)">
                           <IconsLupa corProp="currentColor" alturaProp="1" larguraProp="1"/>  
                         </button>
                       </td>
@@ -609,6 +692,10 @@ onMounted(async () => {
             EDITAR ENTREGA - {{ nfModal }}
           </h1>
 
+          <h1 v-if="modoAberturaModal == 'visualizacao'" class="modal-title fs-5 flex-grow-1 text-center" id="entregaModalLabel">
+            VISUALIZAR ENTREGA - {{ nfModal }}
+          </h1>
+
           <!-- Botão Fechar -->
           <button title="Fechar (F4)" id="update-modal-close-button" 
             type="button" class="btn-close" data-bs-dismiss="modal" 
@@ -624,10 +711,15 @@ onMounted(async () => {
             
             <!-- OBS NOTA FISCAL -->
             <div class="WIDTH-90" style="margin-left: 5%;">
-              <label
+              <label v-if="modoAberturaModal != 'visualizacao'"
                 id="adicionais-post-label"
                 for="adicionais-post-input"
                 class="form-label BGC-branco BORRAD-5 FSIZE-12px FWEIGHT-bold MARGIN-T-15-L7 PADDING-R5-L5 BGC-input-enabled"
+              >NOME RECEBEDOR</label>
+              <label v-else
+                id="adicionais-post-label"
+                for="adicionais-post-input"
+                class="form-label BGC-branco BORRAD-5 FSIZE-12px FWEIGHT-bold MARGIN-T-15-L7 PADDING-R5-L5 BGC-input-disabled"
               >NOME RECEBEDOR</label>
 
               <input v-if="modoAberturaModal == 'criacao'"
@@ -644,6 +736,13 @@ onMounted(async () => {
                 type="text"
                 class="form-control BOR-grey HEIGHT-70 MARGIN-T-10 FSIZE-12px InputUPPERCASE">
 
+              <input v-if="modoAberturaModal == 'visualizacao'"
+                id="adicionais-post-input"
+                v-model="editarEntregaRequest.cNomeRecebedor"
+                disabled
+                type="text"
+                class="form-control BOR-grey HEIGHT-70 MARGIN-T-10 FSIZE-12px InputUPPERCASE">
+
 
             </div>
 
@@ -653,10 +752,15 @@ onMounted(async () => {
             
             <!-- OBS NOTA FISCAL -->
             <div class="WIDTH-53" style="margin-left: 5%;">
-              <label
+              <label v-if="modoAberturaModal != 'visualizacao'"
                 id="adicionais-post-label"
                 for="adicionais-post-input"
                 class="form-label BGC-branco BORRAD-5 FSIZE-12px FWEIGHT-bold MARGIN-T-15-L7 PADDING-R5-L5 BGC-input-enabled"
+              >DOC. RECEBEDOR</label>
+              <label v-else
+                id="adicionais-post-label"
+                for="adicionais-post-input"
+                class="form-label BGC-branco BORRAD-5 FSIZE-12px FWEIGHT-bold MARGIN-T-15-L7 PADDING-R5-L5 BGC-input-disabled"
               >DOC. RECEBEDOR</label>
 
               <input v-if="modoAberturaModal == 'criacao'"
@@ -671,11 +775,25 @@ onMounted(async () => {
                 type="text"
                 class="form-control BOR-grey HEIGHT-70 MARGIN-T-10 FSIZE-12px InputUPPERCASE">
 
+              <input v-if="modoAberturaModal == 'visualizacao'"
+                id="adicionais-post-input"
+                disabled
+                type="text"
+                class="form-control BOR-grey HEIGHT-70 MARGIN-T-10 FSIZE-12px InputUPPERCASE">
+
             </div>
 
             <!-- OBS NOTA FISCAL -->
             <div class="WIDTH-36" style="margin-left: 1%;">
-              <label
+              
+              <label v-if="modoAberturaModal == 'criacao'"
+                id="adicionais-post-label"
+                for="adicionais-post-input"
+                class="form-label BGC-branco BORRAD-5 FSIZE-12px FWEIGHT-bold MARGIN-T-15-L7 PADDING-R5-L5 BGC-input-enabled"
+              >
+                DATA E HORA ENTREGA
+              </label>
+              <label v-else
                 id="adicionais-post-label"
                 for="adicionais-post-input"
                 class="form-label BGC-branco BORRAD-5 FSIZE-12px FWEIGHT-bold MARGIN-T-15-L7 PADDING-R5-L5 BGC-input-disabled"
@@ -691,46 +809,60 @@ onMounted(async () => {
                 @change="onChangeDataEntregaCriacao"
               >
 
-              <input v-if="modoAberturaModal == 'edicao'"
+              <input v-if="modoAberturaModal == 'edicao' || modoAberturaModal == 'visualizacao'"
                 id="adicionais-post-input"
                 type="datetime-local"
                 class="form-control BOR-grey HEIGHT-70 MARGIN-T-10 FSIZE-12px InputUPPERCASE"
                 v-model="editarEntregaRequest.dDataHoraEntregaDT"
                 disabled
                 >
-                <!-- @change="onChangeDataEntregaEdicao" -->
+
             </div>
 
           </div>
 
           <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 60%; border: 1px solid #ccc; border-radius: 8px; padding: 20px; margin: 5%;">
-            
-            <!-- Se não tiver imagem, mostra a área de upload -->
-            <div
-              v-if="!preview"
-              class="upload-area"
-              @click="abrirInputArquivo"
-              @dragover.prevent="onDragOver"
-              @dragleave.prevent="onDragLeave"
-              @drop.prevent="onFileDrop"
-            >
-              <span>{{ isDragging ? 'Solte a imagem aqui...' : 'Clique ou arraste uma imagem' }}</span>
-              <input ref="fileInput" type="file" accept="image/*" @change="handleFileChange" hidden>
-            </div>
 
-            <!-- Se tiver imagem, mostra o preview e botão de excluir -->
-            <div v-else class="preview-container">
+            <!-- CASOS: Criacao ou Edicao -->
+            <template v-if="modoAberturaModal === 'criacao' || modoAberturaModal === 'edicao'">
 
-              <div class="image-wrapper" v-if="preview != 204">
-                <img :src="preview" alt="Imagem da entrega">
-                <button v-if="modoAberturaModal == 'criacao'" class="delete-button" @click="removerImagem">×</button>
+              <!-- Se não tiver arquivo/foto ou preview é 204 -->
+              <div v-if="!preview || preview === 204" class="upload-area"
+                  @click="abrirInputArquivo"
+                  @dragover.prevent="onDragOver"
+                  @dragleave.prevent="onDragLeave"
+                  @drop.prevent="onFileDrop">
+                <span>{{ isDragging ? 'Solte a imagem aqui...' : 'Clique ou arraste uma imagem' }}</span>
+                <input ref="fileInput" type="file" accept="image/*" @change="handleFileChange" hidden>
               </div>
 
-              <div v-else class="sem-imagem">
+              <!-- Se tiver arquivo/foto válido -->
+              <div v-else class="preview-container">
+                <div class="image-wrapper">
+                  <img :src="preview" alt="Imagem da entrega">
+                  <button class="delete-button" @click="removerImagem">×</button>
+                </div>
+              </div>
+
+            </template>
+
+
+            <!-- CASO: Visualizacao -->
+            <template v-else-if="modoAberturaModal === 'visualizacao'">
+              
+              <!-- Sem foto -->
+              <div v-if="!preview || preview === 204" class="sem-imagem">
                 <span>A entrega não possui imagem</span>
               </div>
 
-            </div>
+              <!-- Com foto -->
+              <div v-else class="preview-container">
+                <div class="image-wrapper">
+                  <img :src="preview" alt="Imagem da entrega">
+                </div>
+              </div>
+
+            </template>
 
           </div>
 
@@ -741,11 +873,15 @@ onMounted(async () => {
               style="margin-left: 5%; margin-bottom: 2%; margin-top: 2%;" 
               @click="confirmarEntregaBtnClick()"> CONFIRMAR ENTREGA
             </button>
-            <button v-if="modoAberturaModal == 'edicao'" :disabled="podeEditar"
+            <button 
+              v-if="modoAberturaModal == 'edicao'" 
+              :disabled="podeEditar"
               type="button" 
-              class="btn btn-warning WIDTH-90 FSIZE-14px " 
+              class="btn btn-warning WIDTH-90 FSIZE-14px" 
               style="margin-left: 5%; margin-bottom: 2%; margin-top: 2%;" 
-              @click="confirmarEdicaoEntregaBtnClick()"> EDITAR ENTREGA
+              @click="confirmarEdicaoEntregaBtnClick()"
+            >
+              EDITAR ENTREGA
             </button>
           </div>
 
