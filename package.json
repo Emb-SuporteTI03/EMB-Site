@@ -16,7 +16,7 @@
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
     "nuxt": "^3.11.2",
-    "swiper": "^11.1.9",
+    "swiper": "^10.3.1",
     "vue": "^3.4.27",
     "vue-carousel": "^0.18.0",
     "vue-meta": "^2.4.0",
