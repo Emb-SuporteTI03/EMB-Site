@@ -146,7 +146,7 @@
                 <div class="drop" v-show="isDropdownACESSOActive">
                   <div class="drop-hover" ref="subDropdownToggle" @mouseenter="mouseSubDrop" @mouseleave="mouseSubLeave">
                     <a id="qmSomos-sub" style="color: black; text-decoration: none; cursor: pointer;  font-size: 16px;">
-                      CLIENTES
+                      EXTERNO
                       <i class="bi" :class="{'bi-caret-right-fill': !isSubDropdownActive, 'bi-caret-down-fill': isSubDropdownActive}"></i>
                     </a>
                     <div class="sub-drop" v-show="isSubDropdownActive">
@@ -173,7 +173,7 @@
                     </div>
                   </div>
                     <a id="qmSomos-sub" href="https://ts-embalarte-fin.skydocs.com.br/login" style="color: black; text-decoration: none; cursor: pointer; font-size: 16px;">
-                      COLABORADORES
+                      INTERNO
                     </a> 
                 </div>
               </li>
