@@ -777,6 +777,7 @@ onMounted(async () => {
 
               <input v-if="modoAberturaModal == 'visualizacao'"
                 id="adicionais-post-input"
+                v-model="editarEntregaRequest.cDocRecebedor"
                 disabled
                 type="text"
                 class="form-control BOR-grey HEIGHT-70 MARGIN-T-10 FSIZE-12px InputUPPERCASE">
