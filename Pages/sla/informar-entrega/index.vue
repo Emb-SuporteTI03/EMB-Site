@@ -946,14 +946,24 @@ onMounted(async () => {
       <!-- Corpo -->
       <div class="modal-body p-0 d-flex align-items-center justify-content-center" style="height: 80vh;">
         <div class="image-container position-relative w-100 h-100 d-flex justify-content-center align-items-center p-3">
-          <img v-if="(!preview || preview == 204) && carregandoImagem" src="/assets/images/gif-carregamento-horizontal.gif" alt="Carregando..." style="width: 100px; height: auto;"/>
           <img
-            v-if="(preview && !preview == 204) && !carregandoImagem"
+            v-if="(!preview || preview === 204) && carregandoImagem"
+            src="/assets/images/gif-carregamento-horizontal.gif"
+            alt="Carregando..."
+            style="width: 100px; height: auto;"
+          />
+          <img
+            v-if="preview && preview !== 204 && !carregandoImagem"
             :src="preview"
             alt="Imagem da Entrega"
             class="image-preview"
+          />
+          <p
+            v-if="(!preview || preview === 204) && !carregandoImagem"
+            class="no-image-text text-dark fs-5"
           >
-          <p v-if="(!preview || preview == 204) && !carregandoImagem" class="no-image-text text-dark fs-5">A entrega não possui imagem</p>
+            A entrega não possui imagem
+          </p>
         </div>
       </div>
 
