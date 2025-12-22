@@ -273,6 +273,7 @@ async function abrirModalInformarEntrega(entrega, modoModal) {
 async function confirmarEntregaBtnClick() {
   // Atualiza o DTO com os valores do formulário
   informarEntregaRequest.value.cNFTransp = nfModal.value;
+  informarEntregaRequest.value.iIdCliente = cliente.iD_Cliente;
 
   // Cria FormData
   const formData = new FormData();
@@ -286,9 +287,12 @@ async function confirmarEntregaBtnClick() {
     formData.append("canhoto", arquivoSelecionado.value);
   }
 
+  console.log(toRaw(informarEntregaRequest.value));
   const respostaApi = await informarEntregaReq(formData);
 
-  if(respostaApi?.message == "Entrega atualizada com sucesso!") {
+  console.log(respostaApi);
+
+  if(respostaApi?.message == "Entrega atualizada com sucesso!" || respostaApi?.message == "Entrega informada com sucesso!") {
     
     const modalEl = document.getElementById('entregaModal');
   
@@ -302,6 +306,8 @@ async function confirmarEntregaBtnClick() {
         modalInstance = new bootstrap.Modal(modalEl);
       }
 
+      clickFechaInformarEntregaModal();
+      
       // Fecha o modal
       modalInstance.hide();
     }
@@ -334,13 +340,6 @@ async function confirmarEdicaoEntregaBtnClick() {
   if (excluirFoto.value) {
     formData.append('excluirFoto', true);
   }
-
-  
-  // DEBUG: mostra o que será enviado
-  for (const pair of formData.entries()) {
-    console.log(pair[0], pair[1]);
-  }
-
 
   try {
     const respostaApi = await editarEntregaReq(formData);
@@ -395,7 +394,7 @@ const clickFechaInformarEntregaModal = () => {
   Object.keys(editarEntregaRequest.value).forEach(k => editarEntregaRequest.value[k] = '');
   Object.keys(editarStaticEntregaRequest.value).forEach(k => editarStaticEntregaRequest.value[k] = '');
 
-  informarEntregaRequest.value.iIdClieiIDUsuarioResponsavel = ID_ResponsavelInformaEntregaExterno;
+  // informarEntregaRequest.value.iIdClieiIDUsuarioResponsavel = ID_ResponsavelInformaEntregaExterno;
 
   modoAberturaModal.value = '';
   arquivoSelecionado.value = null;

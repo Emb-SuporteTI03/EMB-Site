@@ -1,7 +1,7 @@
 // Sistema (Global):
 // Comentar LOCALHOST quando for subir e comentar TS quando for desenvolver: -----------\
-// const url = "https://localhost:7130/api";
-const url = "https://grupoembalarte-slaclientes.skydocs.com.br/api";
+const url = "https://localhost:7130/api";
+// const url = "https://grupoembalarte-slaclientes.skydocs.com.br/api";
 // -------------------------------------------------------------------------------------/
 
 export const useToken = () => useState<string | null>('tokenProd', () => {
