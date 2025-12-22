@@ -29,6 +29,7 @@ const modoAberturaModal = ref("");
 const mostrarTodos = ref(false);
 
 const tabelaNOTASCarregada = ref(false);
+const carregandoImagem = ref(false);
 
 const infosTableNotasSLA = ref([]);
 const staticinfosTableNotasSLA = ref([]); // Para manter os dados originais e poder limpar os filtros
@@ -217,6 +218,9 @@ async function editarEntregaReq(formData) {
   }
 }
 async function getFotoEntrega(nfEntrega) {
+
+  carregandoImagem.value = true;
+
   try {
     const response = await axios.get(
       `${urlProd.value}/entrega/foto-canhoto/${nfEntrega}`, // usa o endpoint correto
@@ -227,11 +231,16 @@ async function getFotoEntrega(nfEntrega) {
     );
 
     if (response.status === 204 || !response.data) {
+      carregandoImagem.value = false;
       return 204;
     }
 
+    carregandoImagem.value = false;
     return URL.createObjectURL(response.data);
   } catch (error) {
+    
+  carregandoImagem.value = false;
+
     if (error.response && error.response.status === 204) {
       return null;
     }
@@ -245,18 +254,8 @@ async function abrirModalInformarEntrega(entrega, modoModal) {
 
   modoAberturaModal.value = modoModal;
 
-  if (modoModal === 'edicao' || modoModal === 'visualizacao') {
-    editarStaticEntregaRequest.value = await confereNFEntrega(entrega.nfEntrega);
-    editarStaticEntregaRequest.value.dDataHoraEntregaDT = atribuiData(editarStaticEntregaRequest.value.dEntrega);
-    editarEntregaRequest.value = { ...editarStaticEntregaRequest.value };
-
-    preview.value = await getFotoEntrega(entrega.nfEntrega);
-  }
-
-  nfModal.value = entrega.nfEntrega;
 
   const modalEl = document.getElementById('entregaModal');
-  
   if (modalEl) {
     // Verifica se o modal já tem uma instância
     let modalInstance = bootstrap.Modal.getInstance(modalEl);
@@ -269,6 +268,17 @@ async function abrirModalInformarEntrega(entrega, modoModal) {
     // Exibe o modal
     modalInstance.show();
   }
+
+  nfModal.value = entrega.nfEntrega;
+
+  if (modoModal === 'edicao' || modoModal === 'visualizacao') {
+    editarStaticEntregaRequest.value = await confereNFEntrega(entrega.nfEntrega);
+    editarStaticEntregaRequest.value.dDataHoraEntregaDT = atribuiData(editarStaticEntregaRequest.value.dEntrega);
+    editarEntregaRequest.value = { ...editarStaticEntregaRequest.value };
+
+    preview.value = await getFotoEntrega(entrega.nfEntrega);
+  }
+
 }
 async function confirmarEntregaBtnClick() {
   // Atualiza o DTO com os valores do formulário
@@ -381,10 +391,13 @@ async function abrirModalFotoEntrega(nfEntrega) {
       modalInstance = new bootstrap.Modal(modalEl);
     }
 
-    preview.value = await getFotoEntrega(nfEntrega);
-
     // Exibe o modal
     modalInstance.show();
+
+    carregandoImagem.value = true;
+    preview.value = await getFotoEntrega(nfEntrega);
+    carregandoImagem.value = false;
+
   }
 }
 const clickFechaInformarEntregaModal = () => {
@@ -851,12 +864,16 @@ onMounted(async () => {
             <template v-else-if="modoAberturaModal === 'visualizacao'">
               
               <!-- Sem foto -->
-              <div v-if="!preview || preview === 204" class="sem-imagem">
+              <div v-if="(!preview || preview === 204) && carregandoImagem" class="sem-imagem"> 
+                <img src="/assets/images/gif-carregamento-horizontal.gif" alt="Carregando..." style="width: 100px; height: auto;"/>
+              </div>
+              
+              <div v-if="(!preview || preview === 204) && !carregandoImagem" class="sem-imagem">
                 <span>A entrega não possui imagem</span>
               </div>
 
               <!-- Com foto -->
-              <div v-else class="preview-container">
+              <div v-if="!(!preview || preview === 204) && !carregandoImagem" class="preview-container">
                 <div class="image-wrapper">
                   <img :src="preview" alt="Imagem da entrega">
                 </div>
@@ -929,13 +946,14 @@ onMounted(async () => {
       <!-- Corpo -->
       <div class="modal-body p-0 d-flex align-items-center justify-content-center" style="height: 80vh;">
         <div class="image-container position-relative w-100 h-100 d-flex justify-content-center align-items-center p-3">
+          <img v-if="(!preview || preview == 204) && carregandoImagem" src="/assets/images/gif-carregamento-horizontal.gif" alt="Carregando..." style="width: 100px; height: auto;"/>
           <img
-            v-if="preview && preview !== 204"
+            v-if="(preview && !preview == 204) && !carregandoImagem"
             :src="preview"
             alt="Imagem da Entrega"
             class="image-preview"
           >
-          <p v-else class="no-image-text text-dark fs-5">A entrega não possui imagem</p>
+          <p v-if="(!preview || preview == 204) && !carregandoImagem" class="no-image-text text-dark fs-5">A entrega não possui imagem</p>
         </div>
       </div>
 
