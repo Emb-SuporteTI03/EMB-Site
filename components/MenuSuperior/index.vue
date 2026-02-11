@@ -398,6 +398,7 @@ interface LoginResponse {
   token: string;
   idFuncao: number;
   iD_ResponsavelInformaEntregaExterno: number;
+  iD_Carteira: number;
 }
 
 async function confereLogin(): Promise<LoginResponse | null> {
@@ -439,7 +440,7 @@ async function fecharModalERedirecionar() {
     return
   }
 
-  const { token, idFuncao, iD_ResponsavelInformaEntregaExterno } = response
+  const { token, idFuncao, iD_ResponsavelInformaEntregaExterno, iD_Carteira } = response
 
   await validaToken(token)
 
@@ -450,6 +451,7 @@ async function fecharModalERedirecionar() {
   sessionStorage.setItem('tokenProd', token)
   sessionStorage.setItem('iD_ResponsavelInformaEntregaExterno', iD_ResponsavelInformaEntregaExterno.toString())
   sessionStorage.setItem('idFuncao', idFuncao.toString()) 
+  sessionStorage.setItem('idCarteira', iD_Carteira.toString()) 
 
   // Fecha o modal
   const modalElement = document.getElementById('acessoClienteModal')

@@ -4,13 +4,23 @@ export default {
   props: {
     funcionalidadeProp: String,
     destinoVoltarProp: String,
+    notShowVoltareHomeProp: Boolean,
+    srcFoto: String,
+
+    // 👇 NOVA PROP OPCIONAL
+    onClickVoltarHome: {
+      type: Function,
+      required: false
+    }
   },
+
 
   data () {
     return {
       // Variáveis únicas da página: -----------\
       funcionalidade: this.$props.funcionalidadeProp,
       destinoVoltar: this.$props.destinoVoltarProp,
+      notShowVoltareHome: this.$props.notShowVoltareHomeProp,
       ///////////////////////////////////////////
       nomeAbrevUser: localStorage.getItem('nomeAbreviado'),
       isLogoutButtonShowing: true,
@@ -21,12 +31,21 @@ export default {
     hideShowLogoutButton () {
       this.isLogoutButtonShowing = !this.isLogoutButtonShowing
     },
+
     clickConfirmaLogoutButton () {
       let siglaLogin = localStorage.getItem('sigla');
       localStorage.clear();
       localStorage.setItem('sigla', siglaLogin);
     },
+
+    // 👇 MÉTODO CENTRALIZADO
+    handleClickVoltarHome () {
+      if (typeof this.onClickVoltarHome === 'function') {
+        this.onClickVoltarHome()
+      }
+    }
   },
+
 
   mounted () {
   }
@@ -37,35 +56,46 @@ export default {
 <template>
 
   <nav class="navbar BOX-SHADOW-black D-flex ALITEM-center BGC-branco HEIGHT-6vh WIDTH-100 PADDING-0">
+  
     <div class="container-fluid ALITEM-center">
 
-      <!-- Logo -->
-      <!-- <img
-        src="assets\images\Logo-E-azul-enhanced.png"
-        alt="Logo Grupo Embalarte"
-        class="WIDTH-2 HEIGHT-2"
-        title="Grupo Embalarte"
-      /> -->
-
-      <!-- Botão de Voltar -->
+      <div class="D-flex ALITEM-center">
       <NuxtLink
-        class="TEXTDECO-none WIDTH-2"
+        v-if="!this.notShowVoltareHome"
+        class="TEXTDECO-none MARGIN-R26"
         :to="this.destinoVoltar"
         title="Voltar"
-      > <IconsSetaArrowEsquerda corProp="black" alturaProp="2" larguraProp="2" />
+        @click.native="handleClickVoltarHome"
+      >
+        <IconsSetaArrowEsquerda corProp="black" alturaProp="2" larguraProp="2" />
       </NuxtLink>
+
 
       <NuxtLink
-        class="TEXTDECO-none WIDTH-3"
+        v-if="!this.notShowVoltareHome"
+        class="TEXTDECO-none MARGIN-R10"
         to="/"
         title="Home"
-      > <IconsHome corProp="black" alturaProp="2" larguraProp="2" />
+        @click.native="handleClickVoltarHome"
+      >
+        <IconsHome corProp="black" alturaProp="2" larguraProp="2" />
       </NuxtLink>
 
-      <!-- Título da página -->
-      <span
-        class="D-flex JC-center FSIZE-30px FWEIGHT-bold WIDTH-80"
-      >{{ this.funcionalidade }}</span>
+        <!-- Imagem -->
+        <img
+          :src="srcFoto"
+          alt="Logo do cliente"
+          class="IMG-logo"
+        />
+
+      </div>
+
+      <div class="D-flex JC-space-between ALITEM-center WIDTH-0">
+        <!-- Título -->
+        <span class="FSIZE-30px FWEIGHT-bold">
+          {{ funcionalidade }} 
+        </span>
+      </div>
 
       <div class="D-flex WIDTH-10 JC-flex-end ALITEM-center">
 
@@ -122,4 +152,10 @@ export default {
 
 </template>
 
-<style></style>
+<style>
+.IMG-logo {
+  height: 30px;
+  object-fit: contain;
+  margin-left: 1rem;
+}
+</style>
