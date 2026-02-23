@@ -2,37 +2,62 @@
 import axios from "axios";
 import { ref } from "vue";
 import { useRoute } from 'vue-router'
-import { shortenInfo, applyTableStipedRows, GetGenerico } from '~/composables/visualization';
+import { shortenInfo, applyTableStipedRows, GetGenerico, getStatusClass } from '~/composables/visualization';
 import { ToastSuccess, ToastError, ToastWarning } from '~/composables/toasts';
+
 // VARIÁVEIS ------------------------------------------------------------------------------------------------------------
-  // const isERP = ref(true);  // Sistema interno
-  const isERP = ref(false); // Sistema externo
+  const isERP = ref(true);  // Sistema interno
+  // const isERP = ref(false); // Sistema externo
 
   // Rota para obter o ID do cliente
   const urlProd = useUrlProd();
   const urlSistema = useUrlProdSistema();
   const route = useRoute();
   const urlBase = useUrlProd();
-  const ID_Carteira = Number(sessionStorage.getItem('idCarteira'));
-  const userID = computed(() => {
-    const storage = isERP.value ? localStorage : sessionStorage
-    const key = isERP.value ? 'id_usuario' : 'iD_ResponsavelInformaEntregaExterno'
 
-    const value = Number(storage.getItem(key))
+  const authStore = useAuthStore();
+
+  // ===============================
+  // SOMENTE PINIA (SEM isERP)
+  // ===============================
+
+  const userID_Unidade = ref(authStore.ID_Unidade).value;
+  const userNome = ref(authStore.nome);
+  const siglaUsuario = ref(authStore.sigla);
+  const ID_Area = ref(authStore.ID_Unidade ?? 0);
+  const ID_Carteira = ref(authStore.ID_Carteira ?? 0);
+  const token = ref(authStore.token ?? "");
+
+  // ===============================
+  // REGRA HÍBRIDA (ERP = PINIA | EXTERNO = sessionStorage)
+  // ===============================
+
+  const userID = computed(() => {
+    if (isERP.value) {
+      return userID_Unidade ?? null
+    }
+
+    const value = Number(sessionStorage.getItem('iD_ResponsavelInformaEntregaExterno'))
     return isNaN(value) ? null : value
   });
+
   const transpID = computed(() => {
-    if (isERP.value) return null;
+    if (isERP.value) {
+      return authStore.ID_Carteira ?? null
+    }
 
-    const value = Number(sessionStorage.getItem('idCarteira'));
-    return isNaN(value) ? null : value;
+    const value = Number(sessionStorage.getItem('ID_Carteira'))
+    return isNaN(value) ? null : value
   });
+
   const transpcNmFantasia = computed(() => {
-    if (isERP.value) return null;
+    if (isERP.value) {
+      return authStore.cNmFantasiaTransp ?? null
+    }
 
-    const value = String(sessionStorage.getItem('cNmFantasiaTransp'));
-    return value;
+    return sessionStorage.getItem('cNmFantasiaTransp')
   });
+
   const maxDataHoraAtual = computed(() => {
     const now = new Date();
 
@@ -42,10 +67,9 @@ import { ToastSuccess, ToastError, ToastWarning } from '~/composables/toasts';
   });
   
   const cliente = ref({});
-  const logoPath = `/CLIENTES/${ID_Carteira}.png`;
+  const logoPath = `/CLIENTES/${ID_Carteira.value}.png`;
   const carregandoPDF = ref(false);
   const router = useRouter();
-  const token = useToken();
 
   const isTabelaPedidosCarregada = ref(false);
   const selectedClienteREF = ref();
@@ -239,10 +263,10 @@ import { ToastSuccess, ToastError, ToastWarning } from '~/composables/toasts';
   
   const DefineCliente = async () => {
     if (isERP.value) {
-      const url = `${urlProd.value}/sistema/carteira/com-join/${ID_Carteira}`;
+      const url = `${urlProd}/sistema/carteira/com-join/${ID_Carteira.value}`;
         try {
           const response = await axios.get(url,
-          { headers: { Authorization: `Bearer ${token}` }, }
+          { headers: { Authorization: `Bearer ${token.value}` }, }
         );
         const { iD_Carteira, cNmFantasia } = response.data;
 
@@ -291,7 +315,8 @@ import { ToastSuccess, ToastError, ToastWarning } from '~/composables/toasts';
         `${urlBase.value}/consultas-sla/visualiza-baixa-pdf-pedido/${ID_Pedido}/1`,
         null,
         {
-          responseType: "blob"
+          headers: { Authorization: `Bearer ${token.value}` },
+          responseType: 'blob' // importante para tratar como arquivo binário
         }
       );
 
@@ -311,7 +336,8 @@ import { ToastSuccess, ToastError, ToastWarning } from '~/composables/toasts';
         `${urlBase.value}/consultas-sla/visualiza-baixa-pdf-danfe/${ID_Pedido}/1`,
         null,
         {
-          responseType: "blob"
+          headers: { Authorization: `Bearer ${token.value}` },
+          responseType: 'blob' // importante para tratar como arquivo binário
         }
       );
 
@@ -420,18 +446,18 @@ import { ToastSuccess, ToastError, ToastWarning } from '~/composables/toasts';
   };
 
   // REQUISIÇÕES
-  async function getTransportadorasApenasSLA(idCliente) {
-    cliente.value = await GetGenerico(`${urlSistema.value}/carteira/com-join/${idCliente}`)
+  async function getTransportadorasApenasSLA() {
+    cliente.value = await GetGenerico(`${urlSistema.value}/carteira/com-join/${ID_Carteira.value}`, {}, token.value)
   };
   const FetchPedidosPossiveisInformarEntrega = async () => {
     // Inicia carregamento:
     isTabelaPedidosCarregada.value = false;
-    const url = isERP.value ? `${urlProd.value}/sla/pedido-entrega/obter-pedido-possivel-informar-entrega/${ID_Carteira}` :
-      `${urlProd.value}/sla/pedido-entrega/obter-pedido-possivel-informar-entrega-transp/${transpID.value}`;
+    const url = isERP.value ? `${urlProd}/sla/pedido-entrega/obter-pedido-possivel-informar-entrega/${ID_Carteira.value}` :
+      `${urlProd}/sla/pedido-entrega/obter-pedido-possivel-informar-entrega-transp/${transpID}`;
 
     try {
       const response = await axios.get(url,
-        { headers: { Authorization: `Bearer ${token}` }, }
+        { headers: { Authorization: `Bearer ${token.value}` }, }
       );
       infoPedidosPossiveis.value = response.data;
       staticinfoPedidosPossiveis.value = response.data;
@@ -446,11 +472,11 @@ import { ToastSuccess, ToastError, ToastWarning } from '~/composables/toasts';
   const FetchPedidosPossiveisInformarEntregaCorreios = async () => {
     // Inicia carregamento:
     isTabelaPedidosCarregada.value = false;
-    const url = `${urlProd.value}/sla/pedido-entrega/obter-pedido-possivel-informar-codigo-rastreio/${ID_Carteira}`;
+    const url = `${urlProd}/sla/pedido-entrega/obter-pedido-possivel-informar-codigo-rastreio/${ID_Carteira.value}`;
 
     try {
       const response = await axios.get(url,
-        { headers: { Authorization: `Bearer ${token}` }, }
+        { headers: { Authorization: `Bearer ${token.value}` }, }
       );
 
       infoPedidosPossiveis.value = response.data;
@@ -466,7 +492,7 @@ import { ToastSuccess, ToastError, ToastWarning } from '~/composables/toasts';
   };
   async function getEtapasSistemicas(idPedido) {
     try {
-      const response = await axios.get(`${urlProd.value}/consultas-sla/etapas-sistemicas/${idPedido}`, {});
+      const response = await axios.get(`${urlProd}/consultas-sla/etapas-sistemicas/${idPedido}`, { headers: { Authorization: `Bearer ${token.value}` }, });
       infosEtapasSistemicas.value = response.data;
 
     } catch (response) {
@@ -482,14 +508,14 @@ import { ToastSuccess, ToastError, ToastWarning } from '~/composables/toasts';
         ? toRaw(infoPedidosPossiveis.value)
         : [toRaw(infoPedidosPossiveis.value)];
 
-      const url = `${urlProd.value}/consultas-sla/sla-saidas-excel`;
+      const url = `${urlProd}/consultas-sla/sla-saidas-excel`;
 
       const response = await axios.post(
         url,
         payload,
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            Authorization: `Bearer ${token.value}`,
             'Content-Type': 'application/json',
             Accept: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
           },
@@ -550,11 +576,11 @@ import { ToastSuccess, ToastError, ToastWarning } from '~/composables/toasts';
         ? toRaw(infoPedidosPossiveis.value)
         : [toRaw(infoPedidosPossiveis.value)];
 
-      const url = `${urlProd.value}/consultas-sla/sla-saidas-pdf`; // <-- endpoint do PDF
+      const url = `${urlProd}/consultas-sla/sla-saidas-pdf`; // <-- endpoint do PDF
 
       const response = await axios.post(url, payload, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
+          Authorization: `Bearer ${token.value}`,
           'Content-Type': 'application/json',
           Accept: 'application/pdf'
         },
@@ -840,6 +866,8 @@ import { ToastSuccess, ToastError, ToastWarning } from '~/composables/toasts';
   const OnClickInformarEntregaButton = async () => {
     validacaoInfoStatus();
 
+    // NÃO DEIXAR INFORMAR A ENTREGA ANTES DO VALOOR DE EM ROTA MAIS RECENTE
+
     const pedidoSelecionado = staticinfoPedidosPossiveis.value.find(x => x.bSelecionado);
     if (!pedidoSelecionado) return;
 
@@ -928,9 +956,9 @@ import { ToastSuccess, ToastError, ToastWarning } from '~/composables/toasts';
 
     try {
       await axios.post(
-        `${urlProd.value}/sla/pedido-entrega/informar-em-rota-entregue`,
+        `${urlProd}/sla/pedido-entrega/informar-em-rota-entregue`,
         InformarEmRotaEntregueRequestDTO.value,
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: { Authorization: `Bearer ${token.value}` } }
       );
 
       ToastSuccess('EM ROTA / ENTREGA INFORMADA COM SUCESSO');
@@ -1017,8 +1045,8 @@ import { ToastSuccess, ToastError, ToastWarning } from '~/composables/toasts';
   const FetchAllTransportadorasHomologadas = async () => {
     if (isERP) {
       try {
-        const res = await axios.get(`${urlProd.value}/sla/pedido/transportadoras-homologadas/${ID_Carteira}`,
-          { headers: { Authorization: `Bearer ${token}` } }
+        const res = await axios.get(`${urlProd}/sla/pedido/transportadoras-homologadas/${ID_Carteira.value}`,
+          { headers: { Authorization: `Bearer ${token.value}` } }
         );
         
         infoTransportadorasHomologadas.value = res.data;
@@ -1043,8 +1071,8 @@ import { ToastSuccess, ToastError, ToastWarning } from '~/composables/toasts';
   const FetchPedidoItens = async (ID_Pedido) => {
     tabelaPedidoItensCarregada.value = false;
     try {
-      const res = await axios.get(`${urlProd.value}/sla/pedido-item/por-pedido/${ID_Pedido}`,
-        { headers: { Authorization: `Bearer ${token}` } }
+      const res = await axios.get(`${urlProd}/sla/pedido-item/por-pedido/${ID_Pedido}`,
+        { headers: { Authorization: `Bearer ${token.value}` } }
       );
 
       return res.data;
@@ -1131,9 +1159,9 @@ import { ToastSuccess, ToastError, ToastWarning } from '~/composables/toasts';
     const { iD_Pedido, cCodigoRastreio } = pedidoSelecionadoCorreios.value;
     try {
       await axios.post(
-        `${urlProd.value}/sla/pedido-entrega/informar-codigo-rastreio/${iD_Pedido}/${cCodigoRastreio.toUpperCase()}`,
+        `${urlProd}/sla/pedido-entrega/informar-codigo-rastreio/${iD_Pedido}/${cCodigoRastreio.toUpperCase()}`,
         {},
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: { Authorization: `Bearer ${token.value}` } }
       );
 
       ToastSuccess('CÓDIGO RASTREIO INFORMADO COM SUCESSO');
@@ -1205,7 +1233,34 @@ import { ToastSuccess, ToastError, ToastWarning } from '~/composables/toasts';
 
     return dig1 === verifiers[0] && dig2 === verifiers[1];
   };
+  const parseDataBR = (dataStr) => {
+    if (!dataStr) return null
 
+    const [data, hora] = dataStr.split(' ')
+    const [dia, mes, ano] = data.split('/')
+    const [h, m, s] = hora.split(':')
+
+    return new Date(ano, mes - 1, dia, h, m, s)
+  };
+  const obterMaiorDataSelecionados = () => {
+
+    const pedidosSelecionados = staticinfoPedidosPossiveis.value.filter(p => p.bSelecionado === true)
+
+    let maiorData = null
+
+    pedidosSelecionados.forEach(pedido => {
+      const dataPedido = parseDataBR(pedido.dDataEmRota)
+
+      if (!dataPedido) return
+
+      if (!maiorData || dataPedido > maiorData) {
+        maiorData = dataPedido
+      }
+    })
+
+    return maiorData
+
+  };
   const OnChangeDataEntrega = () => {
     const dataInformada = InformarEmRotaEntregueRequestDTO.value.dEntregaInformada
     if (!dataInformada) return
@@ -1213,10 +1268,19 @@ import { ToastSuccess, ToastError, ToastWarning } from '~/composables/toasts';
     const dataSelecionada = new Date(dataInformada)
     const agora = new Date()
 
+    // Bloqueia futuro
     if (dataSelecionada > agora) {
       InformarEmRotaEntregueRequestDTO.value.dEntregaInformada = null
-
       ToastWarning('A data e hora da entrega não podem ser futuras.')
+      return
+    }
+
+    // Bloqueia menor que a maior dos pedidos
+    const maiorData = obterMaiorDataSelecionados()
+
+    if (maiorData && dataSelecionada < maiorData) {
+      InformarEmRotaEntregueRequestDTO.value.dEntregaInformada = null
+      ToastWarning('A data deve ser maior ou igual à última movimentação dos pedidos selecionados.')
     }
   };
 
@@ -1234,7 +1298,7 @@ import { ToastSuccess, ToastError, ToastWarning } from '~/composables/toasts';
   onMounted(async () => {
     await DefineCliente();
     await FetchPedidosPossiveisInformarEntrega();
-    await getTransportadorasApenasSLA(ID_Carteira);
+    await getTransportadorasApenasSLA();
     await FetchAllTransportadorasHomologadas();
 
     await AjustaRodapeTabela();
@@ -1510,10 +1574,10 @@ import { ToastSuccess, ToastError, ToastWarning } from '~/composables/toasts';
       <!-- Menu Superior -->
       <SetorProducaoSLAMenuSuperior 
         funcionalidadeProp="INFORMAR EM ROTA/ENTREGAS"
-        :destinoVoltarProp="`/sla`"
+        :destinoVoltarProp="`/sla/cliente/saidas`"
         :srcFoto="logoPath"
       />
-
+      
       <!-- ESPAÇO CORPO -->
       <div class="D-flex FD-column HEIGHT-90vh WIDTH-100 JC-center ALITEM-center BGC-cinza-9 BOR-branca">
         <!-- QUADRO BRANCO -->
@@ -2008,7 +2072,7 @@ import { ToastSuccess, ToastError, ToastWarning } from '~/composables/toasts';
 
                             <!-- Linha expandida -->
                             <tr v-if="linhaExpandidaDaTabelaPedidosPossiveis === pedido.iD_Pedido">
-                              <td colspan="15" class="expanded-row" style="background-color: #fff0f0;">
+                              <td colspan="16" class="expanded-row" style="background-color: #fff0f0;">
                                 <div class="expanded-content" style="display: flex">
                                   <table class="table table-sm FSIZE-PADRAO-TABLE" style="overflow-x: hidden; width: 100%; border: 2px 0px 0px 0px solid #000; border-collapse: collapse; z-index: 1">
                                     
@@ -2220,7 +2284,7 @@ import { ToastSuccess, ToastError, ToastWarning } from '~/composables/toasts';
 
                             <!-- Linha expandida -->
                             <tr v-if="linhaExpandidaDaTabelaPedidosSelecionados === pedido.iD_Pedido">
-                              <td colspan="15" class="expanded-row" style="background-color: #fff0f0;">
+                              <td colspan="16" class="expanded-row" style="background-color: #fff0f0;">
                                 <div class="expanded-content" style="display: flex">
                                   <table class="table table-sm FSIZE-PADRAO-TABLE" style="overflow-x: hidden; width: 100%; border: 2px 0px 0px 0px solid #000; border-collapse: collapse; z-index: 1">
                                     
@@ -2335,18 +2399,18 @@ import { ToastSuccess, ToastError, ToastWarning } from '~/composables/toasts';
 
               </div>
               <!-- Botões -->
-              <div v class="D-flex HEIGHT-7 WIDTH-100 BOR-SensacaoAfundado BGC-cinza-6">
+              <div v class="D-flex HEIGHT-7 WIDTH-100 BOR-SensacaoAfundado BGC-cinza-6 PADDING-2">
 
-                <div class="PADDING-L5 WIDTH-70 D-flex ALITEM-center JC-flex-start">
+                <div class="PADDING-L5 WIDTH-70 D-flex ALITEM-center JC-flex-start HEIGHT-100">
                   <button id="selecionar-todos-button"
-                    class="btn btn-primary MARGIN-R5 FSIZE-12px"
+                    class="btn btn-primary MARGIN-R5 FSIZE-12px D-flex JC-center ALITEM-center HEIGHT-100"
                     @click="OnClickSelecionarTodos()"
                     :disabled="infoPedidosPossiveis.filter(p => p.bSelecionado === false).length === 0"
                   >SELECIONAR TODOS
                   </button>
 
                   <button id="anular-selecao-button"
-                    class="btn btn-danger MARGIN-R5 FSIZE-12px"
+                    class="btn btn-danger MARGIN-R5 FSIZE-12px HEIGHT-100 D-flex JC-center ALITEM-center"
                     :disabled="staticinfoPedidosPossiveis.filter(p => p.bSelecionado === true).length === 0"
                     @click="OnClickAnularSelecao()"
                   >ANULAR SELEÇÃO
@@ -2354,9 +2418,9 @@ import { ToastSuccess, ToastError, ToastWarning } from '~/composables/toasts';
 
                 </div>
 
-                <div class="PADDING-r5 WIDTH-30 D-flex ALITEM-center JC-flex-end">
+                <div class="PADDING-r5 WIDTH-30 D-flex ALITEM-center JC-flex-end HEIGHT-100">
                   <button id="gerar-syspick-button"
-                    class="btn btn-success MARGIN-R5 FSIZE-12px"
+                    class="btn btn-success MARGIN-R5 FSIZE-12px D-flex JC-center ALITEM-center HEIGHT-100"
                     @click="OnClickInformarEntregaButton()"
                     :disabled="staticinfoPedidosPossiveis.filter(p => p.bSelecionado === true).length === 0"
                     >INFORMAR EM ROTA/ENTREGA

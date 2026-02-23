@@ -22,14 +22,64 @@
             <!-- Textos -->
             <div class="textos">
 
+              <!-- acessos -->
+              <li class="drop-hover" ref="dropdownToggle2" @mouseenter="mouseAcessoDrop" @mouseleave="handleMouseLeaveAcesso">
+                <a id="acessos-txt" style="color: black; text-decoration: none; cursor: pointer; font-size: 16px;">
+                  ACESSOS
+                  <i class="bi" :class="{'bi-caret-right-fill': !isDropdownACESSOActive, 'bi-caret-down-fill': isDropdownACESSOActive}"></i>
+                </a>
+                <div class="drop" v-show="isDropdownACESSOActive">
+                  <div class="drop-hover" ref="subDropdownToggle" @mouseenter="mouseSubDrop" @mouseleave="mouseSubLeave">
+                    <a id="qmSomos-sub" style="color: black; text-decoration: none; cursor: pointer;  font-size: 16px; display: flex; align-items: center; justify-content: space-between;" 
+                      >
+                      EXTERNO
+                      <i class="bi" :class="{'bi-caret-right-fill': !isSubDropdownActive, 'bi-caret-down-fill': isSubDropdownActive}"></i>
+                    </a>
+                    <div class="sub-drop" v-show="isSubDropdownActive" style="width: 170px;">
+                      <a @click="downloadPop1810()"
+                        type="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                        style="font-size: 186x; cursor: pointer;">
+                        POP 18 01
+                      </a>
+                      <hr class="custom-hr2">
+                      <a href="https://forms.office.com/r/1maudxn8pQ"
+                        target="_blank"
+                        style="cursor: pointer;">
+                        AGENDAMENTO
+                      </a>
+                      <hr class="custom-hr2">
+                        <a
+                          id="qmSomos-sub"
+                          data-bs-toggle="modal"
+                          data-bs-target="#acessoClienteModal"
+                          style="color: black; text-decoration: none; cursor: pointer;"
+                        >
+                          CLIENTE
+                        </a>
+                        <a
+                          id="qmSomos-sub"
+                          data-bs-toggle="modal"
+                          data-bs-target="#acessoTranspModal"
+                          style="color: black; text-decoration: none; cursor: pointer; "
+                        >
+                          TRANSPORTADORAS
+                        </a>
+                    </div>
+                  </div>
+                    <a id="qmSomos-sub" href="https://ts-embalarte-fin.skydocs.com.br/login" style="color: black; text-decoration: none; cursor: pointer; font-size: 16px;">
+                      INTERNO
+                    </a> 
+                </div>
+              </li>
+
               <li class="drop-hover" ref="dropdownToggle" @mouseenter="mouseMainDrop" @mouseleave="handleMouseLeave">
-                <a id="sobre-nos-txt" style="color: black; text-decoration: none; cursor: pointer;">
+                <a id="sobre-nos-txt" style="color: black; text-decoration: none; cursor: pointer; font-size: 16px;" >
                   SOBRE NÓS
                   <i class="bi" :class="{'bi-caret-right-fill': !isDropdownActive, 'bi-caret-down-fill': isDropdownActive}"></i>
                 </a>
                 <div class="drop" v-show="isDropdownActive">
                   <div class="drop-hover" ref="subDropdownToggle" @mouseenter="mouseSubDrop" @mouseleave="mouseSubLeave">
-                    <a id="qmSomos-sub" style="color: black; text-decoration: none; cursor: pointer;">
+                    <a id="qmSomos-sub" style="color: black; text-decoration: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between;" >
                       QUEM SOMOS
                       <i class="bi" :class="{'bi-caret-right-fill': !isSubDropdownActive, 'bi-caret-down-fill': isSubDropdownActive}"></i>
                     </a>
@@ -43,7 +93,7 @@
                   </div>
                   <hr class="custom-hr2">
                   <div class="drop-hover" ref="subDropdownToggle" @mouseenter="mouseSub2Drop" @mouseleave="mouseSub2Leave">
-                    <a id="servicos-sub" style="color: black; text-decoration: none; cursor: pointer;">
+                    <a id="servicos-sub" style="color: black; text-decoration: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between;">
                       NOSSOS SERVIÇOS
                       <i class="bi" :class="{'bi-caret-right-fill': !isSubDropdown2Active, 'bi-caret-down-fill': isSubDropdown2Active}"></i>
                     </a>
@@ -138,45 +188,7 @@
                 </div>
               </li>
 
-              <li class="drop-hover" ref="dropdownToggle2" @mouseenter="mouseAcessoDrop" @mouseleave="handleMouseLeaveAcesso">
-                <a id="acessos-txt" style="color: black; text-decoration: none; cursor: pointer; font-size: 16px;">
-                  ACESSOS
-                  <i class="bi" :class="{'bi-caret-right-fill': !isDropdownACESSOActive, 'bi-caret-down-fill': isDropdownACESSOActive}"></i>
-                </a>
-                <div class="drop" v-show="isDropdownACESSOActive">
-                  <div class="drop-hover" ref="subDropdownToggle" @mouseenter="mouseSubDrop" @mouseleave="mouseSubLeave">
-                    <a id="qmSomos-sub" style="color: black; text-decoration: none; cursor: pointer;  font-size: 16px;">
-                      EXTERNO
-                      <i class="bi" :class="{'bi-caret-right-fill': !isSubDropdownActive, 'bi-caret-down-fill': isSubDropdownActive}"></i>
-                    </a>
-                    <div class="sub-drop" v-show="isSubDropdownActive">
-                      <a @click="downloadPop1810()"
-                        type="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-                        style="font-size: 186x; cursor: pointer;">
-                        POP 18 01
-                      </a>
-                      <hr class="custom-hr2">
-                      <a href="https://forms.office.com/r/1maudxn8pQ"
-                        target="_blank"
-                        style="font-size: 16px; cursor: pointer;">
-                        AGENDAMENTO
-                      </a>
-                      <hr class="custom-hr2">
-<a
-  id="qmSomos-sub"
-  data-bs-toggle="modal"
-  data-bs-target="#acessoClienteModal"
-  style="color: black; text-decoration: none; cursor: pointer; font-size: 16px;"
->
-  ENTRAR
-</a>
-                    </div>
-                  </div>
-                    <a id="qmSomos-sub" href="https://ts-embalarte-fin.skydocs.com.br/login" style="color: black; text-decoration: none; cursor: pointer; font-size: 16px;">
-                      INTERNO
-                    </a> 
-                </div>
-              </li>
+
 
               <!-- Contato -->
               <li><a data-bs-toggle="modal" data-bs-target="#contatoModal" href="" 
@@ -185,7 +197,7 @@
             </div>
 
             <!-- Íxones -->
-            <div class="icones">
+            <div class="icones" style="display: flex; justify-content: flex-end;">
               <!-- Instagram -->
               <li>
                 <a href="https://www.instagram.com/grupoembalarte" target="_blank" title="Instagram">
@@ -296,7 +308,75 @@
         <div class="modal-content" style="width: 75%; left: 12.5%; margin-top: 20%;">
         
           <div class="modal-header">
-            <h5 class="modal-title" id="acessoClienteModalLabel">Acesso Cliente</h5>
+            <h5 class="modal-title" id="acessoClienteModalLabel">ACESSO CLIENTE</h5>
+            <button type="button" @click="clearInfosLogin()" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          
+          <div class="modal-body" style="display: flex; justify-content: center;">
+            <form style="display: flex; flex-direction: column; gap: 1rem; width: 100%; max-width: 300px;">
+              
+              <!-- Campo Usuário -->
+              <div class="form-group">
+                <label for="usuario">Usuário</label>
+                <input
+                  ref="usuarioInput"
+                  v-model="login.usuario"
+                  type="text"
+                  id="usuario"
+                  class="form-control"
+                  placeholder="Digite seu usuário"
+                />
+              </div>
+
+              <!-- Campo Senha -->
+              <div class="form-group">
+                <label for="senha">Senha</label>
+                <input
+                  v-model="login.senha"
+                  type="password"
+                  id="senha"
+                  class="form-control"
+                  placeholder="Digite sua senha"
+                  @keyup.enter="fecharModalERedirecionar"
+                />
+              </div>
+
+            </form>
+          </div>
+
+          <div class="modal-footer" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+
+            <div></div>
+            <!-- Botão à direita -->
+            <div>
+              <button v-if="!aguardandoReqEntrar"
+                @click="fecharModalERedirecionar"
+                class="btn btn-sm btn-success"
+                style="padding: 0.25rem 1rem; text-align: center;"
+                :disabled="aguardandoReqEntrar">
+                ENTRAR
+              </button>
+              <button v-else
+                class="btn btn-sm btn-secondary"
+                style="padding: 0.25rem 1rem; text-align: center;"
+                disabled>
+                AGUARDE ...
+              </button>
+            </div>
+
+          </div>
+          
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal de acesso Transp -->
+    <div class="modal fade" id="acessoTranspModal" tabindex="-1" aria-labelledby="acessoTranspModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content" style="width: 75%; left: 12.5%; margin-top: 20%;">
+        
+          <div class="modal-header">
+            <h5 class="modal-title" id="acessoTranspModalLabel">ACESSO TRANSPORTADORAS</h5>
             <button type="button" @click="clearInfosLogin()" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           
@@ -362,6 +442,7 @@
 </template>
 
 <script setup lang="ts">
+import axios from 'axios'
 import { ref, reactive, onMounted, onUnmounted } from 'vue'
 import { createPinia } from 'pinia'
 import { useRouter } from 'vue-router'
@@ -420,15 +501,20 @@ async function confereLogin(): Promise<LoginResponse | null> {
 
 async function validaToken(token: string): Promise<void> {
   try {
-    await $fetch(`${urlProd.value}/usuario-externo/dados-protegidos`, {
-      method: 'GET',
-      headers: { Authorization: `Bearer ${token}` }
-    })
+    console.log(token)
+
+    const response = await axios.get(
+      `${urlProd.value}/usuario-externo/dados-protegidos`,
+      {
+        headers: { Authorization: `Bearer ${token}` }
+      }
+    )
+
+    return response.data
   } catch (error) {
     console.error('❌ Acesso negado:', error)
   }
 }
-
 declare const bootstrap: any;
 
 async function fecharModalERedirecionar() {
