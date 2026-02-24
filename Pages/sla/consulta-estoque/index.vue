@@ -3,13 +3,14 @@
 import axios from 'axios';
 import { formatarData, formatarDataEUA, applyTableStipedRows, shortenInfo } from '~/composables/visualization';
 import { ToastSuccess, ToastWarning, ToastError } from '~/composables/toasts';
+import { useAuthStore } from '~/stores/auth';
 
 export default {
   data() {
     return {
       // Variáveis estáticas: ----------------------------\
       ID_ComponenteState: useIDComponente(),
-      token: useToken(),
+      token: useAuthStore(),
       urlProd: useUrlProd(),
       // //////////////////////////////////////////////////
 
@@ -113,10 +114,11 @@ export default {
     async fetchEstoqueAnalitico() {
       this.isEstoqueAnalitico = true;
       this.tabelaCarregada(false);
-
+      const authStore = useAuthStore()  // pega a store aqui
+      const token = authStore.token      // pega só o token
       try {
         const response = await axios.get(`${this.urlProd}/estoque/componente/estoque-analitico-web`, {
-          headers: { Authorization: `Bearer ${this.token}` }
+          headers: { Authorization: `Bearer ${token}` }
         });
         
         this.infoEstoque = response.data;
@@ -135,9 +137,12 @@ export default {
       this.tabelaCarregada(false);
       this.isEstoqueAnalitico = false;
 
+      const authStore = useAuthStore()  // pega a store aqui
+      const token = authStore.token      // pega só o token
+
       try {
         const response = await axios.get(`${this.urlProd}/estoque/componente/estoque-sintetico-web`, {
-          headers: { Authorization: `Bearer ${this.token}` }
+          headers: { Authorization: `Bearer ${token}` }
         });
         
         this.infoEstoque = response.data;
@@ -162,12 +167,22 @@ export default {
       }
     },
     async fetchCliente() {
+      const authStore = useAuthStore()  // pega a store
+      const token = authStore.token      // pega só o token
+      console.log('🔑 Token usado para buscar cliente:', token)
+
+      if (!token) {
+        console.warn('⛔ Token não encontrado. Redirecionando...')
+        return navigateTo('/') // opcional: força login
+      }
+
       try {
         const response = await axios.get(`${this.urlProd}/usuario-externo/cliente`, {
-          headers: { Authorization: `Bearer ${this.token}` }
+          headers: { Authorization: `Bearer ${token}` }
         });
-        
+
         const data = response.data;
+        console.log('📥 Cliente recebido:', data)
 
         this.cliente.iD_Cliente = data.iD_Cliente;
         this.cliente.cNmFantasia = data.cNmFantasia;
@@ -344,11 +359,15 @@ export default {
       document.getElementById("exportar-EXCEL-button").disabled = false;
     },
     async fetchPDFEstoqueAnalitico() {
+      
+      const authStore = useAuthStore()  // pega a store aqui
+      const token = authStore.token      // pega só o token
+
       try {
         // Faz a requisição para o endpoint configurando o responseType como 'blob':
         let response = await axios.post(`${this.urlProd}/estoque/componente/estoque-analitico-PDF`,
           this.infoEstoque, // Passando o objeto diretamente
-          { headers: { Authorization: `Bearer ${this.token}`  },
+          { headers: { Authorization: `Bearer ${token}`  },
             responseType: 'blob' // Importante para tratar a resposta como arquivo
           }
         );
@@ -375,11 +394,15 @@ export default {
       } catch (error) { console.error(error) }
     },
     async fetchPDFEstoqueSintetico() {
+      
+      const authStore = useAuthStore()  // pega a store aqui
+      const token = authStore.token      // pega só o token
+
       try {
         // Faz a requisição para o endpoint configurando o responseType como 'blob':
         let response = await axios.post(`${this.urlProd}/estoque/componente/estoque-sintetico-PDF`,
           this.infoEstoque, // Passando o objeto diretamente
-          { headers: { Authorization: `Bearer ${this.token}`  },
+          { headers: { Authorization: `Bearer ${token}`  },
             responseType: 'blob' // Importante para tratar a resposta como arquivo
           }
         );
@@ -406,13 +429,17 @@ export default {
       } catch (error) { console.error(error) }
     },
     async fetchEXCELEstoqueAnalitico() {
+            
+      const authStore = useAuthStore()  // pega a store aqui
+      const token = authStore.token      // pega só o token
+
       try {
         // Faz a requisição para o endpoint configurando o responseType como 'blob':
         let response = await axios.post(`${this.urlProd}/estoque/componente/estoque-analitico-EXCEL`,
           this.infoEstoque,
           {
             headers: {
-              Authorization: `Bearer ${this.token}`,
+              Authorization: `Bearer ${token}`,
               'Content-Type': 'application/json' // Adicionando o Content-Type adequado
             },
             responseType: 'blob', // Importante para tratar a resposta como arquivo
@@ -440,13 +467,17 @@ export default {
       } catch (error) { console.error(error); }
     },
     async fetchEXCELEstoqueSintetico() {
+            
+      const authStore = useAuthStore()  // pega a store aqui
+      const token = authStore.token      // pega só o token
+
       try {
         // Faz a requisição para o endpoint configurando o responseType como 'blob':
         let response = await axios.post(`${this.urlProd}/estoque/componente/estoque-sintetico-EXCEL`,
           this.infoEstoque,
             {
               headers: {
-                Authorization: `Bearer ${this.token}`,
+                Authorization: `Bearer ${token}`,
                 'Content-Type': 'application/json' // Adicionando o Content-Type adequado
               },
               responseType: 'blob', // Importante para tratar a resposta como arquivo
@@ -503,8 +534,11 @@ export default {
     // MÉTODOS QUE LIDAM COM O MODAL: -----------------------------------------------------\
     async getGenerico(url, params = {}) {
 			try {
+      const authStore = useAuthStore()  // pega a store aqui
+      const token = authStore.token      // pega só o token
+
 				const response = await axios.get(url, {
-					headers: { Authorization: `Bearer ${this.token}` },
+					headers: { Authorization: `Bearer ${token}` },
 					params, // Adiciona parâmetros de query se necessário
 				});
 				return response.data;
@@ -581,12 +615,17 @@ export default {
 			});
 		},
     async getImagemComponente(IDComponente) {
+            
+      const authStore = useAuthStore()  // pega a store aqui
+      const token = authStore.token      // pega só o token
+
+
 			try {
 				const url = `${this.urlEstoque}/foto-componente/get-foto/${IDComponente}`;
 
 				// Faz uma requisição direta para verificar se a imagem existe
 				const response = await axios.get(url, {
-					headers: { Authorization: `Bearer ${this.token}` }, // Inclui cabeçalho de autenticação
+					headers: { Authorization: `Bearer ${token}` }, // Inclui cabeçalho de autenticação
 					responseType: "blob", // Garante que a resposta será tratada como um arquivo binário
 				});
 

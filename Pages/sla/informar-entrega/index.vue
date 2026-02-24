@@ -15,8 +15,6 @@ import { ToastSuccess, ToastError, ToastWarning } from '~/composables/toasts';
   const route = useRoute();
   const urlBase = useUrlProd();
 
-  const authStore = useAuthStore();
-
   // ===============================
   // SOMENTE PINIA (SEM isERP)
   // ===============================

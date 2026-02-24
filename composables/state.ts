@@ -4,16 +4,7 @@ const url = "https://localhost:7116/api";                            // DESENVOL
 // const url = "https://grupoembalarte-api-homl.skyone.guru/api"; // HOMOLOGAÇÃO
 // const url = "https://ts-embalarte-sis.skyone.guru/api";        // PRODUÇÃO
 // -------------------------------------------------------------------------------------/
-
-export const useToken = () => useState<string | null>('tokenProd', () => {
-  // Tenta recuperar do sessionStorage ao carregar
-  if (process.client) {
-    return sessionStorage.getItem('tokenProd')
-  }
-  return null
-})
-
-export const useUrlProd = () => useState<string>("urlProd", () => url);
+export const useUrlProd = () => url;
 
 export const useUrlProdSistema = () => useState<string>("urlProdSistema", () => `${url}/sistema`);
 export const useIsSideMenuOpen = () => useState<boolean>("isSideMenuOpen", () => false);
@@ -40,5 +31,3 @@ export const useUrProdGeral = () => useState<string>("urlGeral", () => url);
 // ESTOQUE:
 export const useUrlEstoque = () => useState<string>("urlEstoque", () => `${url}/estoque`);
 export const useIDComponente = () => useState<number | null>("IDComponente", () => 10);
-
-

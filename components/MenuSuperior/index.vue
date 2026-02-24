@@ -448,17 +448,21 @@ import { createPinia } from 'pinia'
 import { useRouter } from 'vue-router'
 import { ToastError } from '~/composables/toasts'
 import { useAuthStore } from '~/stores/auth'
-import { createApp } from 'vue'
-import App from '../../app.vue'
+// import { useAuthStore } from '~/stores/auth'
+// import { createApp } from 'vue'
+// import App from '../../app.vue'
 
-const pinia = createPinia()
-const app = createApp(App)
-app.use(pinia)
+// const pinia = createPinia()
+// const app = createApp(App)
+// app.use(pinia)
 
-const authStore = useAuthStore()
+// const token = useAuthStore().token
+const urlProdProducao = useUrlProdProducao()
+const urlProdSistema = useUrlProdSistema()
+const urlProdControladoria = useUrlProdControladoria()
+// const authStore = useAuthStore()
 const router = useRouter()
 const urlProd = useUrlProd()
-const tokenState = useToken()
 
 // Estados reativos
 const aguardandoReqEntrar = ref(false)
@@ -476,89 +480,94 @@ const login = reactive({ usuario: '', senha: '' })
 
 // Funções de autenticação
 interface LoginResponse {
-  token: string;
-  idFuncao: number;
-  iD_ResponsavelInformaEntregaExterno: number;
-  iD_Carteira: number;
+  status: number
+  token: string
+  idUsuario: number
+  idCarteira?: number | null
+  idFuncao: number
 }
 
 async function confereLogin(): Promise<LoginResponse | null> {
   try {
     const payload = { ...login }
-
-    const response = await $fetch<LoginResponse>(`${urlProd.value}/usuario-externo/login`, {
+    const urlProd = useUrlProd()
+    const response = await $fetch<LoginResponse>(`${urlProd}/usuario-externo/login`, {
       method: 'POST',
       body: payload
     })
-
     return response
-
   } catch (error) {
     ToastError('Usuário ou senha inválidos. Tente novamente.')
     return null
   }
 }
 
-async function validaToken(token: string): Promise<void> {
-  try {
-    console.log(token)
 
-    const response = await axios.get(
-      `${urlProd.value}/usuario-externo/dados-protegidos`,
-      {
-        headers: { Authorization: `Bearer ${token}` }
-      }
-    )
+// async function validaToken(token: string): Promise<void> {
+//   try {
 
-    return response.data
-  } catch (error) {
-    console.error('❌ Acesso negado:', error)
-  }
-}
+//     const response = await axios.get(
+//       `${urlProd.value}/usuario-externo/dados-protegidos`,
+//       {
+//         headers: { Authorization: `Bearer ${token}` }
+//       }
+//     )
+
+//     return response.data
+//   } catch (error) {
+//     console.error('❌ Acesso negado:', error)
+//   }
+// }
 declare const bootstrap: any;
 
 async function fecharModalERedirecionar() {
   aguardandoReqEntrar.value = true
-
+  const authStore = useAuthStore()
   const response = await confereLogin()
+
   if (!response) {
     aguardandoReqEntrar.value = false
     return
   }
 
-  const { token, idFuncao, iD_ResponsavelInformaEntregaExterno, iD_Carteira } = response
+  const token = response.token
 
-  await validaToken(token)
+  const idUsuario = response.idUsuario
+  const idCarteira = response.idCarteira
+  const idFuncao = response.idFuncao
 
-  // Salva no estado global
-  authStore.setToken(token)
-  tokenState.value = token
+  if (!idUsuario) {
+    console.error('❌ idUsuario inválido:', idUsuario)
+    aguardandoReqEntrar.value = false
+    return
+  }
 
-  sessionStorage.setItem('tokenProd', token)
-  sessionStorage.setItem('iD_ResponsavelInformaEntregaExterno', iD_ResponsavelInformaEntregaExterno.toString())
-  sessionStorage.setItem('idFuncao', idFuncao.toString()) 
-  sessionStorage.setItem('idCarteira', iD_Carteira.toString()) 
+  // 🔐 Salva token e dados do usuário no Pinia store
+  authStore.setAuth({
+    token,
+    usuario: {
+      iD_Usuario: idUsuario,
+      iD_Carteira: idCarteira,
+      idFuncao: idFuncao
+    }
+  })
 
-  // Fecha o modal
+  // Fecha modal
   const modalElement = document.getElementById('acessoClienteModal')
   if (modalElement) {
-    const modalInstance = bootstrap.Modal.getInstance(modalElement) || new bootstrap.Modal(modalElement)
+    const modalInstance =
+      bootstrap.Modal.getInstance(modalElement) || new bootstrap.Modal(modalElement)
     modalInstance.hide()
   }
 
   aguardandoReqEntrar.value = false
 
-  if(idFuncao == 3) {
-   setTimeout(() => router.push('/sla/consulta-estoque'), 50)
-  }
-  if(idFuncao == 2) {
-   setTimeout(() => router.push('/sla/informar-entrega'), 50)
-  }
-  if(idFuncao == 1) {
-   setTimeout(() => router.push('/sla'), 50)
-  }
-
+  // Redirecionamento por função
+  if (idFuncao === 3) router.push('/sla/consulta-estoque')
+  else if (idFuncao === 2) router.push('/sla/informar-entrega')
+  else if (idFuncao === 1) router.push('/sla')
 }
+
 function clearInfosLogin() {
   login.usuario = ''
   login.senha = ''
