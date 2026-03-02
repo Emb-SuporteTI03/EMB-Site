@@ -2,7 +2,7 @@
 // Comentar LOCALHOST quando for subir e comentar TS quando for desenvolver: -----------\
 const url = "https://localhost:7116/api";                            // DESENVOLVIMENTO
 // const url = "https://grupoembalarte-api-homl.skydocs.com.br/api"; // HOMOLOGAÇÃO
-// const url = "https://ts-embalarte-sis.skyone.skydocs.com.br/api";        // PRODUÇÃO
+// const url = "https://ts-embalarte-sis.skydocs.com.br/api";        // PRODUÇÃO
 // -------------------------------------------------------------------------------------/
 export const useUrlProd = () => url;
 
