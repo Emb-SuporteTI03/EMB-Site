@@ -268,10 +268,24 @@ import { useAuthStore } from '~/stores/auth';
       totalPaginas.value = Math.ceil(response.data.totalRegistros/numeroRegistrosPagina.value);
 
     } catch (error: any) {
+
+      // request cancelada → ignora
       if (error.name === "CanceledError" || error.code === "ERR_CANCELED") {
         return;
       }
+
+      // ✅ token inválido / expirado
+      if (error.response?.status === 401) {
+        const authStore = useAuthStore();
+
+        authStore.logout();
+        LimpaLocalStor();
+
+        return navigateTo('/');
+      }
+
       console.error(error);
+
     } finally {
       tabelaPedidosCarregada.value = true;
     }

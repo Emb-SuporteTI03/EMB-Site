@@ -234,10 +234,12 @@ const aplicarFiltros = async () => {
 };
 
 // REQUISIÇÕES
+
 async function getTransportadorasApenasSLA() {
   const authStore = useAuthStore();
 
-  const response = await axios.get(
+  try {
+    const response = await axios.get(
       `${urlSistema.value}/carteira/com-join/${ID_Carteira.value}`,
       {
         headers: {
@@ -245,8 +247,22 @@ async function getTransportadorasApenasSLA() {
         }
       }
     );
-  cliente.value = response.data;
+
+    cliente.value = response.data;
+
+  } catch (error) {
+
+    // ✅ Unauthorized → volta pra página base
+    if (error.response?.status === 401) {
+      authStore.logout();
+      LimpaLocalStor();
+      return navigateTo('/');
+    }
+
+    console.error(error);
+  }
 }
+
 async function getInfosAbastecimentoSLA() {
   const authStore = useAuthStore();
 

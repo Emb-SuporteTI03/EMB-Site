@@ -484,17 +484,33 @@ export default {
         window.URL.revokeObjectURL(url);
       } catch (error) { console.error(error); }
     },
-    async getTransportadorasApenasSLA(idCliente) {
-      const authStore = useAuthStore();
+async getTransportadorasApenasSLA(idCliente) {
+  const authStore = useAuthStore();
 
-      const response = await axios.get(`${this.urlSistema}/carteira/com-join/${idCliente}`, {
+  try {
+    const response = await axios.get(
+      `${this.urlSistema}/carteira/com-join/${idCliente}`,
+      {
         headers: {
           Authorization: `Bearer ${authStore.token ?? ''}`
         }
-      });
+      }
+    );
 
-      this.clienteSigla = response.data
-    },
+    this.clienteSigla = response.data;
+
+  } catch (error) {
+
+    // ✅ token expirado / inválido
+    if (error.response?.status === 401) {
+      authStore.logout();
+      LimpaLocalStor();
+      return navigateTo('/');
+    }
+
+    console.error(error);
+  }
+},
     // -------------------------------------------------------------------------------------------/
 
     // Métodos gerais: ---------------------------------------------------------------------------\

@@ -457,22 +457,34 @@ const token = ref(authStore.token ?? "");
   };
 
   // REQUISIÇÕES
-  async function getTransportadorasApenasSLA()  {
-    const authStore = useAuthStore();
-    try {
-      const response = await axios.get(
-        `${urlSistema.value}/carteira/com-join/${ID_Carteira.value}`,
-        {
-          headers: {
-            Authorization: `Bearer ${authStore.token ?? ''}`
-          }
+async function getTransportadorasApenasSLA() {
+  const authStore = useAuthStore();
+
+  try {
+    const response = await axios.get(
+      `${urlSistema.value}/carteira/com-join/${ID_Carteira.value}`,
+      {
+        headers: {
+          Authorization: `Bearer ${authStore.token ?? ''}`
         }
-      );
-      cliente.value = response.data;
-    } catch (error) {
-      console.error("Erro ao buscar dados:", error);
+      }
+    );
+
+    cliente.value = response.data;
+
+  } catch (error) {
+
+    // ✅ Unauthorized → volta pra página base
+    if (error.response?.status === 401) {
+      authStore.logout();
+      LimpaLocalStor();
+      return navigateTo('/');
     }
+
+    console.error(error);
   }
+}
+
   const FetchPedidosPossiveisInformarEntrega = async () => {
     // Inicia carregamento:
     isTabelaPedidosCarregada.value = false;
@@ -1604,12 +1616,12 @@ const token = ref(authStore.token ?? "");
       />
       
       <!-- ESPAÇO CORPO -->
-      <div class="D-flex FD-column HEIGHT-90vh WIDTH-100 JC-center ALITEM-center BGC-cinza-9 BOR-branca">
+      <div class="D-flex FD-column HEIGHT-88vh WIDTH-100 JC-center ALITEM-center BGC-cinza-9 BOR-branca">
         <!-- QUADRO BRANCO -->
         <div style="overflow-x: hidden;" class="D-flex FD-column ALITEM-center JC-center HEIGHT-95 WIDTH-98 BORRAD-5 BGC-branco PADDING-T5-B10">
 
           <!-- Filtros -->
-          <div class="D-flex JC-space-between MIN-HEIGHT-15 HEIGHT-15 WIDTH-98 mb-1">
+          <div class="D-flex JC-space-between MIN-HEIGHT-20 HEIGHT-20 WIDTH-98 mb-1">
 
             <div class="D-flex WIDTH-100 JC-space-between">
               
@@ -1810,7 +1822,7 @@ const token = ref(authStore.token ?? "");
           <transition :name="transitionName" mode="out-in">
             <!-- CORREIOS -->
             <div v-if="isButtonCorreiosSelecionado" key="correios"
-              class="WIDTH-99 HEIGHT-84">
+              class="WIDTH-99 HEIGHT-80">
               <!-- Tabela CORREIOS -->
               <div class="WIDTH-100 HEIGHT-100 BORRAD-5 mb-1">
 
@@ -1994,14 +2006,14 @@ const token = ref(authStore.token ?? "");
             </div>
 
             <!-- TRANSPORTADORAS -->
-            <div v-else key="transportadora" class="WIDTH-99 HEIGHT-84">
+            <div v-else key="transportadora" class="WIDTH-99 HEIGHT-80">
               <!-- 2 Tabelas TRANSPORTADORAS -->
               <div  class="D-flex FD-column HEIGHT-93 WIDTH-100 mb-1">
 
                 <!-- Tabela de pedidos possíveis -->
-                <div class="WIDTH-100 HEIGHT-49 mb-1">
+                <div class="WIDTH-100 HEIGHT-47 mb-1">
                   <!-- TABELA + TITULO -->
-                  <div class="D-flex FD-column ALITEM-center JC-center HEIGHT-100 WIDTH-100 BORRAD-5 BGC-cinza-9  PADDING-2 BOR-grey-1px">
+                  <div class="D-flex FD-column ALITEM-center JC-center HEIGHT-95 WIDTH-100 BORRAD-5 BGC-cinza-9  PADDING-1 BOR-grey-1px">
                     
                     <!-- FILTRO DATAS + BARRA DE PESQUISA + REFRESH -->
                     <div class="D-flex JC-flex-end HEIGHT-6 WIDTH-98">
@@ -2212,7 +2224,7 @@ const token = ref(authStore.token ?? "");
                 </div>
 
                 <!-- Tabela de "Carrinho de compras" -->
-                <div class="WIDTH-100 HEIGHT-49 bb BORRAD-5">
+                <div class="WIDTH-100 HEIGHT-47 bb BORRAD-5">
                   <!-- TABELA + TITULO -->
                   <div class="D-flex FD-column ALITEM-center JC-center HEIGHT-100 WIDTH-100 BORRAD-5 BGC-azul-5 PADDING-2 BOR-blue">                
                     <!-- FILTRO DATAS + BARRA DE PESQUISA + REFRESH -->

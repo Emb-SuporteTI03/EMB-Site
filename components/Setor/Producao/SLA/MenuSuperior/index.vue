@@ -1,4 +1,6 @@
 <script>
+import { useAuthStore } from '~/stores/auth';
+
 export default {
   // Props:
   props: {
@@ -32,10 +34,24 @@ export default {
       this.isLogoutButtonShowing = !this.isLogoutButtonShowing
     },
 
-    clickConfirmaLogoutButton () {
-      let siglaLogin = localStorage.getItem('sigla');
-      localStorage.clear();
-      localStorage.setItem('sigla', siglaLogin);
+    clickConfirmaLogoutButton() {
+      const authStore = useAuthStore();
+
+      const siglaLogin = localStorage.getItem('sigla')
+
+      // limpa estado do pinia
+      authStore.logout()
+
+      // limpa storage
+      localStorage.clear()
+
+      // restaura sigla
+      if (siglaLogin) {
+        localStorage.setItem('sigla', siglaLogin)
+      }
+
+      // redireciona
+      navigateTo('/')
     },
 
     // 👇 MÉTODO CENTRALIZADO

@@ -177,10 +177,33 @@ const aplicarFiltros = () => {
 
 // REQUISIÇÕES
 async function getTransportadorasApenasSLA() {
-  cliente.value = await GetGenerico(`${urlSistema.value}/carteira/com-join/${ID_Carteira.value}`,
-    {}, token.value
-  );
-};
+  const authStore = useAuthStore();
+
+  try {
+    const response = await axios.get(
+      `${urlSistema.value}/carteira/com-join/${ID_Carteira.value}`,
+      {
+        headers: {
+          Authorization: `Bearer ${authStore.token ?? ''}`
+        }
+      }
+    );
+
+    cliente.value = response.data;
+
+  } catch (error) {
+
+    // ✅ Unauthorized → volta pra página base
+    if (error.response?.status === 401) {
+      authStore.logout();
+      LimpaLocalStor();
+      return navigateTo('/');
+    }
+
+    console.error(error);
+  }
+}
+
 
 const FetchInfoLRs = async () => {
   try {

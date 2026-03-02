@@ -371,6 +371,7 @@ const OnKeyUpInfAdicionais = () => {
 // REQUISIÇÕES
 async function getTransportadorasApenasSLA() {
   const authStore = useAuthStore();
+
   try {
     const response = await axios.get(
       `${urlSistema.value}/carteira/com-join/${ID_Carteira.value}`,
@@ -380,11 +381,22 @@ async function getTransportadorasApenasSLA() {
         }
       }
     );
+
     cliente.value = response.data;
+
   } catch (error) {
-    console.error("Erro ao buscar dados:", error);
+
+    // ✅ Unauthorized → volta pra página base
+    if (error.response?.status === 401) {
+      authStore.logout();
+      LimpaLocalStor();
+      return navigateTo('/');
+    }
+
+    console.error(error);
   }
 }
+
 async function getInfosEntradasSLA() {
   const authStore = useAuthStore();
 

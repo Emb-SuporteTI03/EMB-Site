@@ -392,14 +392,31 @@ const aplicarFiltros = async () => {
 async function getTransportadorasApenasSLA() {
   const authStore = useAuthStore();
 
-    const response = await axios.get(`${urlSistema.value}/carteira/com-join/${ID_Carteira.value}`, {
-      headers: {
-        Authorization: `Bearer ${authStore.token ?? ''}`
+  try {
+    const response = await axios.get(
+      `${urlSistema.value}/carteira/com-join/${ID_Carteira.value}`,
+      {
+        headers: {
+          Authorization: `Bearer ${authStore.token ?? ''}`
+        }
       }
-    });
+    );
 
-  cliente.value = response.data;
+    cliente.value = response.data;
+
+  } catch (error) {
+
+    // ✅ Unauthorized → volta pra página base
+    if (error.response?.status === 401) {
+      authStore.logout();
+      LimpaLocalStor();
+      return navigateTo('/');
+    }
+
+    console.error(error);
+  }
 }
+
 async function getInfosSaidasSLA() {
   const authStore = useAuthStore();
 

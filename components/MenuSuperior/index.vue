@@ -38,27 +38,27 @@
                     <div class="sub-drop" v-show="isSubDropdownActive" style="width: 170px;">
                       <a @click="downloadPop1810()"
                         type="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-                        style="font-size: 186x; cursor: pointer;">
+                        style="font-size: 12px; cursor: pointer;">
                         POP 18 01
                       </a>
                       <hr class="custom-hr2">
                       <a href="https://forms.office.com/r/1maudxn8pQ"
                         target="_blank"
-                        style="cursor: pointer;">
+                        style="cursor: pointer; font-size: 12px;">
                         AGENDAMENTO
                       </a>
                       <hr class="custom-hr2">
                         <a
                           id="qmSomos-sub"
                           @click="abrirModal('cliente')"
-                          style="color: black; text-decoration: none; cursor: pointer;"
+                          style="color: black; text-decoration: none; cursor: pointer; font-size: 12px;"
                         >
                           CLIENTE
                         </a>
                         <a
                           id="qmSomos-sub"
                           @click="abrirModal('transportadora')"
-                          style="color: black; text-decoration: none; cursor: pointer; "
+                          style="color: black; text-decoration: none; cursor: pointer; font-size: 12px;"
                         >
                           TRANSPORTADORAS
                         </a>
