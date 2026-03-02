@@ -625,7 +625,7 @@ async function fecharModalERedirecionar(modoLogin : string) {
   {
     router.push('/sla/informar-entrega')
   }
-  if(idFuncao === 3)
+  else if(idFuncao === 3)
   {
     if(bAcessoSLA)
       router.push('/sla')
@@ -634,7 +634,7 @@ async function fecharModalERedirecionar(modoLogin : string) {
   }
   else 
   {
-    ToastError('Adm tela que escolhe.')
+    // ToastError('Adm tela que escolhe.')
   }
 }
 
