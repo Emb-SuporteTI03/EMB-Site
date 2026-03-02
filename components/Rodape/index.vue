@@ -2,11 +2,9 @@
 </script>
 
 <template>
-  <main>
-
-
-
-    <hr class="custom-hr1">
+  <main class="HEIGHT-4vh BGC-branco">
+    
+    <div class="HEIGHT-2px BOR-grey"></div>
 
     <footer class="rodape">
       <p>&copy; {{ new Date().getFullYear() }} Grupo Embalarte - 03.252.307/0001-78</p>
@@ -94,7 +92,6 @@
 .rodape {
   display: flex;
   justify-content: center;
-  height: 4vh;
 }
 
 .rodape p {

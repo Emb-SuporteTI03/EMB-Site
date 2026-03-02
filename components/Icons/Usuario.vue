@@ -1,0 +1,37 @@
+<template>
+  <svg 
+    xmlns="http://www.w3.org/2000/svg" 
+    :width="this.largura + 'em'"
+    :height="this.altura + 'em'"
+    viewBox="0 0 24 24"
+    > <path 
+    fill="none" 
+    :stroke="this.cor"
+    stroke-linecap="round" 
+    stroke-linejoin="round" 
+    stroke-width="2" 
+    d="M18 19v-1.25c0-2.071-1.919-3.75-4.286-3.75h-3.428C7.919 14 6 15.679 6 17.75V19m9-11a3 3 0 1 1-6 0a3 3 0 0 1 6 0">
+    </path>
+  </svg>
+</template>
+
+<script>
+export default {
+  data () {
+    return {
+      cor: this.$props.corProp,
+      altura: this.$props.alturaProp,
+      largura: this.$props.larguraProp
+    }
+  },
+
+  // Props:
+  props: {
+    corProp: String,
+    alturaProp: String,
+    larguraProp: String,
+  },
+
+  name: 'Usuario'
+}
+</script>

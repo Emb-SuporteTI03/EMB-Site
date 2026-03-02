@@ -1,0 +1,33 @@
+<template>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    :width="this.largura + 'em'"
+    :height="this.altura + 'em'"
+    viewBox="0 0 24 24"
+  > <path
+      :fill="this.cor"
+      d="m10.6 16.2l7.05-7.05l-1.4-1.4l-5.65 5.65l-2.85-2.85l-1.4 1.4zM5 21q-.825 0-1.412-.587T3 19V5q0-.825.588-1.412T5 3h14q.825 0 1.413.588T21 5v14q0 .825-.587 1.413T19 21z">
+    </path>
+  </svg>
+</template>
+
+<script>
+export default {
+  data () {
+    return {
+      cor: this.$props.corProp,
+      altura: this.$props.alturaProp,
+      largura: this.$props.larguraProp
+    }
+  },
+
+  // Props:
+  props: {
+    corProp: String,
+    alturaProp: String,
+    larguraProp: String,
+  },
+  
+  name: 'MaterialSymbolsCheckBox'
+}
+</script>

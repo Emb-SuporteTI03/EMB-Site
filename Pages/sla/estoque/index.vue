@@ -1,17 +1,43 @@
-<!-- Página que contem o  ESTOQUE ANALITICO E ESTOQUE SINTETICO -->
 <script>
 import axios from 'axios';
-import { formatarData, formatarDataEUA, applyTableStipedRows, shortenInfo } from '~/composables/visualization';
+import { formatarData, formatarDataEUA, applyTableStipedRows, shortenInfo, GetGenerico } from '~/composables/visualization';
 import { ToastSuccess, ToastWarning, ToastError } from '~/composables/toasts';
+import { useRoute } from 'vue-router';
 import { useAuthStore } from '~/stores/auth';
 
 export default {
+  setup() {
+    const route = useRoute()
+    const authStore = useAuthStore();
+    const userID = ref(authStore.idUsuario);
+    // const userID_Unidade = ref(authStore.ID_Unidade).value;
+    // const userNome = ref(authStore.nome);
+    // const siglaUsuario = ref(authStore.sigla);
+    // const ID_Area = ref(authStore.ID_Unidade ?? 0);
+    const ID_Carteira = ref(authStore.idCarteira ?? 0);
+    const token = ref(authStore.token ?? "");
+    const logoPath = `/CLIENTES/${ID_Carteira.value}.png`
+
+    return { route, ID_Carteira, logoPath, token, userID }
+  },
   data() {
     return {
       // Variáveis estáticas: ----------------------------\
       ID_ComponenteState: useIDComponente(),
-      token: useAuthStore(),
+      token: useAuthStore().token,
       urlProd: useUrlProd(),
+      urlSistema: useUrlProdSistema(),
+      hoje: formatarData(new Date()),
+      hojeEUA: formatarDataEUA(new Date()),
+      senhaDelete: 'tp190980*',
+      senhaDeleteInputadaUsuario: '',
+      // Verifica o tamanho do mês:
+      mesAtual: (new Date().getMonth() + 1).toString().length === 1 ? `0${(new Date().getMonth() + 1)}` : (new Date().getMonth() + 1),
+      anoAtual: new Date().getFullYear(),
+      informacaoIncorreta: 'Informação inválida para este campo.',
+      userNome: useAuthStore().nome,
+      clienteSigla: {},
+      cliente: {},
       // //////////////////////////////////////////////////
 
       infoEstoque: [],
@@ -33,6 +59,7 @@ export default {
 
       // PARA O MODAL ----\
       urlEstoque: useUrlEstoque(),
+      currentTabMovimentacoes: 'tableEntradas',
       componenteAtual: {},
       componenteAtualEstatico: {},
       entradas: [],
@@ -46,10 +73,6 @@ export default {
       tableContainerStyle: {
         width: '100%',
         maxHeight: '0px', // Inicializa com valor padrão até que o cálculo seja feito
-      },
-      cliente: {
-        iD_Cliente: '',
-        cNmFantasia: '',
       },
       // -----------------/
     };
@@ -79,7 +102,7 @@ export default {
       },
 
       // Limpa o HTML e JS da página:
-      document.getElementById('filtro-cliente-input').value = '';
+      // document.getElementById('filtro-cliente-input').value = '';
       document.getElementById('filtro-codigo-input').value = '';
       document.getElementById('filtro-descricao-input').value = '';
       document.getElementById('filtro-familia-input').value = '';
@@ -91,7 +114,7 @@ export default {
         inputVao.value = '';
       }
 
-      this.querieProcuraFiltroCliente = '';
+      // this.querieProcuraFiltroCliente = '';
       this.querieProcuraFiltroCodigo = '';
       this.querieProcuraFiltroDescricao = '';
       this.querieProcuraFiltroEdicao = '';
@@ -111,22 +134,25 @@ export default {
 
     // GET: --------------------------------------------------------------------------------------\
     // Por VÃO (Tem mais registros):
+    GetGenerico,
     async fetchEstoqueAnalitico() {
+      const authStore = useAuthStore();
+
       this.isEstoqueAnalitico = true;
       this.tabelaCarregada(false);
-      const authStore = useAuthStore()  // pega a store aqui
-      const token = authStore.token      // pega só o token
+
       try {
-        const response = await axios.get(`${this.urlProd}/estoque/componente/estoque-analitico-web`, {
-          headers: { Authorization: `Bearer ${token}` }
+        const response = await axios.get(`${this.urlProd}/estoque/componente/estoque-analitico/${this.ID_Carteira}`, {
+          headers: { Authorization: `Bearer ${authStore.token ?? ''}` }
         });
         
         this.infoEstoque = response.data;
         this.staticInfoEstoque = response.data;
 
+        this.cliente = this.infoEstoque[0].cNmFantasia
         this.tabelaCarregada(true);
       } catch (error) {
-        console.error(error);
+        console.log(error);
         this.tabelaCarregada(true);
       } finally {
         this.tabelaCarregada(true);
@@ -137,12 +163,10 @@ export default {
       this.tabelaCarregada(false);
       this.isEstoqueAnalitico = false;
 
-      const authStore = useAuthStore()  // pega a store aqui
-      const token = authStore.token      // pega só o token
-
       try {
-        const response = await axios.get(`${this.urlProd}/estoque/componente/estoque-sintetico-web`, {
-          headers: { Authorization: `Bearer ${token}` }
+        const authStore = useAuthStore();
+        const response = await axios.get(`${this.urlProd}/estoque/componente/estoque-sintetico/${this.ID_Carteira}`, {
+          headers: { Authorization: `Bearer ${authStore.token ?? ''}` }
         });
         
         this.infoEstoque = response.data;
@@ -150,7 +174,7 @@ export default {
 
         this.tabelaCarregada(true);
       } catch (error) {
-        console.error(error);
+        console.log(error);
         this.tabelaCarregada(true);
       } finally {
         this.tabelaCarregada(true);
@@ -164,31 +188,6 @@ export default {
         this.aplicarFiltros();
       } catch (error) {
 
-      }
-    },
-    async fetchCliente() {
-      const authStore = useAuthStore()  // pega a store
-      const token = authStore.token      // pega só o token
-
-      if (!token) {
-        console.warn('⛔ Token não encontrado. Redirecionando...')
-        return navigateTo('/') // opcional: força login
-      }
-
-      try {
-        const response = await axios.get(`${this.urlProd}/usuario-externo/cliente`, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-
-        const data = response.data;
-
-        this.cliente.iD_Cliente = data.iD_Cliente;
-        this.cliente.cNmFantasia = data.cNmFantasia;
-        this.cliente.iD_Lote = data.iD_Lote;
-        this.cliente.cLote = data.cLote;
-
-      } catch (error) {
-        console.error('Erro ao buscar cliente:', error);
       }
     },
     // -------------------------------------------------------------------------------------------/
@@ -320,7 +319,7 @@ export default {
     // Exportar EXCEL:
     async onClickExportarExcel() {
       if (this.infoEstoque.length === 0) {
-        ToastError('Não há dados para exportar!');
+        ToastWarning('Não há dados para exportar!');
         return;
       }
 
@@ -340,7 +339,7 @@ export default {
     // Exportar PDF:
     async onClickExportarPDF() {
       if (this.infoEstoque.length === 0) {
-        ToastError('Não há dados para exportar!');
+        ToastWarning('Não há dados para exportar!');
         return;
       }
 
@@ -357,15 +356,11 @@ export default {
       document.getElementById("exportar-EXCEL-button").disabled = false;
     },
     async fetchPDFEstoqueAnalitico() {
-      
-      const authStore = useAuthStore()  // pega a store aqui
-      const token = authStore.token      // pega só o token
-
       try {
         // Faz a requisição para o endpoint configurando o responseType como 'blob':
         let response = await axios.post(`${this.urlProd}/estoque/componente/estoque-analitico-PDF`,
           this.infoEstoque, // Passando o objeto diretamente
-          { headers: { Authorization: `Bearer ${token}`  },
+          { headers: { Authorization: `Bearer ${this.token}`  },
             responseType: 'blob' // Importante para tratar a resposta como arquivo
           }
         );
@@ -381,7 +376,7 @@ export default {
         link.href = url;
 
         // Define o atributo de download para o nome do arquivo desejado:
-        link.download = `ESTOQUE_ANALITICO.pdf`; // Alterado para PDF
+        link.download = `ESTOQUE_ANALITICO_${this.clienteSigla.cNmFantasia}.pdf`; // Alterado para PDF
 
         // Simula um clique no link para iniciar o download:
         link.click();
@@ -389,18 +384,14 @@ export default {
         // Libera recursos do URL de objeto:
         window.URL.revokeObjectURL(url);
 
-      } catch (error) { console.error(error) }
+      } catch (error) { console.log(error) }
     },
     async fetchPDFEstoqueSintetico() {
-      
-      const authStore = useAuthStore()  // pega a store aqui
-      const token = authStore.token      // pega só o token
-
       try {
         // Faz a requisição para o endpoint configurando o responseType como 'blob':
         let response = await axios.post(`${this.urlProd}/estoque/componente/estoque-sintetico-PDF`,
           this.infoEstoque, // Passando o objeto diretamente
-          { headers: { Authorization: `Bearer ${token}`  },
+          { headers: { Authorization: `Bearer ${this.token}`  },
             responseType: 'blob' // Importante para tratar a resposta como arquivo
           }
         );
@@ -416,7 +407,7 @@ export default {
         link.href = url;
 
         // Define o atributo de download para o nome do arquivo desejado:
-        link.download = `ESTOQUE_SINTETICO.pdf`; // Alterado para PDF
+        link.download = `ESTOQUE_SINTETICO${this.clienteSigla.cNmFantasia}.pdf`; // Alterado para PDF
 
         // Simula um clique no link para iniciar o download:
         link.click();
@@ -424,20 +415,16 @@ export default {
         // Libera recursos do URL de objeto:
         window.URL.revokeObjectURL(url);
 
-      } catch (error) { console.error(error) }
+      } catch (error) { console.log(error) }
     },
     async fetchEXCELEstoqueAnalitico() {
-            
-      const authStore = useAuthStore()  // pega a store aqui
-      const token = authStore.token      // pega só o token
-
       try {
         // Faz a requisição para o endpoint configurando o responseType como 'blob':
         let response = await axios.post(`${this.urlProd}/estoque/componente/estoque-analitico-EXCEL`,
           this.infoEstoque,
           {
             headers: {
-              Authorization: `Bearer ${token}`,
+              Authorization: `Bearer ${this.token}`,
               'Content-Type': 'application/json' // Adicionando o Content-Type adequado
             },
             responseType: 'blob', // Importante para tratar a resposta como arquivo
@@ -453,9 +440,8 @@ export default {
         // Cria um link temporário e configura o URL:
         let link = document.createElement('a');
         link.href = url;
-
         // Define o atributo de download para o nome do arquivo desejado:
-        link.download = `ESTOQUE_ANALITICO.xlsx`;
+        link.download = `ESTOQUE_ANALITICO_${this.clienteSigla.cNmFantasia}.xlsx`;
 
         // Simula um clique no link para iniciar o download:
         link.click();
@@ -465,17 +451,13 @@ export default {
       } catch (error) { console.error(error); }
     },
     async fetchEXCELEstoqueSintetico() {
-            
-      const authStore = useAuthStore()  // pega a store aqui
-      const token = authStore.token      // pega só o token
-
       try {
         // Faz a requisição para o endpoint configurando o responseType como 'blob':
         let response = await axios.post(`${this.urlProd}/estoque/componente/estoque-sintetico-EXCEL`,
           this.infoEstoque,
             {
               headers: {
-                Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${this.token}`,
                 'Content-Type': 'application/json' // Adicionando o Content-Type adequado
               },
               responseType: 'blob', // Importante para tratar a resposta como arquivo
@@ -493,7 +475,7 @@ export default {
         link.href = url;
 
         // Define o atributo de download para o nome do arquivo desejado:
-        link.download = `ESTOQUE_SINTETICO.xlsx`;
+        link.download = `ESTOQUE_SINTETICO${this.clienteSigla.cNmFantasia}.xlsx`;
 
         // Simula um clique no link para iniciar o download:
         link.click();
@@ -502,11 +484,23 @@ export default {
         window.URL.revokeObjectURL(url);
       } catch (error) { console.error(error); }
     },
+    async getTransportadorasApenasSLA(idCliente) {
+      const authStore = useAuthStore();
+
+      const response = await axios.get(`${this.urlSistema}/carteira/com-join/${idCliente}`, {
+        headers: {
+          Authorization: `Bearer ${authStore.token ?? ''}`
+        }
+      });
+
+      this.clienteSigla = response.data
+    },
     // -------------------------------------------------------------------------------------------/
 
     // Métodos gerais: ---------------------------------------------------------------------------\
     applyTableStipedRows,
     shortenInfo,
+    GetGenerico,
 
     toggleVerMais() {
 			this.mostrarTodos = !this.mostrarTodos;
@@ -523,33 +517,20 @@ export default {
     clickComponentOnTheList(iD_Componente) {
       this.ID_ComponenteState = iD_Componente;
       this.$router.push({
-        path: '/',
+        path: '/logistica/estoque',
         query: { ID_Componente: iD_Componente }
       });
     },
 
     // -------------------------------------------------------------------------------------------/
     // MÉTODOS QUE LIDAM COM O MODAL: -----------------------------------------------------\
-    async getGenerico(url, params = {}) {
-			try {
-      const authStore = useAuthStore()  // pega a store aqui
-      const token = authStore.token      // pega só o token
-
-				const response = await axios.get(url, {
-					headers: { Authorization: `Bearer ${token}` },
-					params, // Adiciona parâmetros de query se necessário
-				});
-				return response.data;
-			} catch (error) {
-				console.error("Erro na requisição:", error);
-				return error;
-			}
-		},
     async fillUpdateDeleteModal(IDComponente) {
 			this.modalAberto = true;
+			this.currentTabMovimentacoes = 'tableEntradas';
 			
 			await this.getComponenteByID(IDComponente);
 			await this.getImagemComponente(IDComponente);
+			await this.GetTop50Movimentacoes(this.componenteAtual.iD_Componente, this.currentTabMovimentacoes);
 
 			await nextTick(); // Aguarda Vue atualizar o DOM
 
@@ -561,9 +542,8 @@ export default {
 			this.ativarBotoesTabelaEntrada();
 		},
     async getComponenteByID (IDComponente) {
-			this.componenteAtual = await this.getGenerico(`${this.urlEstoque}/componente/get-componente/${IDComponente}`);
-	
-      this.componenteAtualEstatico = {
+			this.componenteAtual = await GetGenerico(`${this.urlEstoque}/componente/get-componente/${IDComponente}`);
+			this.componenteAtualEstatico = {
 				iD_Componente: this.componenteAtual.iD_Componente,
 				data: this.componenteAtual.data,
 				codigoCliente: this.componenteAtual.codigoCliente,
@@ -580,6 +560,27 @@ export default {
 				saldoOutros: this.componenteAtual.saldoOutros,
 			};
 		},
+		async GetTop50Movimentacoes(ID_Componente) {
+			this.tabelaEntradasCarregada = false;
+			this.tabelaSaidasCarregada = false;
+			const entradaURL = `${this.urlEstoque}/movimentacao-entrada/top50-movimentacoes/${ID_Componente}`;
+			const totalEntradasURL = `${this.urlEstoque}/movimentacao-entrada/quantidade-total/${ID_Componente}`;
+			const saidaURL = `${this.urlEstoque}/movimentacao-saidas/top50-movimentacoes/${ID_Componente}`;
+			const totalSaidasURL = `${this.urlEstoque}/movimentacao-saidas/quantidade-total/${ID_Componente}`;
+		 
+			this.totalSaidas = '';
+			this.totalEntradas = '';
+			this.entradas = await GetGenerico(entradaURL);
+			this.totalEntradas = await GetGenerico(totalEntradasURL);
+			this.saidas = await GetGenerico(saidaURL);
+			this.totalSaidas = await GetGenerico(totalSaidasURL);
+		 
+			await nextTick(); 
+
+			this.tabelaEntradasCarregada = true;
+			this.tabelaSaidasCarregada = true;
+
+		},
     async adjustTableHeight() {
 			await nextTick(); // Aguarda Vue atualizar o DOM
 			// Altura total do modal (91% da altura da tela)
@@ -591,8 +592,14 @@ export default {
 			// Altura do formulário (se presente)
 			const formHeight = document.getElementById('update-form-componente') ? document.getElementById('update-form-componente').offsetHeight : 0;
 
+			// Altura da nova movimentação (se presente)
+			const novaMovHeight = document.getElementById('nova-mov') ? document.getElementById('nova-mov').offsetHeight : 0;
+
+			// Altura dos botões (se presente)
+			const buttonsHeight = document.querySelector('.abas-movimentacoes') ? document.querySelector('.abas-movimentacoes').offsetHeight : 0;
+
 			// Calcular altura disponível para a tabela
-				const bodyHeight = modalHeight - headerHeight - formHeight - 30;
+				const bodyHeight = modalHeight - headerHeight - formHeight - novaMovHeight - buttonsHeight - 30;
 
 			// Ajusta a altura máxima da tabela
 			this.tableContainerStyle = {
@@ -613,17 +620,13 @@ export default {
 			});
 		},
     async getImagemComponente(IDComponente) {
-            
-      const authStore = useAuthStore()  // pega a store aqui
-      const token = authStore.token      // pega só o token
-
-
+      const authStore = useAuthStore();
 			try {
 				const url = `${this.urlEstoque}/foto-componente/get-foto/${IDComponente}`;
 
 				// Faz uma requisição direta para verificar se a imagem existe
 				const response = await axios.get(url, {
-					headers: { Authorization: `Bearer ${token}` }, // Inclui cabeçalho de autenticação
+					headers: { Authorization: `Bearer ${authStore.token ?? ''}` }, // Inclui cabeçalho de autenticação
 					responseType: "blob", // Garante que a resposta será tratada como um arquivo binário
 				});
 
@@ -645,7 +648,19 @@ export default {
       this.modalAberto = false;
 			this.entradas = [];
 			this.saidas = [];
-      this.imagemComponente = null;
+		},
+    async showTab (tabName) {
+			await this.GetTop50Movimentacoes(this.componenteAtual.iD_Componente, tabName)
+
+			this.currentTabMovimentacoes = tabName;
+
+			await nextTick();
+
+			if(this.currentTabMovimentacoes === 'tableEntradas') {
+				this.ativarBotoesTabelaEntrada();
+			} else {
+				this.ativarBotoesTabelaSaida();
+			}
 		},
     escolheIconePelaExtensao(caminho) {
 			const extensaoMap = {
@@ -669,8 +684,8 @@ export default {
   },
 
   async mounted() {
+    await this.getTransportadorasApenasSLA(this.ID_Carteira);
     await this.fetchEstoqueAnalitico();
-    await this.fetchCliente(); 
   },
 };
 </script>
@@ -682,30 +697,31 @@ export default {
     <!-- Todo o Conteúdo da página -->
     <div class="D-flex FD-column WIDTH-100 HEIGHT-100vh OFLOW-auto">
 
-      <!-- Menu Superior -->
-      <MenuSuperiorEstoque
-        funcionalidadeProp="CONSULTA DO ESTOQUE"
-        destinoVoltarProp="/"
-      />
+      <!-- DIV CABEÇALHO -->
+      <SetorProducaoSLAMenuSuperior 
+        funcionalidadeProp="ESTOQUE"
+        :destinoVoltarProp="`/sla`"
+        :srcFoto="logoPath"
+      /> 
 
       <!-- Tabela de COMPONENTES -->
-      <div class="D-flex FD-column HEIGHT-90vh WIDTH-100 JC-center ALITEM-center BGC-cinza-9 BOR-branca">
+      <div class="D-flex FD-column HEIGHT-88vh WIDTH-100 JC-center ALITEM-center BGC-cinza-9 BOR-branca">
 
         <!-- COMPONENTE -->
         <div class="D-flex FD-column ALITEM-center JC-center HEIGHT-85vh WIDTH-98 BORRAD-5 BGC-branco PADDING-5">
           
           <!-- Filtros -->
-          <div class="D-flex JC-space-between HEIGHT-30 WIDTH-95 mb-1">
+          <div class="D-flex JC-space-between HEIGHT-30 WIDTH-98 mb-1">
             <!-- DIV esquerda -->
             <div class="D-flex WIDTH-70 JC-space-between">
               <!-- Decoração FILTROS -->
-              <div class="WIDTH-10 BGC-azul-esverdeado COLOR-white ALITEM-center BORRAD-5 FWEIGHT-bold D-flex FD-column JC-space-between">
+              <div class="WIDTH-6 BGC-azul-esverdeado COLOR-white ALITEM-center BORRAD-5 FWEIGHT-bold D-flex FD-column JC-space-between">
                 <p>Filtros</p>
-                <button type="button" class="btn btn-dark WIDTH-75 FSIZE-12px mb-1" @click="this.onClickLimparFiltros()">Limpar</button>
+                <button type="button" class="btn btn-dark WIDTH-75 FSIZE-12px mb-1 D-flex JC-center ALITEM-center" @click="this.onClickLimparFiltros()">Limpar</button>
               </div>
 
               <!-- Inputs de Filtro + Toggle de Estado do material -->
-              <div class="D-flex WIDTH-89 BORRAD-5">
+              <div class="D-flex WIDTH-93 BORRAD-5">
                 <!-- Inputs de Filtro -->
                 <div class="WIDTH-70">
                 <!-- OFLOW-Y-scroll -->
@@ -719,14 +735,15 @@ export default {
                         for="filtro-cliente-input"
                         class="form-label BGC-input-disabled BORRAD-5 FWEIGHT-bold FSIZE-14px MARGIN-T-15-L7 PADDING-R2-L2"
                       >Cliente</label>
-                      <input
-                        disabled
+                      <input 
                         id="filtro-cliente-input"
                         autocomplete="off"
                         type="text"
+                        disabled
+                        v-model="cliente"
                         class="form-control BOR-grey MARGIN-T-10"
-                        v-model="this.cliente.cNmFantasia"
-                        >
+                        style="text-transform: uppercase;"
+                        @keyup="this.onKeyupFiltroCliente()">
                     </div>
                     
                     <!-- Família -->
@@ -801,26 +818,12 @@ export default {
 
                     <!-- LOTE -->
                     <div class="col-6 input-group-sm" style="margin-top: -2px;">
-                      <label v-if="cliente.cLote || cliente.iD_Lote"
-                        id="filtro-lote-label"
-                        for="filtro-lote-input"
-                        class="form-label BGC-input-disabled BORRAD-5 FWEIGHT-bold FSIZE-14px MARGIN-T-15-L7 PADDING-R2-L2"
-                      >Lote</label>
-                      <label v-else
+                      <label
                         id="filtro-lote-label"
                         for="filtro-lote-input"
                         class="form-label BGC-branco BORRAD-5 FWEIGHT-bold FSIZE-14px MARGIN-T-15-L7 PADDING-R2-L2"
                       >Lote</label>
-                      <input v-if="cliente.cLote || cliente.iD_Lote"
-                        disabled
-                        id="filtro-lote-input"
-                        type="text"
-                        autocomplete="off"
-                        style="text-transform: uppercase;"
-                        class="form-control BOR-grey MARGIN-T-10"
-                        v-model="cliente.cLote"
-                        >
-                        <input v-else
+                      <input
                         id="filtro-lote-input"
                         type="text"
                         autocomplete="off"
@@ -828,7 +831,6 @@ export default {
                         class="form-control BOR-grey MARGIN-T-10"
                         @keyup="this.onKeyupFiltroLote()">
                     </div>
-                    
                   </div>
 
                   <!-- EDIÇÃO -->
@@ -911,7 +913,7 @@ export default {
           <!-- Tabela -->
           <div class="OFLOW-auto WIDTH-98 HEIGHT-70 BOR-SensacaoAfundado mb-1">
             <!-- Analítico -->
-            <table class="table-responsive table-sm table-striped WIDTH-100 BORRAD-5" v-if="this.isEstoqueAnalitico">
+            <table class="table-responsive table-sm table-striped WIDTH-100 BORRAD-5 FSIZE-PADRAO-TABLE" v-if="this.isEstoqueAnalitico">
               <thead class="BGC-cinza-secondary POSITION-sticky TOP-0">
                 <tr>
                   <th class="WIDTH-8 TEXTALI-center" scope="col">Cliente</th>
@@ -937,21 +939,21 @@ export default {
 									@click="this.fillUpdateDeleteModal(comp.iD_Componente)"
                   >
                   <!-- @click="this.clickComponentOnTheList(comp.iD_Componente)" -->
-                  <td class="HEIGHT-5px WIDTH-8 TEXTALI-center no-wrap-text" scope="row" :title="comp.cNmFantasia" >{{ comp.cNmFantasia }}</td>
-                  <td class="HEIGHT-5px WIDTH-10 TEXTALI-center no-wrap-text" :title="comp.cCodComponente" >{{ comp.cCodComponente }}</td>
-                  <td class="HEIGHT-5px WIDTH-30 TEXTALI-left no-wrap-text" :title="comp.cDescricao" >{{ comp.cDescricao, 45 }}</td>
-                  <td class="HEIGHT-5px WIDTH-9 TEXTALI-center no-wrap-text" :title="comp.cFamilia" >{{ shortenInfo(comp.cFamilia, 10) }}</td>
-                  <td class="HEIGHT-5px WIDTH-9 TEXTALI-center no-wrap-text" :title="comp.cEdicao" >{{ shortenInfo(comp.cEdicao, 10) }}</td>
-                  <td class="HEIGHT-5px WIDTH-10 TEXTALI-center no-wrap-text" :title="comp.cLote" >{{ shortenInfo(comp.cLote, 10) }}</td>
-                  <td class="HEIGHT-5px WIDTH-8 TEXTALI-right no-wrap-text" >{{ comp.iQuantidade }}</td>
-                  <td class="HEIGHT-5px WIDTH-6 TEXTALI-center no-wrap-text" :class="this.aplicaCorAoEstado(comp.cEstadoMaterial)" >{{ comp.cEstadoMaterial }}</td>
-                  <td class="HEIGHT-5px WIDTH-10 TEXTALI-center no-wrap-text BGC-amarelo-intenso-3" style="padding-top: 1px;">{{ comp.cVao }}</td>
+                  <td class="WIDTH-8  TEXTALI-center CTTABLEELPIS" scope="row" :title="comp.cNmFantasia" >{{ comp.cNmFantasia }}</td>
+                  <td class="WIDTH-10 TEXTALI-center CTTABLEELPIS" :title="comp.cCodComponente" >{{ comp.cCodComponente }}</td>
+                  <td class="WIDTH-30 TEXTALI-left   CTTABLEELPIS" :title="comp.cDescricao" >{{ comp.cDescricao }}</td>
+                  <td class="WIDTH-9  TEXTALI-center CTTABLEELPIS" :title="comp.cFamilia" >{{ comp.cFamilia }}</td>
+                  <td class="WIDTH-9  TEXTALI-center CTTABLEELPIS" :title="comp.cEdicao" >{{ comp.cEdicao }}</td>
+                  <td class="WIDTH-10 TEXTALI-center CTTABLEELPIS" :title="comp.cLote" >{{ comp.cLote }}</td>
+                  <td class="WIDTH-8  TEXTALI-right  CTTABLEELPIS" >{{ comp.iQuantidade }}</td>
+                  <td class="WIDTH-6  TEXTALI-center CTTABLEELPIS" :class="this.aplicaCorAoEstado(comp.cEstadoMaterial)" >{{ comp.cEstadoMaterial }}</td>
+                  <td class="WIDTH-10 TEXTALI-center CTTABLEELPIS BGC-amarelo-intenso-3" style="padding-top: 1px;">{{ comp.cVao }}</td>
                 </tr>
               </tbody>
             </table>
 
             <!-- Sintético -->
-            <table class="table-responsive table-sm table-striped WIDTH-100 BORRAD-5" v-if="!this.isEstoqueAnalitico">
+            <table class="table-responsive table-sm table-striped WIDTH-100 BORRAD-5 FSIZE-PADRAO-TABLE" v-if="!this.isEstoqueAnalitico">
               <thead class="BGC-cinza-secondary POSITION-sticky TOP-0">
                 <tr>
                   <th class="WIDTH-8 TEXTALI-center" scope="col">Cliente</th>
@@ -989,8 +991,8 @@ export default {
 
           </div>
 
-          <div class="WIDTH-95">
-						<button @click="toggleVerMais" class="btn btn-secondary WIDTH-100 FSIZE-14px">
+          <div class="WIDTH-98">
+						<button @click="toggleVerMais" class="btn btn-secondary WIDTH-100 FSIZE-11px">
 							{{ mostrarTodos ? `Ver menos...` : `Ver mais... (${this.infoEstoque.length})` }}
 						</button>
 					</div>
@@ -1039,17 +1041,17 @@ export default {
 					</div>
 
           <!-- Corpo MODAL -->
-					<div class="BOR-B-grey-2" style="flex-grow: 1; display: flex; flex-direction: column; height: 77.5vh;">
+					<div class="BOR-B-grey-2" style="flex-grow: 1; display: flex; flex-direction: column;">
 
 						<!-- Formulário Componente -->
-						<form id="update-form-componente" class="PADDING-T5-R10-B5-L10 mb-1 BGC-cinza-9 D-flex D-flex JC-space-between" style="flex-shrink: 0; margin-bottom: 1%;">
+						<form id="update-form-componente" class="PADDING-T5-R10-B5-L10 mb-1 BGC-cinza-9 D-flex D-flex JC-space-between" style="flex-shrink: 0;">
 
 							<!-- DIV da esquerda com as informações -->
-							<div class="WIDTH-40 MARGIN-R5" style="height: 75vh;">
+							<div class="WIDTH-75 MARGIN-R5">
 								<!-- Linha 1 -->
 								<div class="mb-1 row">
 									<!-- ID -->
-									<div class="col-2 input-group-sm">
+									<div class="col-1 input-group-sm">
 										<label
 											id="update-ID-componente-label"
 											for="update-ID-componente-input"
@@ -1063,26 +1065,28 @@ export default {
 											v-model="componenteAtual.iD_Componente">
 									</div>
 
-                  <div class="col-3 input-group-sm">
-										<label
-											id="update-cliente-componente-label"
-											for="update-cliente-componente-input"
-											class="form-label BGC-input-disabled BORRAD-5 FWEIGHT-bold MARGIN-T-15-L7 PADDING-R5-L5 update-label-OS"
-										>CLIENTE</label>
-										<input
-											id="update-cliente-componente-input"
-											type="text"
-											class="form-control BOR-grey MARGIN-T-10 update-input-OS"
+									<!-- Cliente -->
+									<div class="col-2 input-group-sm">
+									<label
+										id="update-cliente-componente-label"
+										for="update-cliente-componente-select"
+										class="form-label BGC-input-disabled BORRAD-5 FWEIGHT-bold MARGIN-T-15-L7 PADDING-R5-L5 update-label-componente"
+									>CLIENTE</label>
+										<select
+											id="update-cliente-componente-select"
+											class="form-control BOR-grey MARGIN-T-10 update-input-componente"
+											v-model="componenteAtual.codigoCliente"
 											disabled
-											v-model="cliente.cNmFantasia">
+											>
+										</select>
 									</div>
 
 									<!-- Data -->
-									<div class="col-3 input-group-sm">
+									<div class="col-2 input-group-sm">
 										<label
 											id="update-data-componente-label"
 											for="update-data-componente-select"
-											class="form-label BGC-input-disabled BORRAD-5 FWEIGHT-bold MARGIN-T-15-L7 FSIZE-12px PADDING-R5-L5 update-label-componente"
+											class="form-label BGC-input-disabled BORRAD-5 FWEIGHT-bold MARGIN-T-15-L7 PADDING-R5-L5 update-label-componente"
 										>DATA CRIAÇÃO</label>
 										<input
 											id="update-data-componente-select"
@@ -1111,13 +1115,7 @@ export default {
 										</input>
 
 									</div>
-									
-								</div>
 
-								<!-- Linha 2 -->
-								<div class="mb-1 row">
-
-                  
                   <!-- Edição -->
 									<div class="col-3 input-group-sm">
 										<label
@@ -1136,6 +1134,11 @@ export default {
 											v-model="componenteAtual.edicao"
 											@keyup="this.onKeyupEditarComponentePesoIndividualInput()">
 									</div>
+									
+								</div>
+
+								<!-- Linha 2 -->
+								<div class="mb-1 row">
 
 									<!-- Código Componente -->
 									<div class="col-3 input-group-sm">
@@ -1154,45 +1157,8 @@ export default {
 											@keyup="this.confereCampoTemInformacaoEAplicaBordaVermelha('update-codigo-componente-input', componenteAtual.codComponente)">
 									</div>
 
-                  <!-- Padrão caixa -->
-									<div class="col-3 input-group-sm">
-										<label
-											id="update-padraoCaixa-componente-label"
-											for="update-padraoCaixa-componente-input"
-											class="form-label BGC-input-disabled BORRAD-5 FWEIGHT-bold MARGIN-T-15-L7 FSIZE-11px PADDING-R5-L5 update-label-OS-dataCriacao"
-										>PADRÃO CAIXA</label>
-										<input
-											id="update-padraoCaixa-componente-input"
-											class="form-control BOR-grey MARGIN-T-10 no-calendar-date-input input-OS-dataCriacao"
-											type="number"
-											disabled
-											v-model="componenteAtual.padraoCaixa"
-											@keyup="this.confereCampoTemInformacaoEAplicaBordaVermelha('update-padraoCaixa-componente-input', componenteAtual.padraoCaixa)">
-									</div>
-
-									<!-- Peso Individual -->
-									<div class="col-3 input-group-sm">
-										<label
-											id="update-pesoIndividual-componente-label"
-											for="update-pesoIndividual-componente-input"
-											class="form-label BGC-input-disabled BORRAD-5 FWEIGHT-bold MARGIN-T-15-L7 FSIZE-14px PADDING-R5-L5 update-label-OS-dataCriacao"
-										>PESO (KG.)</label>
-										<input
-											id="update-pesoIndividual-componente-input"
-											class="form-control BOR-grey MARGIN-T-10 no-calendar-date-input input-OS-dataCriacao"
-											type="number"
-											disabled
-											v-model="componenteAtual.pesoIndividual"
-											@keyup="this.onKeyupEditarComponentePesoIndividualInput()">
-									</div>
-
-								</div>
-
-								<div class="mb-1 row">
-
-
 										<!-- Descrição -->
-									<div class="col-12 input-group-sm">
+									<div class="col-9 input-group-sm">
 										<label
 											id="update-descricao-componente-label"
 											for="update-descricao-componente-input"
@@ -1215,10 +1181,43 @@ export default {
 								<!-- Linha 3 -->
 								<div class="mb-2 row">
 
+									<!-- Padrão caixa -->
+									<div class="col-1 WIDTH-12-5 input-group-sm">
+										<label
+											id="update-padraoCaixa-componente-label"
+											for="update-padraoCaixa-componente-input"
+											class="form-label BGC-input-disabled BORRAD-5 FWEIGHT-bold MARGIN-T-15-L7 FSIZE-13px PADDING-R5-L5 update-label-OS-dataCriacao"
+										>PADRÃO CAIXA</label>
+										<input
+											id="update-padraoCaixa-componente-input"
+											class="form-control BOR-grey MARGIN-T-10 no-calendar-date-input input-OS-dataCriacao"
+											type="number"
+											disabled
+											v-model="componenteAtual.padraoCaixa"
+											@keyup="this.confereCampoTemInformacaoEAplicaBordaVermelha('update-padraoCaixa-componente-input', componenteAtual.padraoCaixa)">
+									</div>
+
+									<!-- Peso Individual -->
+									<div class="col-1 WIDTH-12-5 input-group-sm">
+										<label
+											id="update-pesoIndividual-componente-label"
+											for="update-pesoIndividual-componente-input"
+											class="form-label BGC-input-disabled BORRAD-5 FWEIGHT-bold MARGIN-T-15-L7 FSIZE-14px PADDING-R5-L5 update-label-OS-dataCriacao"
+										>PESO (KG.)</label>
+										<input
+											id="update-pesoIndividual-componente-input"
+											class="form-control BOR-grey MARGIN-T-10 no-calendar-date-input input-OS-dataCriacao"
+											type="number"
+											disabled
+											v-model="componenteAtual.pesoIndividual"
+											@keyup="this.onKeyupEditarComponentePesoIndividualInput()">
+									</div>
+
 									<!-- Ajustar visualização -->
+									<div class="col-5 WIDTH-45 input-group-sm"></div>
 
 									<!-- Quantidade -->
-									<div class="col-4 input-group-sm">
+									<div class="col-1 WIDTH-10 input-group-sm">
 										<label
 											id="update-quantidade-componente-label"
 											for="update-quantidade-componente-input"
@@ -1233,7 +1232,7 @@ export default {
 									</div>
 
 									<!-- Saldo Bom -->
-									<div class="col-4 input-group-sm">
+									<div class="col-1 WIDTH-10 input-group-sm">
 										<label
 											id="update-saldoBom-componente-label"
 											for="update-saldoBom-componente-input"
@@ -1248,7 +1247,7 @@ export default {
 									</div>
 
 									<!-- Saldo Outros -->
-									<div class="col-4 input-group-sm">
+									<div class="col-1 WIDTH-10 input-group-sm">
 										<label
 											id="update-saldoOutros-componente-label"
 											for="update-saldoOutros-componente-input"
@@ -1266,20 +1265,257 @@ export default {
 							</div>
 
 							<!-- DIV da direita com a FOTO -->
-							<div class="WIDTH-60 D-flex JC-center ALITEM-center BGC-cinza-8 BORRAD-5" style="height: 75vh; ">
+							<div class="WIDTH-20 D-flex JC-center ALITEM-center BGC-cinza-8 BORRAD-5">
 								<!-- Se a imagem estiver carregada, mostra-a. Caso contrário, exibe um texto alternativo -->
-								<a v-if="imagemComponente" :href="imagemComponente" target="_blank">
+								<a v-if="imagemComponente" :href="imagemComponente" target="_blank" class="text-decoration-none">
 									<img 
 										:src="imagemComponente" 
 										alt="Imagem do componente" 
-										class="MIN-HEIGHT-150px BORRAD-5" 
-										style="cursor: pointer; height: 60vh;"
+										class="MAX-WIDTH-100 MAX-HEIGHT-150px MIN-HEIGHT-150px BORRAD-5" 
+										style="cursor: pointer;"
 									/>
 								</a>
 								<p v-else>Imagem não disponível</p>
 							</div>
 
 						</form>
+							
+						<!-- Movimentações -->
+						<div class="PADDING-L5 d-flex flex-column" style="flex-grow: 1; overflow-y: auto;">
+
+							<!-- Botões de navegação -->
+							<div class="abas-movimentacoes BOR-none d-flex" style="flex-shrink: 0;">
+									<button id="tab-button-entradas" class="aba-movimentacoes-button"
+													@click="showTab('tableEntradas')" 
+													:class="{ active: currentTabMovimentacoes === 'tableEntradas' }">
+											ENTRADAS
+									</button>
+									<button id="tab-button-saidas" class="aba-movimentacoes-button"
+													@click="showTab('tableSaidas')" 
+													:class="{ active: currentTabMovimentacoes === 'tableSaidas' }">
+											SAÍDAS
+									</button>
+							</div>
+
+							<!-- Contêiner da Tabela -->
+							<div class="d-flex flex-column" id="table-container" style="flex-grow: 1; overflow-y: auto; margin-bottom: 10px; margin-right: 10px;">
+							
+								<!-- Tabela com scroll ativado quando necessário -->
+								<div v-if="currentTabMovimentacoes === 'tableEntradas'" :style="tableContainerStyle">
+									
+									<div v-if="entradas.length > 0">
+
+										<table class="table table-striped table-sm FSIZE-PADRAO-TABLE">
+										
+											<thead>
+												<tr class="table-primary">
+													<th style="text-align: center; width: 6%; min-width: 30px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">DATA</th>
+													<th style="text-align: center; width: 6%; min-width: 30px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">HORA</th>
+													<th style="text-align: center; width: 8%; min-width: 50px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">USUÁRIO</th>
+													<th style="text-align: center; width: 4%; min-width: 30px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">QTDE.</th>
+													<th style="text-align: center; width: 4%; min-width: 30px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">SALDO</th>
+													<th style="text-align: center; width: 6%; min-width: 40px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">DESTINO</th>
+													<th style="text-align: center; width: 3%; min-width: 25px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">ESTADO</th>
+													<th style="text-align: center; width: 7%; min-width: 40px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">LOTE</th>
+													<th style="text-align: center; width: 8%; min-width: 50px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">TIPO MOVTO</th>
+													<th style="text-align: center; width: 12%; min-width: 60px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">MOTIVO MOVTO</th>
+													<th style="text-align: center; width: 15%; min-width: 80px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">INFORMAÇÕES ADICIONAIS</th>
+													<th style="text-align: center; width: 14%; min-width: 70px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">COMPLEMENTO MOVTO</th>
+												</tr>
+											</thead>
+
+											<LayoutTabelaCarregarEsqueleto :Linhas=20 :Colunas=14 v-if="!tabelaEntradasCarregada" />
+											<tbody v-else>
+												<tr v-for="(entrada, index) in entradas" :key="'filled-' + index">
+												
+													<td style="text-align: center; width: 6%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" 
+														:title="entrada.data">{{ entrada.data }}</td>
+												
+													<td style="text-align: center; width: 6%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" 
+														:title="entrada.hora">{{ entrada.hora }}</td>
+												
+													<td style="text-align: center; width: 8%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" 
+														:title="entrada.usuario">{{ entrada.usuario }}</td>
+												
+													<td style="text-align: right; width: 4%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" 
+														:title="entrada.quantidade">{{ entrada.quantidade }}</td>
+												
+													<td style="text-align: right; width: 4%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" 
+														:title="entrada.saldo">{{ entrada.saldo }}</td>
+												
+													<td style="text-align: center; width: 6%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" 
+														:title="entrada.destino">{{ entrada.destino }}</td>
+													
+													<td style="text-align: center; width: 3%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" 
+														:title="entrada.estado">{{ entrada.estado }}</td>
+													
+													<td style="text-align: center; width: 7%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" 
+														:title="entrada.lote">{{ entrada.lote }}</td>
+													
+													<td style="text-align: center; width: 8%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" 
+														:title="entrada.tipoMovimento">{{ entrada.tipoMovimento }}</td>
+													
+													<td style="text-align: center; width: 12%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" 
+														:title="entrada.motivoMovimento">{{ entrada.motivoMovimento }}</td>
+
+													<!-- QUANDO AMBOS ESTÃO NO ESTADO NORMAL ----------------------------------\ -->
+													<!-- O conteúdo do Informações adicionais (Troca pelo INPUT) -->
+													<td style="width: 15%; text-align: center;">
+														<span :title="entrada.informacoesAdicionais" class="tamanhoMaxTextocelulaTable">
+															{{ shortenInfo(entrada.informacoesAdicionais, 15) }}
+														</span>
+													</td>
+
+													<!-- O conteúdo do COMPLEMENTOMOVIMENTO (Troca pelo INPUT) -->
+													<td style="width: 14%; text-align: center;" :title="entrada.complementoMovimento">
+														{{ shortenInfo(entrada.complementoMovimento, 15) }}
+													</td>
+													<!-- ----------------------------------------------------------------------/ -->
+												</tr>
+
+											</tbody>
+
+										</table>
+										
+										<!-- Botões fixos -->
+										<div class="botoes-fixos" v-if="entradas.length >= 50">
+											<button v-if="entradas.length <= 50 && totalEntradas > 50"
+												class="btn btn-secondary" 
+												style="font-size: 12px; width: 30%;"
+												@click="GetAllMovimentacoes(componenteAtual.iD_Componente, currentTabMovimentacoes)">
+												VER TODOS (+1)
+											</button>
+
+											<button v-if="entradas.length > 50"
+												class="btn btn-secondary"
+												style="font-size: 12px; width: 30%;"
+												@click="GetTop50Movimentacoes(componenteAtual.iD_Componente, currentTabMovimentacoes)">
+												VER MENOS (PRIMEIROS 50)
+											</button>
+										</div>
+
+									</div>
+
+									<span v-else>
+										Não existem entradas
+									</span>
+
+								</div>
+
+								<div v-if="currentTabMovimentacoes === 'tableSaidas'" :style="tableContainerStyle">
+									
+									<div v-if="entradas.length > 0">
+
+									<table class="table table-striped table-sm FSIZE-PADRAO-TABLE">
+										<thead >
+											<tr class="table-primary">
+												<th style="text-align: center; width: 6%;">DATA</th>  
+												<!-- 6% -->
+												<th style="text-align: center; width: 6%;">HORA</th>
+												<!-- 12% -->
+												<th style="text-align: center; width: 8%;">USUÁRIO</th>
+												<!-- 20% -->
+												<th style="text-align: center; width: 4%;">QTDE.</th>
+												<!-- 24% -->
+												<th style="text-align: center; width: 8%; ">ORIGEM</th>
+												<!-- 30% -->
+												<th style="text-align: center; width: 6%; ">ESTADO</th>
+												<!-- 40% -->
+												<th style="text-align: center; width: 10%;">LOTE</th>
+												<!-- 50% -->
+												<th style="text-align: center; width: 10%;">TIPO MOVTO</th>
+												<!-- 58% -->
+												<th style="text-align: center; width: 16%;">MOTIVO MOVTO</th>
+												<!-- 72% -->
+												<th style="text-align: center; width: 22%;">COMPLEMENTO MOVTO</th>
+												<!-- 94% -->
+												<th style="text-align: center; width: 3%;"></th>
+												<!-- 97% -->
+												<th style="text-align: center; width: 1%;"></th>
+
+											</tr>
+										</thead>
+
+										<LayoutTabelaCarregarEsqueleto :Linhas=20 :Colunas=14 v-if="!tabelaSaidasCarregada" />
+										<tbody v-else>
+											<tr v-for="(saida, index) in saidas" :key="'filled-' + index">
+									
+												<td style="text-align: center; width: 6%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" 
+												:title="saida.data">{{ saida.data }}</td>
+
+												<td style="text-align: center; width: 6%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" 
+												:title="saida.hora">{{ saida.hora }}</td>
+												
+												<td style="text-align: center; width: 8%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" 
+												:title="saida.usuario">{{ saida.usuario }}</td>
+
+												<td style="text-align: right; width: 4%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" 
+												:title="saida.quantidade">{{ saida.quantidade }}</td>
+
+												<td style="text-align: center; width: 8%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" 
+												:title="saida.origem">{{ saida.origem }}</td>
+
+												<td style="text-align: center; width: 6%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" 
+												:title="saida.estado">{{ saida.estado }}</td>
+
+												<td style="text-align: left; width: 10%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" 
+												:title="saida.lote">{{ saida.lote }}</td>
+
+												<td style="text-align: center; width: 10%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" 
+												:title="saida.tipoMovimento">{{ saida.tipoMovimento }}</td>
+
+												<td style="text-align: center; width: 16%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" 
+												:title="saida.motivoMovimento">{{ saida.motivoMovimento }}</td>
+
+												<!-- O conteúdo do COMPLEMENTOMOVIMENTO (Troca pelo INPUT) -->
+												<td v-if="saida.complementoMovimento.startsWith(`E:`)" style="width: 22%; text-align:right;">
+											
+													<button v-if="saida.complementoMovimento.startsWith(`E:`)" id="botao-complemento-motivo" class="BOR-none BGC-transparent" @click="this.clickAbreArquivoButton(saida.idSaida)">
+														<IconsPDF v-if="this.escolheIconePelaExtensao(saida.complementoMovimento) === 'pdf'" corProp="red" alturaProp="1.5" larguraProp="1.5" />
+														<IconsExcel v-if="this.escolheIconePelaExtensao(saida.complementoMovimento) === 'csv'" corProp="green" alturaProp="1.5" larguraProp="1.5" />
+														<IconsFoto v-if="this.escolheIconePelaExtensao(saida.complementoMovimento) === 'jpg'" corProp="#00aaff" alturaProp="1.5" larguraProp="1.5" />
+														<IconsOutlook v-if="this.escolheIconePelaExtensao(saida.complementoMovimento) === 'eml'" corProp="blue" alturaProp="1.5" larguraProp="1.5" />
+														<IconsOutlook v-if="this.escolheIconePelaExtensao(saida.complementoMovimento) === 'msg'" corProp="blue" alturaProp="1.5" larguraProp="1.5" />
+														<IconsArquivo v-if="this.escolheIconePelaExtensao(saida.complementoMovimento) === 'outro'" corProp="gray" alturaProp="1.5" larguraProp="1.5" />
+													</button>
+												</td>
+
+												<td v-if="!saida.complementoMovimento.startsWith(`E:`)"
+														style="width: 22%; text-align:left;" :title="saida.complementoMovimento">
+													<span style="text-align: left; width: 22%;">{{ shortenInfo(saida.complementoMovimento, 15) }}</span>
+												</td>
+
+                      </tr>
+										</tbody>
+									</table>
+
+									<!-- Botões fixos -->
+									<div class="botoes-fixos" v-if="saidas.length >= 50">
+										<button v-if="saidas.length <= 50 && totalSaidas > 50"
+											class="btn btn-secondary" 
+											style="font-size: 12px; width: 30%;"
+											@click="GetAllMovimentacoes(componenteAtual.iD_Componente, currentTabMovimentacoes)">
+											VER TODOS (+1)
+										</button>
+
+										<button v-if="saidas.length > 50"
+											class="btn btn-secondary"
+											style="font-size: 12px; width: 30%;"
+											@click="GetTop50Movimentacoes(componenteAtual.iD_Componente, currentTabMovimentacoes)">
+											VER MENOS (PRIMEIROS 50)
+										</button>
+									</div>
+
+									</div>
+
+									<span v-else>
+										Não existem saídas
+									</span>
+
+								</div>
+
+							</div>
+						</div>
 						
 					</div>
 
@@ -1288,7 +1524,6 @@ export default {
     </div>
 
   </main>
-
 </template>
 
 
@@ -1317,14 +1552,6 @@ background-color: rgb(255, 255, 255);
 	overflow-y: auto; /* Permite rolagem vertical */
 	overflow-x: hidden; /* Evita rolagem horizontal */
 	padding-bottom: 10px; /* Pequena margem para evitar que a tabela fique colada no rodapé */
-}
-
-.tabela-wrapper th {
-	font-size: 0.9rem; /* Ajuste o tamanho da fonte conforme necessário */
-}
-
-.table td {
-	font-size: 1rem;
 }
 
 /* Ajustes no tamanho do cabeçalho */
@@ -1382,6 +1609,47 @@ background-color: rgb(255, 255, 255);
 	background-color: #dad9d9; /* Muda a cor de fundo ao passar o mouse */
 }
 
+/* Relativo à estilização das abas-movimentacoes */
+.abas-movimentacoes-container {
+display: flex;
+justify-content: flex-start;
+flex-direction: column;
+width: 100%;
+padding: 10px;
+margin: 0 auto; 
+}
+.abas-movimentacoes {
+display: flex;
+justify-content: flex-start;
+}
+.aba-movimentacoes-button {
+width: 80px; /* Ajuste conforme necessário */
+height: 30px;
+font-size: 12px;
+padding: 2px 5px;
+border: none; /* Remove todas as bordas inicialmente */
+background-color: #dfdfdf;
+cursor: pointer; /* Define o cursor como pointer para indicar que é clicável */
+border-top-left-radius: 8px; /* Arredonda o canto superior esquerdo */
+border-top-right-radius: 8px; /* Arredonda o canto superior direito */
+border-left: 1px solid rgb(177, 177, 177); /* Define a cor da borda esquerda */
+border-right: 1px solid rgb(177, 177, 177); /* Define a cor da borda direita */
+border-top: 1px solid rgb(177, 177, 177); /* Define a cor da borda superior */
+border-bottom: none; /* Remove a borda inferior */
+}
+.aba-movimentacoes-button.active {
+background-color: #01395E;
+color: #fff;
+}
+.aba-movimentacoes-content {
+width: 100%;
+padding: 0.5%;
+background-color: #ffffff;
+border-radius: 8px;
+border-top-left-radius: 0px; /* Arredonda o canto superior esquerdo */
+border: 2px solid rgb(190, 190, 190);
+}
+
 .disabled-button {
 	cursor: default;
 	opacity: 0.5;
@@ -1391,6 +1659,8 @@ background-color: rgb(255, 255, 255);
 .modal-content {
 	display: flex;
 	flex-direction: column;
+	height: 91vh;
+	max-height: 91vh;
 }
 
 /* Cabeçalho do modal */

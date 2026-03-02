@@ -50,16 +50,14 @@
                       <hr class="custom-hr2">
                         <a
                           id="qmSomos-sub"
-                          data-bs-toggle="modal"
-                          data-bs-target="#acessoClienteModal"
+                          @click="abrirModal('cliente')"
                           style="color: black; text-decoration: none; cursor: pointer;"
                         >
                           CLIENTE
                         </a>
                         <a
                           id="qmSomos-sub"
-                          data-bs-toggle="modal"
-                          data-bs-target="#acessoTranspModal"
+                          @click="abrirModal('transportadora')"
                           style="color: black; text-decoration: none; cursor: pointer; "
                         >
                           TRANSPORTADORAS
@@ -319,7 +317,7 @@
               <div class="form-group">
                 <label for="usuario">Usuário</label>
                 <input
-                  ref="usuarioInput"
+                  ref="usuarioInputCliente"
                   v-model="login.usuario"
                   type="text"
                   id="usuario"
@@ -337,7 +335,7 @@
                   id="senha"
                   class="form-control"
                   placeholder="Digite sua senha"
-                  @keyup.enter="fecharModalERedirecionar"
+                  @keyup.enter="fecharModalERedirecionar('cliente')"
                 />
               </div>
 
@@ -350,7 +348,7 @@
             <!-- Botão à direita -->
             <div>
               <button v-if="!aguardandoReqEntrar"
-                @click="fecharModalERedirecionar"
+                @click="fecharModalERedirecionar('cliente')"
                 class="btn btn-sm btn-success"
                 style="padding: 0.25rem 1rem; text-align: center;"
                 :disabled="aguardandoReqEntrar">
@@ -385,12 +383,12 @@
               
               <!-- Campo Usuário -->
               <div class="form-group">
-                <label for="usuario">Usuário</label>
+                <label for="usuarioTransp">Usuário</label>
                 <input
-                  ref="usuarioInput"
+                  ref="usuarioInputTransportadora"
                   v-model="login.usuario"
                   type="text"
-                  id="usuario"
+                  id="usuarioTransp"
                   class="form-control"
                   placeholder="Digite seu usuário"
                 />
@@ -398,14 +396,14 @@
 
               <!-- Campo Senha -->
               <div class="form-group">
-                <label for="senha">Senha</label>
+                <label for="senhaTransp">Senha</label>
                 <input
                   v-model="login.senha"
                   type="password"
-                  id="senha"
+                  id="senhaTransp"
                   class="form-control"
                   placeholder="Digite sua senha"
-                  @keyup.enter="fecharModalERedirecionar"
+                  @keyup.enter="fecharModalERedirecionar('transportadora')"
                 />
               </div>
 
@@ -418,7 +416,7 @@
             <!-- Botão à direita -->
             <div>
               <button v-if="!aguardandoReqEntrar"
-                @click="fecharModalERedirecionar"
+                @click="fecharModalERedirecionar('transportadora')"
                 class="btn btn-sm btn-success"
                 style="padding: 0.25rem 1rem; text-align: center;"
                 :disabled="aguardandoReqEntrar">
@@ -473,7 +471,8 @@ const isSubDropdown2Active = ref(false)
 const isMenuVisible = ref(false)
 const isSubDrop1Cllr = ref(false)
 const isSubDrop2Cllr = ref(false)
-const usuarioInput = ref<HTMLInputElement | null>(null)
+const usuarioInputCliente = ref<HTMLInputElement | null>(null)
+const usuarioInputTransportadora = ref<HTMLInputElement | null>(null)
 
 const contato = reactive({ nome: '', email: '', mensagem: '', area: '' })
 const login = reactive({ usuario: '', senha: '' })
@@ -485,13 +484,14 @@ interface LoginResponse {
   idUsuario: number
   idCarteira?: number | null
   idFuncao: number
+  bAcessoSLA: number
 }
 
-async function confereLogin(): Promise<LoginResponse | null> {
+async function confereLogin(modoLogin: string): Promise<LoginResponse | null> {
   try {
     const payload = { ...login }
     const urlProd = useUrlProd()
-    const response = await $fetch<LoginResponse>(`${urlProd}/usuario-externo/login`, {
+    const response = await $fetch<LoginResponse>(`${urlProd}/usuario-externo/login-${modoLogin}`, {
       method: 'POST',
       body: payload
     })
@@ -520,21 +520,48 @@ async function confereLogin(): Promise<LoginResponse | null> {
 // }
 declare const bootstrap: any;
 
-async function fecharModalERedirecionar() {
+function fecharTodosModais() {
+  document.querySelectorAll('.modal.show').forEach(el => {
+    const instance = bootstrap.Modal.getInstance(el)
+    if (instance) instance.hide()
+  })
+}
+
+function abrirModal(tipo: string) {
+  // fecha qualquer modal aberto
+  fecharTodosModais()
+
+  let modalId = null
+
+  if (tipo === 'cliente') {
+    modalId = 'acessoClienteModal'
+  }
+
+  if (tipo === 'transportadora') {
+    modalId = 'acessoTranspModal'
+  }
+
+  const el = document.getElementById(modalId ?? '')
+  if (!el) return
+
+  const modal =
+    bootstrap.Modal.getOrCreateInstance(el)
+
+  modal.show()
+}
+
+async function fecharModalERedirecionar(modoLogin : string) {
   aguardandoReqEntrar.value = true
+
   const authStore = useAuthStore()
-  const response = await confereLogin()
+  const response = await confereLogin(modoLogin)
 
   if (!response) {
     aguardandoReqEntrar.value = false
     return
   }
 
-  const token = response.token
-
-  const idUsuario = response.idUsuario
-  const idCarteira = response.idCarteira
-  const idFuncao = response.idFuncao
+  const { token, idUsuario, idCarteira, idFuncao, bAcessoSLA } = response
 
   if (!idUsuario) {
     console.error('❌ idUsuario inválido:', idUsuario)
@@ -542,31 +569,75 @@ async function fecharModalERedirecionar() {
     return
   }
 
-  // 🔐 Salva token e dados do usuário no Pinia store
+  // salva auth
   authStore.setAuth({
     token,
     usuario: {
       iD_Usuario: idUsuario,
       iD_Carteira: idCarteira,
-      idFuncao: idFuncao
+      idFuncao,
+      bAcessoSLA
     }
   })
 
-  // Fecha modal
-  const modalElement = document.getElementById('acessoClienteModal')
-  if (modalElement) {
-    const modalInstance =
-      bootstrap.Modal.getInstance(modalElement) || new bootstrap.Modal(modalElement)
-    modalInstance.hide()
-  }
+  // -------- FECHAR MODAIS --------
+  const idsModais = [
+    'acessoClienteModal',
+    'acessoTranspModal'
+  ]
+
+  const promisesFechamento = idsModais.map(id => {
+    return new Promise<void>(resolve => {
+      const el = document.getElementById(id)
+
+      if (!el) {
+        resolve()
+        return
+      }
+
+      const instance =
+        bootstrap.Modal.getInstance(el) ||
+        new bootstrap.Modal(el)
+
+      // se não estiver aberto
+      if (!el.classList.contains('show')) {
+        resolve()
+        return
+      }
+
+      el.addEventListener(
+        'hidden.bs.modal',
+        () => resolve(),
+        { once: true }
+      )
+
+      instance.hide()
+    })
+  })
+
+  // espera TODOS fecharem
+  await Promise.all(promisesFechamento)
 
   aguardandoReqEntrar.value = false
 
-  // Redirecionamento por função
-  if (idFuncao === 3) router.push('/sla/consulta-estoque')
-  else if (idFuncao === 2) router.push('/sla/informar-entrega')
-  else if (idFuncao === 1) router.push('/sla')
+  // -------- REDIRECIONA UMA VEZ --------
+  if(idFuncao === 2)
+  {
+    router.push('/sla/informar-entrega')
+  }
+  if(idFuncao === 3)
+  {
+    if(bAcessoSLA)
+      router.push('/sla')
+    else
+      router.push('/sla/consulta-estoque')
+  }
+  else 
+  {
+    ToastError('Adm tela que escolhe.')
+  }
 }
+
 
 function clearInfosLogin() {
   login.usuario = ''
@@ -667,10 +738,10 @@ onMounted(() => {
   document.addEventListener('mousemove', handleScroll)
   window.addEventListener('touchmove', handleTouchMove)
 
-  const modal = document.getElementById('acessoClienteModal')
-  modal?.addEventListener('shown.bs.modal', () => {
-    usuarioInput.value?.focus()
-  })
+  // const modal = document.getElementById('acessoClienteModal')
+  // modal?.addEventListener('shown.bs.modal', () => {
+  //   usuarioInput.value?.focus()
+  // })
 
 })
 

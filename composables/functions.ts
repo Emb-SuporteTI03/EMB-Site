@@ -225,6 +225,7 @@ export const ShowElementById = (id: string, bool: boolean): void => {
 }
 
 import { nextTick } from 'vue'
+import { useAuthStore } from '~/stores/auth';
 
 /**
  * Define o foco em um campo de input com base no seu ID,
@@ -325,13 +326,16 @@ export const LimpaLocalStor = () => {
 
 // Reservas em aberto
 export const BuscaQtdReservasEmAbertoPCP = async (ID_Carteira: number): Promise<number> => {
+
+  const token = useAuthStore().token;
+
   try {
     // const authStore = useAuthStore()
     // const token = authStore.token
     const url = `${urlProd}/pcp/entrada-componente-reservado-pcp/reservas-em-aberto/${ID_Carteira}`
 
     const response = await axios.get<number>(url, {
-      headers: { Authorization: `Bearer $` }
+      headers: { Authorization: `Bearer ${token ?? ''}` }
     })
 
     return response.data;

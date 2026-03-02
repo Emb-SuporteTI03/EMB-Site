@@ -1,60 +1,59 @@
 <script setup>
 import axios from "axios";
-import { ref } from "vue";
-import { useRoute } from 'vue-router'
-import { shortenInfo, applyTableStipedRows, GetGenerico, getStatusClass } from '~/composables/visualization';
+import { shortenInfo, applyTableStipedRows, GetGenerico } from '~/composables/visualization';
 import { ToastSuccess, ToastError, ToastWarning } from '~/composables/toasts';
+import { ref, nextTick } from 'vue'
+import { toRaw } from 'vue';
+import { useAuthStore } from '~/stores/auth';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+import { Swiper, SwiperSlide } from 'swiper/vue'
+import { Navigation, Pagination } from 'swiper/modules'
 
+const swiperModules = [Navigation, Pagination]
 // VARIÁVEIS ------------------------------------------------------------------------------------------------------------
-  const isERP = ref(true);  // Sistema interno
-  // const isERP = ref(false); // Sistema externo
+  // const isERP = ref(true);  // Sistema interno
+  const isERP = ref(false); // Sistema externo
 
-  // Rota para obter o ID do cliente
-  const urlProd = useUrlProd();
-  const urlSistema = useUrlProdSistema();
-  const route = useRoute();
-  const urlBase = useUrlProd();
-
+// Rota para obter o ID do cliente
+const urlProd = useUrlProd();
+const urlSistema = useUrlProdSistema();
+const route = useRoute();
+const authStore = useAuthStore();
+const userID = ref(authStore.idUsuario);
+// const userID_Unidade = ref(authStore.ID_Unidade).value;
+// const userNome = ref(authStore.nome);
+// const siglaUsuario = ref(authStore.sigla);
+// const ID_Area = ref(authStore.ID_Unidade ?? 0);
+const ID_Carteira = ref(authStore.idCarteira ?? 0);
+const token = ref(authStore.token ?? "");
   // ===============================
   // SOMENTE PINIA (SEM isERP)
   // ===============================
 
-  const userID_Unidade = ref(authStore.ID_Unidade).value;
-  const userNome = ref(authStore.nome);
-  const siglaUsuario = ref(authStore.sigla);
-  const ID_Area = ref(authStore.ID_Unidade ?? 0);
-  const ID_Carteira = ref(authStore.ID_Carteira ?? 0);
-  const token = ref(authStore.token ?? "");
+  // const userID_Unidade = ref(authStore.ID_Unidade).value;
+  // const userNome = ref(authStore.nome);
+  // const siglaUsuario = ref(authStore.sigla);
+  // const ID_Area = ref(authStore.ID_Unidade ?? 0);
+  // const ID_Carteira = ref(authStore.ID_Carteira ?? 0);
+  // const token = ref(authStore.token ?? "");
 
   // ===============================
   // REGRA HÍBRIDA (ERP = PINIA | EXTERNO = sessionStorage)
   // ===============================
 
-  const userID = computed(() => {
-    if (isERP.value) {
-      return userID_Unidade ?? null
-    }
+  // const userID = computed(() => {
+  //   if (isERP.value) {
+  //     return userID_Unidade ?? null
+  //   }
 
-    const value = Number(sessionStorage.getItem('iD_ResponsavelInformaEntregaExterno'))
-    return isNaN(value) ? null : value
-  });
+  //   const value = Number(sessionStorage.getItem('iD_ResponsavelInformaEntregaExterno'))
+  //   return isNaN(value) ? null : value
+  // });
 
-  const transpID = computed(() => {
-    if (isERP.value) {
-      return authStore.ID_Carteira ?? null
-    }
-
-    const value = Number(sessionStorage.getItem('ID_Carteira'))
-    return isNaN(value) ? null : value
-  });
-
-  const transpcNmFantasia = computed(() => {
-    if (isERP.value) {
-      return authStore.cNmFantasiaTransp ?? null
-    }
-
-    return sessionStorage.getItem('cNmFantasiaTransp')
-  });
+  const transpID = ref(null);
+  const transpcNmFantasia = ref(null);
 
   const maxDataHoraAtual = computed(() => {
     const now = new Date();
@@ -277,6 +276,20 @@ import { ToastSuccess, ToastError, ToastWarning } from '~/composables/toasts';
       }
     } 
   };
+  const DefineTransportadora = async () => {
+      const url = `${urlProd}/usuario-externo/transportadora-do-cliente`;
+      try {
+        const response = await axios.get(url,
+        { headers: { Authorization: `Bearer ${token.value}` }, }
+      );
+      transpID.value = response.data?.iIdTransportadora;
+      transpcNmFantasia.value = response.data?.cNomeTransportadora;
+    } catch (err) {
+      console.error(err);
+    } finally {
+      selectedClienteREF.value?.desabilitar();
+    }
+  };
 
   // MODAL 
   const abrirModalEtapasSistema = async (ID_Pedido) => {
@@ -444,14 +457,27 @@ import { ToastSuccess, ToastError, ToastWarning } from '~/composables/toasts';
   };
 
   // REQUISIÇÕES
-  async function getTransportadorasApenasSLA() {
-    cliente.value = await GetGenerico(`${urlSistema.value}/carteira/com-join/${ID_Carteira.value}`, {}, token.value)
-  };
+  async function getTransportadorasApenasSLA()  {
+    const authStore = useAuthStore();
+    try {
+      const response = await axios.get(
+        `${urlSistema.value}/carteira/com-join/${ID_Carteira.value}`,
+        {
+          headers: {
+            Authorization: `Bearer ${authStore.token ?? ''}`
+          }
+        }
+      );
+      cliente.value = response.data;
+    } catch (error) {
+      console.error("Erro ao buscar dados:", error);
+    }
+  }
   const FetchPedidosPossiveisInformarEntrega = async () => {
     // Inicia carregamento:
     isTabelaPedidosCarregada.value = false;
-    const url = isERP.value ? `${urlProd}/sla/pedido-entrega/obter-pedido-possivel-informar-entrega/${ID_Carteira.value}` :
-      `${urlProd}/sla/pedido-entrega/obter-pedido-possivel-informar-entrega-transp/${transpID}`;
+    const url = isERP.value ? `${urlProd}/sla/pedido-entrega/obter-pedido-possivel-informar-entrega/${ID_Carteira}` :
+      `${urlProd}/sla/pedido-entrega/obter-pedido-possivel-informar-entrega-transp/${transpID.value}`;
 
     try {
       const response = await axios.get(url,
@@ -1295,6 +1321,7 @@ import { ToastSuccess, ToastError, ToastWarning } from '~/composables/toasts';
   // MOUNTED DA PÁGINA
   onMounted(async () => {
     await DefineCliente();
+    await DefineTransportadora();
     await FetchPedidosPossiveisInformarEntrega();
     await getTransportadorasApenasSLA();
     await FetchAllTransportadorasHomologadas();
@@ -1572,7 +1599,7 @@ import { ToastSuccess, ToastError, ToastWarning } from '~/composables/toasts';
       <!-- Menu Superior -->
       <SetorProducaoSLAMenuSuperior 
         funcionalidadeProp="INFORMAR EM ROTA/ENTREGAS"
-        :destinoVoltarProp="`/sla/cliente/saidas`"
+        :destinoVoltarProp="`/`"
         :srcFoto="logoPath"
       />
       
