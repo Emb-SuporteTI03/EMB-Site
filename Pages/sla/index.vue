@@ -250,6 +250,7 @@ import { useAuthStore } from '~/stores/auth';
       await getInfosPedidosAreaCliente('corte-logico');
     } else if(currentTab.value == 'tab3') {
       await getInfosPedidosAreaCliente('pendentes');
+      console.log('pedidos aguardando proxima pagina')
     } else if(currentTab.value == 'tab4') {
       await getInfosPedidosAreaCliente('cancelados');
     }
@@ -308,8 +309,6 @@ import { useAuthStore } from '~/stores/auth';
       totalPaginas.value = Math.ceil(
         response.data.totalRegistros / numeroRegistrosPagina.value
       )
-
-      paginaAtual.value = 1
 
     } catch (error: any) {
       if (error.name === 'CanceledError' || error.code === 'ERR_CANCELED') {
