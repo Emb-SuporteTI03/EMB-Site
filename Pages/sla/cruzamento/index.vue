@@ -427,7 +427,7 @@ const analisaEstoqueLogicoXSintetico = () => {
     // labelEstoqueSintetico.classList.add('BGC-input-disabled');
   }
 
-  estoqueLogico.value = (totalQuantidadeAbastecimento.value || 0) - (totalQuantidadeConsumo.value || 0);
+  estoqueLogico.value = (totalEntradas.value || 0) - (totalSaidas.value || 0);
   estoqueSintetico.value = estoqueSinteticoComponente?.value || 0;
 
   if (estoqueLogico.value != estoqueSintetico.value) {
@@ -448,6 +448,7 @@ const analisaEstoqueLogicoXSintetico = () => {
 // REQUISIÇÕES
 async function getInfosAbastecimentoSLA() {
   const authStore = useAuthStore();
+
   try {
     const response = await axios.get(
       `${urlProd}/consultas-sla/sla-abastecimento/${ID_Carteira.value}?idComponente=${selectedCodProduto.value.id}`,

@@ -1,6 +1,6 @@
 <script>
 import axios from 'axios';
-import { formatarData, formatarDataEUA, applyTableStipedRows, shortenInfo, GetGenerico } from '~/composables/visualization';
+import { formatarData, formatarDataEUA, applyTableStipedRows, shortenInfo } from '~/composables/visualization';
 import { ToastSuccess, ToastWarning, ToastError } from '~/composables/toasts';
 import { useRoute } from 'vue-router';
 import { useAuthStore } from '~/stores/auth';
@@ -130,12 +130,26 @@ export default {
       // Aplica os filtros:
       this.aplicarFiltros();
     },
+    async getGenerico(url, params = {}) {
+			try {
+      const authStore = useAuthStore()  // pega a store aqui
+      const token = authStore.token      // pega só o token
+
+				const response = await axios.get(url, {
+					headers: { Authorization: `Bearer ${token}` },
+					params, // Adiciona parâmetros de query se necessário
+				});
+				return response.data;
+			} catch (error) {
+				console.error("Erro na requisição:", error);
+				return error;
+			}
+		},
     // -------------------------------------------------------------------------------------------/
 
     // GET: --------------------------------------------------------------------------------------\
     // Por VÃO (Tem mais registros):
-    GetGenerico,
-    async fetchEstoqueAnalitico() {
+      async fetchEstoqueAnalitico() {
       const authStore = useAuthStore();
 
       this.isEstoqueAnalitico = true;
@@ -516,7 +530,6 @@ async getTransportadorasApenasSLA(idCliente) {
     // Métodos gerais: ---------------------------------------------------------------------------\
     applyTableStipedRows,
     shortenInfo,
-    GetGenerico,
 
     toggleVerMais() {
 			this.mostrarTodos = !this.mostrarTodos;
@@ -558,7 +571,7 @@ async getTransportadorasApenasSLA(idCliente) {
 			this.ativarBotoesTabelaEntrada();
 		},
     async getComponenteByID (IDComponente) {
-			this.componenteAtual = await GetGenerico(`${this.urlEstoque}/componente/get-componente/${IDComponente}`);
+			this.componenteAtual = await this.getGenerico(`${this.urlEstoque}/componente/get-componente/${IDComponente}`);
 			this.componenteAtualEstatico = {
 				iD_Componente: this.componenteAtual.iD_Componente,
 				data: this.componenteAtual.data,
@@ -586,10 +599,10 @@ async getTransportadorasApenasSLA(idCliente) {
 		 
 			this.totalSaidas = '';
 			this.totalEntradas = '';
-			this.entradas = await GetGenerico(entradaURL);
-			this.totalEntradas = await GetGenerico(totalEntradasURL);
-			this.saidas = await GetGenerico(saidaURL);
-			this.totalSaidas = await GetGenerico(totalSaidasURL);
+			this.entradas = await this.getGenerico(entradaURL);
+			this.totalEntradas = await this.getGenerico(totalEntradasURL);
+			this.saidas = await this.getGenerico(saidaURL);
+			this.totalSaidas = await this.getGenerico(totalSaidasURL);
 		 
 			await nextTick(); 
 
