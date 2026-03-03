@@ -117,7 +117,7 @@ export default {
       const authStore = useAuthStore()  // pega a store aqui
       const token = authStore.token      // pega só o token
       try {
-        const response = await axios.get(`${this.urlProd}/estoque/componente/estoque-analitico-web`, {
+        const response = await axios.get(`${this.urlProd}/estoque/componente/estoque-analitico-clientes/${this.cliente.iD_Cliente}?idLote=${this.cliente.iD_Lote}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         
@@ -141,7 +141,7 @@ export default {
       const token = authStore.token      // pega só o token
 
       try {
-        const response = await axios.get(`${this.urlProd}/estoque/componente/estoque-sintetico-web`, {
+        const response = await axios.get(`${this.urlProd}/estoque/componente/estoque-sintetico-clientes/${this.cliente.iD_Cliente}?idLote=${this.cliente.iD_Lote}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         
@@ -669,8 +669,8 @@ export default {
   },
 
   async mounted() {
-    await this.fetchEstoqueAnalitico();
     await this.fetchCliente(); 
+    await this.fetchEstoqueAnalitico();
   },
 };
 </script>
@@ -689,7 +689,7 @@ export default {
       />
 
       <!-- Tabela de COMPONENTES -->
-      <div class="D-flex FD-column HEIGHT-90vh WIDTH-100 JC-center ALITEM-center BGC-cinza-9 BOR-branca">
+      <div class="D-flex FD-column HEIGHT-88vh WIDTH-100 JC-center ALITEM-center BGC-cinza-9 BOR-branca">
 
         <!-- COMPONENTE -->
         <div class="D-flex FD-column ALITEM-center JC-center HEIGHT-85vh WIDTH-98 BORRAD-5 BGC-branco PADDING-5">
@@ -989,7 +989,7 @@ export default {
 
           </div>
 
-          <div class="WIDTH-95">
+          <div class="WIDTH-98">
 						<button @click="toggleVerMais" class="btn btn-secondary WIDTH-100 FSIZE-14px">
 							{{ mostrarTodos ? `Ver menos...` : `Ver mais... (${this.infoEstoque.length})` }}
 						</button>

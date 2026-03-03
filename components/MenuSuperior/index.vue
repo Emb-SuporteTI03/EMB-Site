@@ -55,9 +55,9 @@
                         >
                           CLIENTE
                         </a>
+                        <!-- @click="abrirModal('transportadora')" -->
                         <a
-                          id="qmSomos-sub"
-                          @click="abrirModal('transportadora')"
+                          @click="ToastWarning('Em Desenvolvimento...')"
                           style="color: black; text-decoration: none; cursor: pointer; font-size: 12px;"
                         >
                           TRANSPORTADORAS
@@ -444,7 +444,7 @@ import axios from 'axios'
 import { ref, reactive, onMounted, onUnmounted } from 'vue'
 import { createPinia } from 'pinia'
 import { useRouter } from 'vue-router'
-import { ToastError } from '~/composables/toasts'
+import { ToastError, ToastWarning } from '~/composables/toasts'
 import { useAuthStore } from '~/stores/auth'
 // import { useAuthStore } from '~/stores/auth'
 // import { createApp } from 'vue'
