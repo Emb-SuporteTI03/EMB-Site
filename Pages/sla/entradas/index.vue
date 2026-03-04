@@ -296,6 +296,70 @@ const totalQuantidadeVolumesSaidas = computed(() => {
 //   });
 // };
 
+// const aplicarFiltrosSelect = async () => {
+//   const remetente      = selectedRemetente.value?.cNmFantasia?.toLowerCase() || "";
+//   const transportadora = selectedTransportadora.value?.cNmFantasia?.toLowerCase() || "";
+//   const notaFiscal     = selectedNotaFiscal.value?.cNome.toLowerCase() || "";
+//   const tramite        = selectedTramite.value?.cNome.toLowerCase() || "";
+//   const codProduto     = selectedCodProduto.value?.cNome.toLowerCase() || "";
+//   const descProduto    = selectedDescProduto.value?.cNome.toLowerCase() || "";
+
+//   const query = queryInfAdc.value?.trim().toLowerCase();
+
+//   infosTableEntradasSLA.value = staticInfosTableEntradasSLA.value.filter(comp => {
+//     // -----------------------------
+//     //   VALIDAÇÃO DE INTERVALO DE DATAS
+//     // -----------------------------
+//     let dentroIntervalo = true;
+//     // if (comp.dataTramite && dataInicial.value && dataFinal.value) {
+//     //   const [dia, mes, ano] = comp.dataTramite.split("/");
+//     //   const dataItem = new Date(`${ano}-${mes}-${dia}`);
+//     //   const inicio   = new Date(dataInicial.value);
+//     //   const fim      = new Date(dataFinal.value);
+
+//     //   dentroIntervalo = dataItem >= inicio && dataItem <= fim;
+//     // }
+
+//     // -----------------------------
+//     //   FILTRO DOS SELECTS
+//     // -----------------------------
+//     const filtroSelects =
+//       (remetente      ? comp.remetente?.cNmFantasia?.toLowerCase().includes(remetente) : true) &&
+//       (transportadora ? comp.transportadora?.cNmFantasia?.toLowerCase().includes(transportadora) : true) &&
+//       (notaFiscal     ? comp.numeroNFE?.toLowerCase().includes(notaFiscal) : true) &&
+//       (tramite        ? String(comp.idTramite || comp.IDTramite || "")
+//                           .toLowerCase()
+//                           .includes(tramite) : true) &&
+//       (codProduto     ? comp.codigoComponente?.toLowerCase().includes(codProduto) : true) &&
+//       (descProduto    ? comp.descricaoComponente?.toLowerCase().includes(descProduto) : true);
+
+//     // -----------------------------
+//     //   FILTRO DO INPUT GERAL (query)
+//     // -----------------------------
+//     const filtroQuery = query
+//       ? (
+//           (comp.idTramite           || "").toString().toLowerCase().includes(query) ||
+//           (comp.protocoloProduto    || "").toLowerCase().includes(query) ||
+//           (comp.numeroNFE           || "").toLowerCase().includes(query) ||
+//           (comp.codigoComponente    || "").toLowerCase().includes(query) ||
+//           (comp.descricaoComponente || "").toLowerCase().includes(query) ||
+//           (comp.familia             || "").toLowerCase().includes(query) ||
+//           (comp.adicionaisProduto   || "").toLowerCase().includes(query)
+//         )
+//       : true;
+
+//     // -----------------------------
+//     //   RETORNO FINAL
+//     // -----------------------------
+//     return filtroSelects && filtroQuery && dentroIntervalo;
+//   });
+  
+//   await nextTick();
+
+//   ajustarCompensacaoScrollEntradas();
+
+// };
+
 const aplicarFiltrosSelect = async () => {
   const remetente      = selectedRemetente.value?.cNmFantasia?.toLowerCase() || "";
   const transportadora = selectedTransportadora.value?.cNmFantasia?.toLowerCase() || "";
@@ -303,35 +367,41 @@ const aplicarFiltrosSelect = async () => {
   const tramite        = selectedTramite.value?.cNome.toLowerCase() || "";
   const codProduto     = selectedCodProduto.value?.cNome.toLowerCase() || "";
   const descProduto    = selectedDescProduto.value?.cNome.toLowerCase() || "";
+  const filtrarLR      = isButtonLRSelecionado.value;
 
   const query = queryInfAdc.value?.trim().toLowerCase();
 
   infosTableEntradasSLA.value = staticInfosTableEntradasSLA.value.filter(comp => {
+
     // -----------------------------
     //   VALIDAÇÃO DE INTERVALO DE DATAS
     // -----------------------------
     let dentroIntervalo = true;
-    // if (comp.dataTramite && dataInicial.value && dataFinal.value) {
-    //   const [dia, mes, ano] = comp.dataTramite.split("/");
-    //   const dataItem = new Date(`${ano}-${mes}-${dia}`);
-    //   const inicio   = new Date(dataInicial.value);
-    //   const fim      = new Date(dataFinal.value);
-
-    //   dentroIntervalo = dataItem >= inicio && dataItem <= fim;
-    // }
 
     // -----------------------------
     //   FILTRO DOS SELECTS
     // -----------------------------
     const filtroSelects =
-      (remetente      ? comp.remetente?.cNmFantasia?.toLowerCase().includes(remetente) : true) &&
-      (transportadora ? comp.transportadora?.cNmFantasia?.toLowerCase().includes(transportadora) : true) &&
-      (notaFiscal     ? comp.numeroNFE?.toLowerCase().includes(notaFiscal) : true) &&
-      (tramite        ? String(comp.idTramite || comp.IDTramite || "")
-                          .toLowerCase()
-                          .includes(tramite) : true) &&
-      (codProduto     ? comp.codigoComponente?.toLowerCase().includes(codProduto) : true) &&
-      (descProduto    ? comp.descricaoComponente?.toLowerCase().includes(descProduto) : true);
+      (remetente
+        ? comp.remetente?.cNmFantasia?.toLowerCase().includes(remetente)
+        : true) &&
+      (transportadora
+        ? comp.transportadora?.cNmFantasia?.toLowerCase().includes(transportadora)
+        : true) &&
+      (notaFiscal
+        ? comp.numeroNFE?.toLowerCase().includes(notaFiscal)
+        : true) &&
+      (tramite
+        ? String(comp.idTramite || comp.IDTramite || "")
+            .toLowerCase()
+            .includes(tramite)
+        : true) &&
+      (codProduto
+        ? comp.codigoComponente?.toLowerCase().includes(codProduto)
+        : true) &&
+      (descProduto
+        ? comp.descricaoComponente?.toLowerCase().includes(descProduto)
+        : true);
 
     // -----------------------------
     //   FILTRO DO INPUT GERAL (query)
@@ -349,16 +419,50 @@ const aplicarFiltrosSelect = async () => {
       : true;
 
     // -----------------------------
+    //   FILTRO DO BOTÃO LR
+    // -----------------------------
+    const codigo = comp.codigoComponente || "";
+
+    const filtroLR = filtrarLR
+      ? true // Se botão LR estiver ativo → deixa passar tudo
+      : codigo !== "TE00000000000"; // Se não estiver ativo → remove TE00000000000
+
+    // -----------------------------
     //   RETORNO FINAL
     // -----------------------------
-    return filtroSelects && filtroQuery && dentroIntervalo;
+    return filtroSelects && filtroQuery && dentroIntervalo && filtroLR;
   });
-  
+
   await nextTick();
 
   ajustarCompensacaoScrollEntradas();
-
 };
+
+  const isButtonLRSelecionado = ref(false);
+
+  const OnClicKLRButton = () => {
+    isButtonLRSelecionado.value = !isButtonLRSelecionado.value;
+
+    atualizarEstilosBotoes();
+    aplicarFiltrosSelect();
+  };
+
+  const atualizarEstilosBotoes = ()  => {
+    isButtonLRSelecionado.value
+      ? aplicaEstiloSelecionado('lr-button') 
+      : removeEstiloSelecionado('lr-button');
+  };
+
+  const aplicaEstiloSelecionado = (buttonID) => {
+    const botao = document.getElementById(buttonID);
+    botao?.classList.remove('BGC-branco', 'COLOR-black', 'BOR-grey');
+    botao?.classList.add('BGC-amarelo-0', 'COLOR-white', 'BOR-amarelo');
+  };
+  const removeEstiloSelecionado = (buttonID) => {
+    const botao = document.getElementById(buttonID);
+    botao?.classList.remove('BGC-amarelo-0', 'COLOR-white', 'BOR-amarelo');
+    botao?.classList.add('BGC-branco', 'COLOR-black', 'BOR-grey');
+  };
 
 const toggleVerMais = () => {
   mostrarTodos.value = !mostrarTodos.value;
@@ -797,6 +901,10 @@ async function onClickLimparFiltros() {
   selectedFamilia.value = null;
   queryInfAdc.value = null;
 
+    // Resetar botões de filtro
+  isButtonLRSelecionado.value = false;
+  atualizarEstilosBotoes();
+
   infosTableEntradasSLA.value = staticInfosTableEntradasSLA.value;
   aplicarFiltrosSelect();
   await getInfosEntradasSLA();
@@ -1065,7 +1173,11 @@ onMounted(async () => {
                       :title="queryInfAdc">
                   </div>
 
-                  <div class="HEIGHT-20"></div>
+                  <div class="HEIGHT-20 D-flex ALITEM-center JC-center">
+                  <button id="lr-button" class="BOR-grey BORRAD-5 WIDTH-40 BGC-branco"
+                    @click="OnClicKLRButton()"
+                  >L.R.</button>
+                  </div>
                 </div>
 
                 <!-- Botões -->
