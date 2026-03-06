@@ -1346,6 +1346,14 @@ async function getTransportadorasApenasSLA() {
     }      
   };
 
+  async function clickRefreshPedidosButton() {
+    await FetchPedidosPossiveisInformarEntrega();
+    await getTransportadorasApenasSLA();
+    await FetchAllTransportadorasHomologadas();
+
+    await AjustaRodapeTabela();
+  };
+
   // MOUNTED DA PÁGINA
   onMounted(async () => {
     await DefineCliente();
@@ -1817,6 +1825,15 @@ async function getTransportadorasApenasSLA() {
                   option-label="label"
                   option-value="value"
                 />
+
+                
+              <div style="margin-right: 10px; cursor: pointer;" @click="clickRefreshPedidosButton()" title="Atualizar informações">
+                <IconsRefresh
+                  corProp="rgb(24, 134, 84)"
+                  alturaProp="1.6"
+                  larguraProp="1.6"
+                />
+              </div>
                 <!-- <div style="margin-right: 10px; cursor: pointer;" @click="FetchPedidosPossiveisInformarEntrega()" title="Atualizar informações">
                   <IconsRefresh
                     corProp="rgb(24, 134, 84)"

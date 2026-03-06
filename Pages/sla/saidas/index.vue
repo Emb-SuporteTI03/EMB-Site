@@ -123,7 +123,7 @@ const notasFiscaisUnicas = computed(() => {
 })
 const pedidosUnicos = computed(() => {
   if (!infosTableSaidasSLA.value) return []
-  return [...new Set(infosTableSaidasSLA.value.map(e => e.idPedido))] 
+  return [...new Set(infosTableSaidasSLA.value.map(e => e.cNumPedido))] 
     .filter(Boolean)
     .map(c => ({ label: String(c), value: c })) // força label string p/ não dar warning
 })
@@ -372,7 +372,7 @@ const aplicarFiltros = async () => {
       (destinatario   ? normalize(comp.destino).includes(destinatario) : true) &&
       // (uf             ? normalize(comp.uf).includes(uf) : true) &&
       (notaFiscal     ? normalize(comp.nFe).includes(notaFiscal) : true) &&
-      (pedido         ? normalize(comp.idPedido).includes(pedido) : true) &&
+      (pedido         ? normalize(comp.cNumPedido).includes(pedido) : true) &&
       (guiaRemessa    ? normalize(comp.guiaRemessa).includes(guiaRemessa) : true) &&
       (tramite        ? normalize(comp.tramite).includes(tramite) : true) &&
       (status         ? normalize(comp.status).includes(status) : true) &&
