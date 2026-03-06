@@ -55,9 +55,9 @@
                         >
                           CLIENTE
                         </a>
-                        <!-- @click="abrirModal('transportadora')" -->
+                        <!-- @click="ToastWarning('Em Desenvolvimento...')" -->
                         <a
-                          @click="ToastWarning('Em Desenvolvimento...')"
+                          @click="abrirModal('transportadora')"
                           style="color: black; text-decoration: none; cursor: pointer; font-size: 12px;"
                         >
                           TRANSPORTADORAS

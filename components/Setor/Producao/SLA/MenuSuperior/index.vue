@@ -98,11 +98,11 @@ export default {
       </NuxtLink>
 
         <!-- Imagem -->
-        <img
+        <!-- <img
           :src="srcFoto"
           alt="Logo do cliente"
           class="IMG-logo"
-        />
+        /> -->
 
       </div>
 

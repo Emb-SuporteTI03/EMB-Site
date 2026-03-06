@@ -103,10 +103,13 @@ const token = ref(authStore.token ?? "");
   const selectedTransportadora = ref({iD: 0, cNome: ''});
   const selectedStatus = ref({iD: 0, cNome: ''});
   const selectedTranspFiltro = ref({iD: 0, cNome: ''});
+  const selectedNFEntrega = ref(null);
 
   const selectedStatusREF = ref(null);
   const selectedTransportadoraREF = ref(null);
-  
+  const selectedTranspFiltroREF = ref(null);
+  const selectedNFEntregaREF = ref(null);
+
   const infosEtapasSistemicas = ref([]);
 
   const isLoadingEXCELRelatorio = ref(false);
@@ -220,6 +223,12 @@ const token = ref(authStore.token ?? "");
       .filter(Boolean) // tira undefined/nulos
       .map(c => ({ label: c, value: c }))
   });
+  const NFEntregaUnicas = computed(() => {
+    if (!infoPedidosPossiveis.value.filter(x => x.bSelecionado === false)) return []
+    return [...new Set(infoPedidosPossiveis.value.filter(x => x.bSelecionado === false).map(e => e.cNFTransp))]
+      .filter(Boolean) // tira undefined/nulos
+      .map(c => ({ label: c, value: c }))
+  });
   const guiasRemessasUnicas = computed(() => {
     if (!infoPedidosPossiveis.value.filter(x => x.bSelecionado === false)) return []
     return [...new Set(infoPedidosPossiveis.value.filter(x => x.bSelecionado === false).map(e => e.cGuiaRemessa))]
@@ -272,7 +281,7 @@ const token = ref(authStore.token ?? "");
       } catch (err) {
         console.error(err);
       } finally {
-        selectedClienteREF.value?.desabilitar();
+        transportadorasUnicas.value?.desabilitar();
       }
     } 
   };
@@ -282,12 +291,16 @@ const token = ref(authStore.token ?? "");
         const response = await axios.get(url,
         { headers: { Authorization: `Bearer ${token.value}` }, }
       );
+
       transpID.value = response.data?.iIdTransportadora;
       transpcNmFantasia.value = response.data?.cNomeTransportadora;
+      selectedTranspFiltro.value.iD = response.data?.iIdTransportadora;
+      selectedTranspFiltro.value.cNome = response.data?.cNomeTransportadora;
+
     } catch (err) {
       console.error(err);
     } finally {
-      selectedClienteREF.value?.desabilitar();
+      selectedTranspFiltroREF.value?.desabilitar();
     }
   };
 
@@ -377,6 +390,7 @@ const token = ref(authStore.token ?? "");
 
     const ck          = normalize(selectedCK.value?.value);
     const notaFiscal  = normalize(selectedNF.value?.value);
+    const notaFiscalEntrega = normalize(selectedNFEntrega.value?.value);
     const guiaRemessa = normalize(selectedGuiaRemessa.value?.value);
     const tramite     = normalize(selectedTramite.value?.value);
     const cliente     = normalize(selectedCliente.value?.cNome);
@@ -386,6 +400,7 @@ const token = ref(authStore.token ?? "");
       return (
         (ck          ? normalize(comp.cCK).includes(ck) : true) &&
         (notaFiscal  ? normalize(comp.cNumNFe).includes(notaFiscal) : true) &&
+        (notaFiscalEntrega ? normalize(comp.cNFTransp).includes(notaFiscalEntrega) : true) &&
         (guiaRemessa ? normalize(comp.cGuiaRemessa).includes(guiaRemessa) : true) &&
         (tramite     ? normalize(comp.cTramite).includes(tramite) : true) &&
         (transp      ? normalize(comp.cNomeTransportadora).includes(transp) : true) &&
@@ -662,6 +677,7 @@ async function getTransportadorasApenasSLA() {
     selectedTramite.value = null;
     selectedNF.value = null;
     selectedTranspFiltro.value = null;
+    selectedNFEntrega.value = null;
 
     infoPedidosPossiveis.value = staticinfoPedidosPossiveis.value;
     aplicarFiltros();
@@ -1633,6 +1649,7 @@ async function getTransportadorasApenasSLA() {
 
               <!-- DIV CENTRAL 1 -->
               <div class="D-flex WIDTH-18 FD-column ALITEM-center JC-space-between PADDING-T0-R5-B5-L5">
+                
                 <!-- CLIENTE -->
                 <BasicElementVue3SelectPequeno
                   ref="selectedClienteREF"
@@ -1763,7 +1780,7 @@ async function getTransportadorasApenasSLA() {
                   :options="nfsUnicas"
                   v-model="selectedNF"
 
-                  label="NF"
+                  label="NF PEDIDO"
                   :titulo="selectedNF ? selectedNF.label : ''"
 
                   @update:modelValue="aplicarFiltros"
@@ -1780,7 +1797,26 @@ async function getTransportadorasApenasSLA() {
               </div>
 
               <!-- DIV DIREITA - Botões -->
-              <div class="WIDTH-40 HEIGHT-100 D-flex JC-flex-end ALITEM-flex-end">
+              <div class="D-flex WIDTH-40 FD-column JC-space-between PADDING-T0-R5-B5-L10 BOR-L-solidgrey-1">
+
+                <!-- NF ENTREGA -->
+                <BasicElementVue3SelectPequeno
+                  :options="NFEntregaUnicas"
+                  v-model="selectedNFEntrega"
+
+                  label="NF DE TRANSPORTE"
+                  :titulo="selectedNFEntrega ? selectedNFEntrega.label : ''"
+
+                  @update:modelValue="aplicarFiltros"
+
+                  :divClass="'MARGIN-T21 WIDTH-40'"
+                  :selectClass="''"
+                  :labelClass="'FSIZE-12px MARGIN-T-15-L-5'"
+                  :widthLista="''"
+
+                  option-label="label"
+                  option-value="value"
+                />
                 <!-- <div style="margin-right: 10px; cursor: pointer;" @click="FetchPedidosPossiveisInformarEntrega()" title="Atualizar informações">
                   <IconsRefresh
                     corProp="rgb(24, 134, 84)"
@@ -2034,7 +2070,7 @@ async function getTransportadorasApenasSLA() {
                     <!-- Tabela -->
                     <div class="BOR-SensacaoAfundado OFLOW-auto WIDTH-98 HEIGHT-90 BGC-branco">
 
-                      <div class="WIDTH-100 HEIGHT-91 OFLOW-auto BGC-branco" ref="tabelaWrapperPossiveis">
+                      <div class="WIDTH-100 HEIGHT-88 OFLOW-auto BGC-branco" ref="tabelaWrapperPossiveis">
                         <table class="table-responsive table-sm table-striped WIDTH-100 BORRAD-5  table-fixed FSIZE-PADRAO-TABLE" style="overflow-x: hidden; width: 100%;">
                           
                           <thead class="BGC-cinza-secondary POSITION-sticky TOP-0">

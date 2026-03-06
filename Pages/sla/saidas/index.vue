@@ -1353,22 +1353,22 @@ onMounted(async () => {
         
           <div class="WIDTH-100 HEIGHT-100 D-flex ALITEM-center JC-flex-end">
             <!-- cruzamento -->
-            <button
+            <!-- <button
               type="button"
               class="btn btn-azul-claro HEIGHT-100 D-flex JC-center ALITEM-center MARGIN-R5"
               @click="ToastWarning('CONSULTAR ENTREGAS: Em desenvolvimento')"
-              >CONSULTAR ENTREGAS
+              >CONSULTAR ENTREGAS -->
               <!-- @click="IrParaRota(`/sla/informarEntregas`)" -->
-            </button>
+            <!-- </button> -->
 
             <!-- cruzamento -->
-            <button
+            <!-- <button
               type="button"
               class="btn btn-azul-claro HEIGHT-100 D-flex JC-center ALITEM-center"
               @click="IrParaRota(`/sla/informarEntregas`)"
             >
               INFORMAR ENTREGAS
-            </button>
+            </button> -->
           </div>
 
         </div>
