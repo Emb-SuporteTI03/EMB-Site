@@ -728,6 +728,7 @@ async function getTransportadorasApenasSLA() {
       .filter(p => p.bSelecionado && p.iD_Pedido !== pedido.iD_Pedido)
 
     const clienteClicado = pedido.cNmFantasia
+    const idClienteClicado = pedido.iD_Carteira
     const transportadoraClicada = pedido.cNomeTransportadora
 
     // 2️⃣ Regra: não misturar clientes
@@ -951,7 +952,12 @@ async function getTransportadorasApenasSLA() {
 
   const OnClickConfirmarEntregaButton = async () => {
     InformarEmRotaEntregueRequestDTO.value.iD_StatusAPIInformado = selectedStatus.value.iD;
-    InformarEmRotaEntregueRequestDTO.value.iD_Carteira = selectedCliente.value.iD;
+
+    const primeiroPedido = staticinfoPedidosPossiveis.value.find(p => p.bSelecionado === true);
+    if (primeiroPedido) {
+      InformarEmRotaEntregueRequestDTO.value.iD_Carteira = primeiroPedido.iD_Cliente;
+    }
+
     // InformarEmRotaEntregueRequestDTO.value.iD_Transportadora = selectedTransportadora.value.id;
 
     InformarEmRotaEntregueRequestDTO.value.iD_ResponsavelInformarEntrega = userID.value;
@@ -1678,7 +1684,7 @@ async function getTransportadorasApenasSLA() {
                 />
                 
                 <!-- Toggle de CORREIOS ou TRANSPORTADORAS -->
-                <div class="WIDTH-100 TEXTALI-center HEIGHT-50">
+                <!-- <div class="WIDTH-100 TEXTALI-center HEIGHT-50">
                   <h5 class="FSIZE-14px">Mostrar na lista:</h5>
                   <div class=" D-flex JC-space-around ALITEM-center">
                     <div></div>
@@ -1694,7 +1700,7 @@ async function getTransportadorasApenasSLA() {
                     <div></div>
                   </div>
 
-                </div>
+                </div> -->
               </div>
 
               <!-- DIV CENTRAL 2 -->
