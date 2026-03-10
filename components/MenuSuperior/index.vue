@@ -23,168 +23,185 @@
             <div class="textos">
 
               <!-- acessos -->
-              <li class="drop-hover" ref="dropdownToggle2" @mouseenter="mouseAcessoDrop" @mouseleave="handleMouseLeaveAcesso">
+              <li class="drop-hover" ref="dropdownToggle2" style="height: 10vh; display: flex; align-items: center; justify-content: center;" @mouseenter="mouseAcessoDrop" @mouseleave="handleMouseLeaveAcesso">
                 <a id="acessos-txt" style="color: black; text-decoration: none; cursor: pointer; font-size: 16px;">
                   ACESSOS
                   <i class="bi" :class="{'bi-caret-right-fill': !isDropdownACESSOActive, 'bi-caret-down-fill': isDropdownACESSOActive}"></i>
                 </a>
-                <div class="drop" v-show="isDropdownACESSOActive">
-                  <div class="drop-hover" ref="subDropdownToggle" @mouseenter="mouseSubDrop" @mouseleave="mouseSubLeave">
-                    <a id="qmSomos-sub" style="color: black; text-decoration: none; cursor: pointer;  font-size: 16px; display: flex; align-items: center; justify-content: space-between;" 
-                      >
-                      EXTERNO
-                      <i class="bi" :class="{'bi-caret-right-fill': !isSubDropdownActive, 'bi-caret-down-fill': isSubDropdownActive}"></i>
-                    </a>
-                    <div class="sub-drop" v-show="isSubDropdownActive" style="width: 170px;">
-                      <a @click="downloadPop1810()"
-                        type="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-                        style="font-size: 12px; cursor: pointer;">
-                        POP 18 01
-                      </a>
-                      <hr class="custom-hr2">
-                      <a href="https://forms.office.com/r/1maudxn8pQ"
-                        target="_blank"
-                        style="cursor: pointer; font-size: 12px;">
-                        AGENDAMENTO
-                      </a>
-                      <hr class="custom-hr2">
-                        <a
-                          id="qmSomos-sub"
-                          @click="abrirModal('cliente')"
-                          style="color: black; text-decoration: none; cursor: pointer; font-size: 12px;"
-                        >
-                          CLIENTE
+                  <div class="drop" v-show="isDropdownACESSOActive">
+                      <div class="drop-hover" ref="subDropdownToggle" @mouseenter="mouseSubDrop" @mouseleave="mouseSubLeave">
+                        <a class="dropdown-item-custom" id="qmSomos-sub" style="color: black; text-decoration: none; cursor: pointer;  font-size: 16px; display: flex; align-items: center; justify-content: space-between;" 
+                          >
+                          EXTERNO
+                          <i class="bi" :class="{'bi-caret-right-fill': !isSubDropdownActive, 'bi-caret-down-fill': isSubDropdownActive}"></i>
                         </a>
-                        <!-- @click="ToastWarning('Em Desenvolvimento...')" -->
-                        <a
-                          @click="abrirModal('transportadora')"
-                          style="color: black; text-decoration: none; cursor: pointer; font-size: 12px;"
-                        >
-                          TRANSPORTADORAS
-                        </a>
-                    </div>
+                        <div class="sub-drop dropdown-item-custom" v-show="isSubDropdownActive" style="width: 170px;">
+                          <a @click="downloadPop1810()"
+                            type="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                            style="font-size: 12px; cursor: pointer;">
+                            POP 18 01
+                          </a>
+                          <hr class="custom-hr2">
+                          <a href="https://forms.office.com/r/1maudxn8pQ"
+                            target="_blank"
+                            style="cursor: pointer; font-size: 12px;"
+                            class="dropdown-item-custom">
+                            AGENDAMENTO
+                          </a>
+                          <hr class="custom-hr2">
+                            <a
+                              class="dropdown-item-custom"
+                              id="qmSomos-sub"
+                              @click="abrirModal('cliente')"
+                              style="color: black; text-decoration: none; cursor: pointer; font-size: 12px;"
+                            >
+                              CLIENTE
+                            </a>
+                            <!-- @click="ToastWarning('Em Desenvolvimento...')" -->
+                            <a
+                              class="dropdown-item-custom"
+                              @click="abrirModal('transportadora')"
+                              style="color: black; text-decoration: none; cursor: pointer; font-size: 12px;"
+                            >
+                              TRANSPORTADORAS
+                            </a>
+                        </div>
+                      </div>
+                      <a class="dropdown-item-custom"id="qmSomos-sub" href="https://ts-embalarte-fin.skydocs.com.br/login" style="color: black; text-decoration: none; cursor: pointer; font-size: 16px;">
+                        INTERNO
+                      </a> 
                   </div>
-                    <a id="qmSomos-sub" href="https://ts-embalarte-fin.skydocs.com.br/login" style="color: black; text-decoration: none; cursor: pointer; font-size: 16px;">
-                      INTERNO
-                    </a> 
-                </div>
               </li>
 
-              <li class="drop-hover" ref="dropdownToggle" @mouseenter="mouseMainDrop" @mouseleave="handleMouseLeave">
-                <a id="sobre-nos-txt" style="color: black; text-decoration: none; cursor: pointer; font-size: 16px;" >
+              <li class="drop-hover" ref="dropdownToggle" style="height: 10vh; display: flex; align-items: center; justify-content: center;" @mouseenter="mouseMainDrop" @mouseleave="handleMouseLeave">
+                <a  id="sobre-nos-txt" style="color: black; text-decoration: none; cursor: pointer; font-size: 16px;" >
                   SOBRE NÓS
                   <i class="bi" :class="{'bi-caret-right-fill': !isDropdownActive, 'bi-caret-down-fill': isDropdownActive}"></i>
                 </a>
                 <div class="drop" v-show="isDropdownActive">
-                  <div class="drop-hover" ref="subDropdownToggle" @mouseenter="mouseSubDrop" @mouseleave="mouseSubLeave">
-                    <a id="qmSomos-sub" style="color: black; text-decoration: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between;" >
-                      QUEM SOMOS
-                      <i class="bi" :class="{'bi-caret-right-fill': !isSubDropdownActive, 'bi-caret-down-fill': isSubDropdownActive}"></i>
-                    </a>
-                    <div class="sub-drop" v-show="isSubDropdownActive">
-                      <router-link :to="{ path: '/Nossa-Historia' }" style="color: black; text-decoration: none; cursor: pointer;">História</router-link>
-                      <hr class="custom-hr2">
-                      <router-link :to="{ path: '/Nossa-Cultura' }" style="color: black; text-decoration: none; cursor: pointer;">Cultura</router-link>
-                      <hr class="custom-hr2">
-                      <router-link :to="{ path: '/Governanca' }" style="color: black; text-decoration: none; cursor: pointer;">Governança</router-link>
-                      <hr class="custom-hr2">
-                      <router-link :to="{ path: '/Politica-de-Privacidade' }" style="color: black; text-decoration: none; cursor: pointer;">Privacidade</router-link>
+                 
+                    <div class="drop-hover" ref="subDropdownToggle" @mouseenter="mouseSubDrop" @mouseleave="mouseSubLeave">
+                      <a class="dropdown-item-custom" id="qmSomos-sub" style="color: black; text-decoration: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between;" >
+                        QUEM SOMOS
+                        <i class="bi" :class="{'bi-caret-right-fill': !isSubDropdownActive, 'bi-caret-down-fill': isSubDropdownActive}"></i>
+                      </a>
+                      <div class="sub-drop" v-show="isSubDropdownActive">
+                        <router-link :to="{ path: '/Nossa-Historia' }" style="color: black; text-decoration: none; cursor: pointer;" class="dropdown-item-custom">História</router-link>
+                        <hr class="custom-hr2">
+                        <router-link :to="{ path: '/Nossa-Cultura' }" style="color: black; text-decoration: none; cursor: pointer;" class="dropdown-item-custom">Cultura</router-link>
+                        <hr class="custom-hr2">
+                        <router-link :to="{ path: '/Governanca' }" style="color: black; text-decoration: none; cursor: pointer;" class="dropdown-item-custom">Governança</router-link>
+                        <hr class="custom-hr2">
+                        <router-link :to="{ path: '/Politica-de-Privacidade' }" style="color: black; text-decoration: none; cursor: pointer;" class="dropdown-item-custom">Privacidade</router-link>
+                      </div>
                     </div>
-                  </div>
-                  <hr class="custom-hr2">
-                  <div class="drop-hover" ref="subDropdownToggle" @mouseenter="mouseSub2Drop" @mouseleave="mouseSub2Leave">
-                    <a id="servicos-sub" style="color: black; text-decoration: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between;">
-                      NOSSOS SERVIÇOS
-                      <i class="bi" :class="{'bi-caret-right-fill': !isSubDropdown2Active, 'bi-caret-down-fill': isSubDropdown2Active}"></i>
-                    </a>
-                    <div class="sub-drop" id= "subDrop2" v-show="isSubDropdown2Active">
-                      <router-link 
-                        :to="{ path: '/Nossos-Servicos' }" 
-                        style="color: black; text-decoration: none; cursor: pointer;"
-                      >
-                        Início
-                      </router-link>
+                    <hr class="custom-hr2">
+                    <div class="drop-hover" ref="subDropdownToggle" @mouseenter="mouseSub2Drop" @mouseleave="mouseSub2Leave">
+                      <a class="dropdown-item-custom" id="servicos-sub" style="color: black; text-decoration: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between;">
+                        NOSSOS SERVIÇOS
+                        <i class="bi" :class="{'bi-caret-right-fill': !isSubDropdown2Active, 'bi-caret-down-fill': isSubDropdown2Active}"></i>
+                      </a>
+                      <div class="sub-drop" id= "subDrop2" v-show="isSubDropdown2Active">
+                        <router-link 
+                          :to="{ path: '/Nossos-Servicos' }" 
+                          style="color: black; text-decoration: none; cursor: pointer;"
+                          class="dropdown-item-custom"
+                        >
+                          Início
+                        </router-link>
 
-                      <router-link 
-                        :to="{ path: '/Nossos-Servicos', hash: '#Armazenagem' }" 
-                        style="color: black; text-decoration: none; cursor: pointer;"
-                      >
-                        Armazenagem
-                      </router-link>
+                        <router-link 
+                          :to="{ path: '/Nossos-Servicos', hash: '#Armazenagem' }" 
+                          style="color: black; text-decoration: none; cursor: pointer;"
+                          class="dropdown-item-custom"
+                        >
+                          Armazenagem
+                        </router-link>
 
-                      <router-link 
-                        :to="{ path: '/Nossos-Servicos', hash: '#Picking_Packing' }" 
-                        style="color: black; text-decoration: none; cursor: pointer;"
-                      >
-                      Picking e Packing e Cross-Docking
-                      </router-link>
+                        <router-link 
+                          :to="{ path: '/Nossos-Servicos', hash: '#Picking_Packing' }" 
+                          style="color: black; text-decoration: none; cursor: pointer;"
+                          class="dropdown-item-custom"
+                        >
+                        Picking e Packing e Cross-Docking
+                        </router-link>
 
-                      <router-link 
-                        :to="{ path: '/Nossos-Servicos', hash: '#Atendimento_E-Commerce' }" 
-                        style="color: black; text-decoration: none; cursor: pointer;"
-                      >
-                      Atendimento E-commerce
-                      </router-link>
+                        <router-link 
+                          :to="{ path: '/Nossos-Servicos', hash: '#Atendimento_E-Commerce' }" 
+                          style="color: black; text-decoration: none; cursor: pointer;"
+                          class="dropdown-item-custom"
+                        >
+                        Atendimento E-commerce
+                        </router-link>
 
-                      <router-link 
-                        :to="{ path: '/Nossos-Servicos', hash: '#Manuseio_e_Kits' }" 
-                        style="color: black; text-decoration: none; cursor: pointer;"
-                      >
-                      Manuseios Diversos e Montagem de Kits
+                        <router-link 
+                          :to="{ path: '/Nossos-Servicos', hash: '#Manuseio_e_Kits' }" 
+                          style="color: black; text-decoration: none; cursor: pointer;"
+                          class="dropdown-item-custom"
+                        >
+                        Manuseios Diversos e Montagem de Kits
 
-                      </router-link>
+                        </router-link>
 
-                      <router-link 
-                        :to="{ path: '/Nossos-Servicos', hash: '#Logistica_Promocional' }" 
-                        style="color: black; text-decoration: none; cursor: pointer;"
-                      >
-                      Logistica Promocional
-                      </router-link>
+                        <router-link 
+                          :to="{ path: '/Nossos-Servicos', hash: '#Logistica_Promocional' }" 
+                          style="color: black; text-decoration: none; cursor: pointer;"
+                          class="dropdown-item-custom"
+                        >
+                        Logistica Promocional
+                        </router-link>
 
-                      <router-link 
-                        :to="{ path: '/Nossos-Servicos', hash: '#Envaze_e_Blister' }" 
-                        style="color: black; text-decoration: none; cursor: pointer;"
-                      >
-                      Envase e Blister
-                      </router-link>
+                        <router-link 
+                          :to="{ path: '/Nossos-Servicos', hash: '#Envaze_e_Blister' }" 
+                          style="color: black; text-decoration: none; cursor: pointer;"
+                          class="dropdown-item-custom"
+                        >
+                        Envase e Blister
+                        </router-link>
 
-                      <router-link 
-                        :to="{ path: '/Nossos-Servicos', hash: '#Encadernacao' }" 
-                        style="color: black; text-decoration: none; cursor: pointer;"
-                      >
-                      Encadernações em Espiral
-                      </router-link>
+                        <router-link 
+                          :to="{ path: '/Nossos-Servicos', hash: '#Encadernacao' }" 
+                          style="color: black; text-decoration: none; cursor: pointer;"
+                          class="dropdown-item-custom"
+                        >
+                        Encadernações em Espiral
+                        </router-link>
 
-                      <router-link 
-                        :to="{ path: '/Nossos-Servicos', hash: '#Etiquetagem' }" 
-                        style="color: black; text-decoration: none; cursor: pointer;"
-                      >
-                      Etiquetagem e Rótulagem
-                      </router-link>
+                        <router-link 
+                          :to="{ path: '/Nossos-Servicos', hash: '#Etiquetagem' }" 
+                          style="color: black; text-decoration: none; cursor: pointer;"
+                          class="dropdown-item-custom"
+                        >
+                        Etiquetagem e Rótulagem
+                        </router-link>
 
-                      <router-link 
-                        :to="{ path: '/Nossos-Servicos', hash: '#Gravacao' }" 
-                        style="color: black; text-decoration: none; cursor: pointer;"
-                      >
-                      Gravação Inkjet
-                      </router-link>
+                        <router-link 
+                          :to="{ path: '/Nossos-Servicos', hash: '#Gravacao' }" 
+                          style="color: black; text-decoration: none; cursor: pointer;"
+                          class="dropdown-item-custom"
+                        >
+                        Gravação Inkjet
+                        </router-link>
 
-                      <router-link 
-                        :to="{ path: '/Nossos-Servicos', hash: '#Distribuicao' }" 
-                        style="color: black; text-decoration: none; cursor: pointer;"
-                      >
-                      Distribuição em Nível Nacional
-                      </router-link>
+                        <router-link 
+                          :to="{ path: '/Nossos-Servicos', hash: '#Distribuicao' }" 
+                          style="color: black; text-decoration: none; cursor: pointer;"
+                          class="dropdown-item-custom"
+                        >
+                        Distribuição em Nível Nacional
+                        </router-link>
 
-                      <hr class="custom-hr2" style="height: 1px;">
-                      <router-link 
-                        :to="{ path: '/Nossos-Servicos', hash: '#Secao_Tecnologia' }" 
-                        style="color: black; text-decoration: none; cursor: pointer;"
-                      >
-                        Soluções em Tecnologia
-                      </router-link>
+                        <hr class="custom-hr2" style="height: 1px;">
+                        <router-link 
+                          :to="{ path: '/Nossos-Servicos', hash: '#Secao_Tecnologia' }" 
+                          style="color: black; text-decoration: none; cursor: pointer;"
+                          class="dropdown-item-custom"
+                        >
+                          Soluções em Tecnologia
+                        </router-link>
+                      </div>
                     </div>
-                  </div>
+
                 </div>
               </li>
 
@@ -1011,14 +1028,19 @@ function downloadPop1810() {
   height: auto; /* Mantém a proporção correta da imagem */
 }
 
+.drop-hover {
+  position: relative;
+}
+
 /* Trata do dropdown */
 .drop {
-  margin-top: 0.05%;
-  width: 25vh; /* Defina uma largura para o dropdown */
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-  background-color: #ececec;
-  display: block;
   position: absolute;
+  top: 75%;
+  left: 0;
+
+  width: 25vh;
+  box-shadow: 0px 4px 8px rgba(0,0,0,0.2);
+  background-color: #ececec;
 }
 
 .drop a {
@@ -1153,5 +1175,15 @@ function downloadPop1810() {
 .fade-slide-leave-to {
   opacity: 0;
   transform: translateY(-10px);
+}
+
+.dropdown-item-custom {
+  display: block;
+  padding: 6px 10px;
+  transition: background-color 0.2s ease;
+}
+
+.dropdown-item-custom:hover {
+  background-color: #e0e0e0; /* cinza mais escuro */
 }
 </style>
