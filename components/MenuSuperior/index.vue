@@ -1036,7 +1036,7 @@ function downloadPop1810() {
 .drop {
   position: absolute;
   top: 75%;
-  left: 0;
+  left: -20%;
 
   width: 25vh;
   box-shadow: 0px 4px 8px rgba(0,0,0,0.2);
