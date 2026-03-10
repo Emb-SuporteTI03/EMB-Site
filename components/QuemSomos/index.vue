@@ -177,16 +177,16 @@ export default {
       ></iframe>
       <div class="text-overlay">
         <strong class="filiais-txt" id="about-us-nos">LOCALIZAÇÃO:</strong>
-        <strong class="filiais-txt" id="localTexto">MATRIZ:<br> </strong>
+        <strong class="filiais-txt" id="localTexto"><br> </strong>
           <ul class="lista-cidades">
             <li><a @click.prevent="updateMapValue('1', $event)" style="font-size: 1.6rem;">📌 Santana de Parnaíba</a></li>
           </ul>
-           <strong class="filiais-txt" id="localTexto">
-          E ESTAMOS PRESENTES EM OUTRAS 3 CIDADES <br> NO ESTADO DE SÃO PAULO!</strong>
+           <!-- <strong class="filiais-txt" id="localTexto">
+          E ESTAMOS PRESENTES EM OUTRAS 3 CIDADES <br> NO ESTADO DE SÃO PAULO!</strong> -->
         <ul class="lista-cidades">
-          <li><a @click.prevent="updateMapValue('2', $event)" style="font-size: 1.6rem;">📌 São Paulo</a></li>
+          <!-- <li><a @click.prevent="updateMapValue('2', $event)" style="font-size: 1.6rem;">📌 São Paulo</a></li>
           <li><a @click.prevent="updateMapValue('3', $event)" style="font-size: 1.6rem;">📌 São José dos Campos</a></li>
-          <li><a @click.prevent="updateMapValue('4', $event)" style="font-size: 1.6rem;">📌 Cajamar</a></li>
+          <li><a @click.prevent="updateMapValue('4', $event)" style="font-size: 1.6rem;">📌 Cajamar</a></li> -->
         </ul>
     <hr class="custom-hr">
     <hr class="custom-hr">
@@ -201,7 +201,7 @@ export default {
       <div class="grid-container">
       <div class="grid-item">🏢 Unidade própria com 4.000m²</div>
       <div class="grid-item">👥 Equipe treinada e qualificada</div>
-      <div class="grid-item">🏭 Modernas instalações</div>
+      <div class="grid-item">🏭 Instalações modernas</div>
       <div class="grid-item">🚗 Próximo às Rodovias Anhanguera e Bandeirantes</div>
       <div class="grid-item">🚛 Docas com facilidade de acesso para carga e descarga</div>
       <div class="grid-item">📱 Controle por software e aplicativos mobile</div>

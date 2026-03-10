@@ -87,6 +87,8 @@
                       <router-link :to="{ path: '/Nossa-Cultura' }" style="color: black; text-decoration: none; cursor: pointer;">Cultura</router-link>
                       <hr class="custom-hr2">
                       <router-link :to="{ path: '/Governanca' }" style="color: black; text-decoration: none; cursor: pointer;">Governança</router-link>
+                      <hr class="custom-hr2">
+                      <router-link :to="{ path: '/Politica-de-Privacidade' }" style="color: black; text-decoration: none; cursor: pointer;">Privacidade</router-link>
                     </div>
                   </div>
                   <hr class="custom-hr2">
@@ -270,31 +272,14 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <p>Conte-nos como podemos ajudar. Nós responderemos em breve!</p>
-            <form @submit.prevent="insertContato()">
-              <div class="mb-3">
-                <label for="nome" class="form-label">Com que setor deseja falar?</label>
-                <select class="form-control" id="nomeSelect" v-model="contato.area" required>
-                  <option value="" disabled selected>Selecione uma opção</option>
-                  <option value="opcao1">RH</option>
-                  <option value="opcao2">Financeiro</option>
-                  <option value="opcao3">Outros</option>
-                </select>
-              </div>
-              <div class="mb-3">
-                <label for="nome" class="form-label">Nome</label>
-                <input type="text" class="form-control" id="nome" v-model="contato.nome" required>
-              </div>
-              <div class="mb-3">
-                <label for="email" class="form-label">E-mail</label>
-                <input type="email" class="form-control" id="email" v-model="contato.email" required>
-              </div>
-              <div class="mb-3">
-                <label for="mensagem" class="form-label">Mensagem</label>
-                <textarea class="form-control" id="mensagem" v-model="contato.mensagem" rows="3" required></textarea>
-              </div>
-              <button type="submit" class="btn btn-primary">Enviar mensagem</button>
-            </form>
+            <p>Entre em contato conosco!</p>
+
+            <p>
+              <a href="mailto:atendimento@grupoembalarte.com.br?subject=Contato pelo Portal&body=Olá, preciso de ajuda com:">
+                atendimento@grupoembalarte.com.br
+              </a>
+            </p>
+
           </div>
         </div>
       </div>
@@ -302,7 +287,74 @@
 
     <!-- Modal de acesso cliente -->
     <div class="modal fade" id="acessoClienteModal" tabindex="-1" aria-labelledby="acessoClienteModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
+
+      <!-- <transition name="fade-slide" mode="out-in"> -->
+
+      <div v-if="!aceitouPolitica" key="politica" class="modal-dialog modal-dialog-centered">
+        <div class="modal-content modal-lgpd">
+
+          <div class="modal-header">
+            <h5 class="modal-title">
+              Confirmação de Privacidade
+            </h5>
+
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+
+          <div class="modal-body lgpd-body">
+
+            <div class="lgpd-icon">
+              🔒
+            </div>
+
+            <p class="lgpd-text">
+              Antes de prosseguir, confirme que você leu e concorda com nossa
+              <strong>Política de Privacidade</strong>.
+            </p>
+
+            <p class="lgpd-link">
+              Você pode ler a política completa
+              <a href="/Politica-de-Privacidade" target="_blank">
+                clicando aqui.
+              </a>
+            </p>
+
+            <div class="lgpd-checkbox">
+
+              <input
+                type="checkbox"
+                id="aceitePolitica"
+                v-model="clicouCheckBox"
+              >
+
+              <label for="aceitePolitica">
+                &nbsp;Li e concordo com a Política de Privacidade
+              </label>
+
+            </div>
+
+          </div>
+
+          <div class="modal-footer lgpd-footer">
+
+            <button
+              class="btn btn-success btn-prosseguir"
+              :disabled="!clicouCheckBox"
+              @click="clickProsseguirAceitarPolitica()"
+            >
+              Prosseguir
+            </button>
+
+          </div>
+
+        </div>
+      </div>
+      
+      <div v-else key="login" class="modal-dialog">
         <div class="modal-content" style="width: 75%; left: 12.5%; margin-top: 20%;">
         
           <div class="modal-header">
@@ -366,11 +418,81 @@
           
         </div>
       </div>
+
+      <!-- </transition> -->
+      
     </div>
 
     <!-- Modal de acesso Transp -->
     <div class="modal fade" id="acessoTranspModal" tabindex="-1" aria-labelledby="acessoTranspModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
+      
+      <!-- <transition name="fade-slide" mode="out-in"> -->
+      
+      <div v-if="!aceitouPolitica" key="politica" class="modal-dialog modal-dialog-centered">
+        <div class="modal-content modal-lgpd">
+
+          <div class="modal-header">
+            <h5 class="modal-title">
+              Confirmação de Privacidade
+            </h5>
+
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+
+          <div class="modal-body lgpd-body">
+
+            <div class="lgpd-icon">
+              🔒
+            </div>
+
+            <p class="lgpd-text">
+              Antes de prosseguir, confirme que você leu e concorda com nossa
+              <strong>Política de Privacidade</strong>.
+            </p>
+
+            <p class="lgpd-link">
+              Você pode ler a política completa
+              <a href="/Politica-de-Privacidade" target="_blank">
+                clicando aqui
+              </a>.
+            </p>
+
+            <div class="lgpd-checkbox">
+
+              <input
+                type="checkbox"
+                id="aceitePolitica"
+                v-model="clicouCheckBox"
+              >
+
+              <label for="aceitePolitica">
+                &nbsp;Li e concordo com a Política de Privacidade
+              </label>
+
+            </div>
+
+          </div>
+
+          <div class="modal-footer lgpd-footer">
+
+            <button
+              class="btn btn-success btn-prosseguir"
+              :disabled="!clicouCheckBox"
+              @click="clickProsseguirAceitarPolitica()"
+            >
+              Prosseguir
+            </button>
+
+          </div>
+
+        </div>
+      </div>
+
+      <div v-else key="login" class="modal-dialog">
         <div class="modal-content" style="width: 75%; left: 12.5%; margin-top: 20%;">
         
           <div class="modal-header">
@@ -434,6 +556,10 @@
           
         </div>
       </div>
+
+      <!-- </transition> -->
+
+
     </div>
 
   </main>
@@ -473,6 +599,11 @@ const isSubDrop1Cllr = ref(false)
 const isSubDrop2Cllr = ref(false)
 const usuarioInputCliente = ref<HTMLInputElement | null>(null)
 const usuarioInputTransportadora = ref<HTMLInputElement | null>(null)
+
+const clicouCheckBox = ref(false);
+const aceitouPolitica = ref(false);
+
+const emit = defineEmits(["cookies-aceitos"])
 
 const contato = reactive({ nome: '', email: '', mensagem: '', area: '' })
 const login = reactive({ usuario: '', senha: '' })
@@ -525,6 +656,17 @@ function fecharTodosModais() {
     const instance = bootstrap.Modal.getInstance(el)
     if (instance) instance.hide()
   })
+}
+const clickProsseguirAceitarPolitica = async() => {
+
+  localStorage.setItem("cookiesAceitos", "true")
+  emit("cookies-aceitos")
+
+  await nextTick();
+
+  localStorage.setItem("politicaPrivacidadeAceita", "true")
+  aceitouPolitica.value = true
+
 }
 
 function abrirModal(tipo: string) {
@@ -738,6 +880,12 @@ onMounted(() => {
   document.addEventListener('mousemove', handleScroll)
   window.addEventListener('touchmove', handleTouchMove)
 
+  const aceite = localStorage.getItem("politicaPrivacidadeAceita")
+
+  if (aceite === "true") {
+    aceitouPolitica.value = true
+  }
+
   // const modal = document.getElementById('acessoClienteModal')
   // modal?.addEventListener('shown.bs.modal', () => {
   //   usuarioInput.value?.focus()
@@ -807,7 +955,7 @@ function downloadPop1810() {
   background-color: rgb(255, 255, 255); /* Fundo branco inicial */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Cria uma pequena sombra embaixo do cabeçalho */
   transition: background-color 0.3s ease, backdrop-filter 0.3s ease; /* Suaviza a transição quando scrolla a página */
-  height: 10%;
+  height: 10vh;
 }
 .header-cllr {
     display: none;
@@ -990,5 +1138,20 @@ function downloadPop1810() {
 .subdrop-cllr a {
   font-size: 1.3rem;
 }
+}
+
+.fade-slide-enter-active,
+.fade-slide-leave-active {
+  transition: all 0.35s ease;
+}
+
+.fade-slide-enter-from {
+  opacity: 0;
+  transform: translateY(15px);
+}
+
+.fade-slide-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
 }
 </style>
