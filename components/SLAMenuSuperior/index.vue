@@ -23,7 +23,14 @@ export default {
     },
     clickConfirmaLogoutButton () {
       let siglaLogin = localStorage.getItem('sigla');
-      localStorage.clear();
+      let cookiesAceitos = localStorage.getItem('cookiesAceitos');
+      let privacidadeAceita = localStorage.getItem('politicaPrivacidadeAceita');
+
+      // limpa storage
+      localStorage.clear()
+
+      localStorage.setItem('cookiesAceitos', cookiesAceitos);
+      localStorage.setItem("politicaPrivacidadeAceita", privacidadeAceita)
       localStorage.setItem('sigla', siglaLogin);
     },
   },

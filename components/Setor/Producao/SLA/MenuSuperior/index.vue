@@ -38,12 +38,18 @@ export default {
       const authStore = useAuthStore();
 
       const siglaLogin = localStorage.getItem('sigla')
+      let cookiesAceitos = localStorage.getItem('cookiesAceitos');
+      let privacidadeAceita = localStorage.getItem('politicaPrivacidadeAceita');
 
       // limpa estado do pinia
       authStore.logout()
 
       // limpa storage
       localStorage.clear()
+
+      localStorage.setItem('cookiesAceitos', cookiesAceitos);
+      localStorage.setItem("politicaPrivacidadeAceita", privacidadeAceita)
+
 
       // restaura sigla
       if (siglaLogin) {
