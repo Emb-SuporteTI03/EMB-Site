@@ -264,6 +264,7 @@
               <hr class="custom-hr2">
               <router-link :to="{ path: '/Nossos-Valores' }" style="color: black; text-decoration: none;">Valores</router-link>
               <hr class="custom-hr2">
+              <router-link :to="{ path: '/Politica-de-Privacidade' }" style="color: black; text-decoration: none; cursor: pointer;" class="dropdown-item-custom">Privacidade</router-link>
             </div>
             <div @click="toggleSubDropCllr2" class="opcao">
               <li><a style="color: black; text-decoration: none;">NOSSOS SERVIÇOS</a></li>
@@ -273,6 +274,30 @@
               <router-link :to="{ path: '/Nossos-Servicos' }" style="color: black; text-decoration: none;">Soluções em Logística</router-link>
               <hr class="custom-hr2">
               <router-link :to="{ path: '/Nossos-Servicos', hash: '#Secao_Tecnologia' }"  style="color: black; text-decoration: none;">Soluções em Tecnologia</router-link>
+            </div>
+            <div @click="toggleSubDropCllr3" class="opcao">
+              <li><a style="color: black; text-decoration: none;">ACESSOS</a></li>
+              <i class="bi" :class="{'bi-caret-right-fill': !isSubDrop3Cllr, 'bi-caret-down-fill': isSubDrop3Cllr}"></i>
+            </div>
+            <div class="subdrop-cllr" v-if="isSubDrop3Cllr">
+              <a :href="'https://ts-embalarte-fin.skyone.guru/login'" target="_blank" style="color: black; text-decoration: none;">INTERNO</a>
+              <hr class="custom-hr2">
+                            <a
+                              class="dropdown-item-custom"
+                              id="qmSomos-sub"
+                              @click="abrirModal('cliente')"
+                              style="color: black; text-decoration: none; cursor: pointer"
+                            >
+                              CLIENTE
+                            </a>
+              <hr class="custom-hr2">
+                            <a
+                              class="dropdown-item-custom"
+                              @click="abrirModal('transportadora')"
+                              style="color: black; text-decoration: none; cursor: pointer"
+                            >
+                              TRANSPORTADORAS
+                            </a>
             </div>
           </ul>
         </div>
@@ -614,6 +639,7 @@ const isSubDropdown2Active = ref(false)
 const isMenuVisible = ref(false)
 const isSubDrop1Cllr = ref(false)
 const isSubDrop2Cllr = ref(false)
+const isSubDrop3Cllr = ref(false)
 const usuarioInputCliente = ref<HTMLInputElement | null>(null)
 const usuarioInputTransportadora = ref<HTMLInputElement | null>(null)
 
@@ -819,6 +845,10 @@ function toggleSubDropCllr1() {
 
 function toggleSubDropCllr2() {
   isSubDrop2Cllr.value = !isSubDrop2Cllr.value
+}
+
+function toggleSubDropCllr3() {
+  isSubDrop3Cllr.value = !isSubDrop3Cllr.value
 }
 
 function mouseMainDrop() {

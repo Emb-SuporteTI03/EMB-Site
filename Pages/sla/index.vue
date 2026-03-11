@@ -389,7 +389,11 @@ import { useAuthStore } from '~/stores/auth';
       console.error("Erro ao buscar PDF Pedido", err);
     }
   };
+const isMobile = ref(window.innerWidth <= 768);
 
+window.addEventListener("resize", () => {
+  isMobile.value = window.innerWidth <= 768;
+});
   const getPDFDanfe = async (ID_Pedido: number): Promise<boolean> => {
     try {
       const response = await axios.post(
@@ -1242,28 +1246,40 @@ import { useAuthStore } from '~/stores/auth';
               <thead class="BGC-cinza-secondary POSITION-sticky TOP-0">
                
                 <!-- CABEÇALHO QUANDO A TABELA FOR DA TAB1 -->
-                <tr v-if="currentTab == 'tab1' ">
-                  <th class="WIDTH-2  TEXTALI-center no-wrap-text"></th>
-                  <th class="WIDTH-2  TEXTALI-center no-wrap-text"></th>
-                  <th class="WIDTH-2  TEXTALI-center no-wrap-text"></th>
-                  <th class="WIDTH-2  TEXTALI-center no-wrap-text"></th>
-                  <th class="WIDTH-7  TEXTALI-center no-wrap-text">DATA</th>
-                  <th class="WIDTH-7  TEXTALI-center no-wrap-text">CK</th>
-                  <th class="WIDTH-10  TEXTALI-center no-wrap-text">GUIA REMESSA</th>
-                  <th class="WIDTH-10 TEXTALI-center no-wrap-text">PEDIDO</th>
-                  <th class="WIDTH-6  TEXTALI-center no-wrap-text">O.V.</th>
-                  <th class="WIDTH-8  TEXTALI-center no-wrap-text">NFE</th>
-                  <th class="WIDTH-4  TEXTALI-center no-wrap-text">VOL.</th>
-                  <th class="WIDTH-17 TEXTALI-center no-wrap-text">DESTINATÁRIO</th>
-                  <th class="WIDTH-4  TEXTALI-center no-wrap-text">UF</th>
-                  <th class="WIDTH-8  TEXTALI-center no-wrap-text">STATUS</th>
+                <tr v-if="currentTab == 'tab1'">
+                  <th :class="[isMobile ? 'WIDTH-4' : 'WIDTH-2', 'TEXTALI-center no-wrap-text']"></th>
+                  <th :class="[isMobile ? 'WIDTH-4' : 'WIDTH-2', 'TEXTALI-center no-wrap-text']"></th>
+                  <th :class="[isMobile ? 'WIDTH-4' : 'WIDTH-2', 'TEXTALI-center no-wrap-text']"></th>
+                  <th :class="[isMobile ? 'WIDTH-4' : 'WIDTH-2', 'TEXTALI-center no-wrap-text']"></th>
+
+                  <th class="WIDTH-7 TEXTALI-center no-wrap-text">DATA</th>
+                  <th class="WIDTH-7 TEXTALI-center no-wrap-text">CK</th>
+
+                  <th :class="[isMobile ? 'WIDTH-8' : 'WIDTH-10', 'TEXTALI-center no-wrap-text']">
+                    GUIA REMESSA
+                  </th>
+
+                  <th :class="[isMobile ? 'WIDTH-8' : 'WIDTH-10', 'TEXTALI-center no-wrap-text']">
+                    PEDIDO
+                  </th>
+
+                  <th class="WIDTH-6 TEXTALI-center no-wrap-text">O.V.</th>
+                  <th class="WIDTH-8 TEXTALI-center no-wrap-text">NFE</th>
+                  <th class="WIDTH-4 TEXTALI-center no-wrap-text">VOL.</th>
+
+                  <th :class="[isMobile ? 'WIDTH-13' : 'WIDTH-17', 'TEXTALI-center no-wrap-text']">
+                    DESTINATÁRIO
+                  </th>
+
+                  <th class="WIDTH-4 TEXTALI-center no-wrap-text">UF</th>
+                  <th class="WIDTH-8 TEXTALI-center no-wrap-text">STATUS</th>
                   <th class="WIDTH-14 TEXTALI-center no-wrap-text">TRANSPORTADORA</th>
                 </tr>
 
                 <!-- CABEÇALHO QUANDO A TABELA FOR DA TAB2, 3 OU 4 (ERA ÁREA DO CLIENTE) -->
                 <tr v-if="currentTab != 'tab1'">
-                  <th class="TEXTALI-center WIDTH-2 no-wrap-text"></th>
-                  <th class="TEXTALI-center WIDTH-9 no-wrap-text">DATA</th>
+                  <th :class="[isMobile ? 'WIDTH-4' : 'WIDTH-2', 'TEXTALI-center no-wrap-text']"></th>
+                  <th :class="[isMobile ? 'WIDTH-9' : 'WIDTH-9', 'TEXTALI-center no-wrap-text']">DATA</th>
                   <th class="TEXTALI-center WIDTH-9 no-wrap-text">GUIA REMESSA</th>
                   <th class="TEXTALI-center WIDTH-10 no-wrap-text">PEDIDO</th>
                   <th class="TEXTALI-center WIDTH-8 no-wrap-text">O.V.</th>
@@ -1904,4 +1920,20 @@ import { useAuthStore } from '~/stores/auth';
   width: 20px;
   height: 20px;
 }
+
+@media (max-width: 768px) {
+  .table-container {
+    overflow-x: auto;
+  }
+
+  .table-container table {
+    min-width: 700px;
+  }
+}
+
+.table-container {
+  cursor: grab;
+}
+
+
 </style>
