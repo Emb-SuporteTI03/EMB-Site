@@ -67,7 +67,7 @@
                             </a>
                         </div>
                       </div>
-                      <a class="dropdown-item-custom"id="qmSomos-sub" href="https://ts-embalarte-fin.skydocs.com.br/login" style="color: black; text-decoration: none; cursor: pointer; font-size: 16px;">
+                      <a class="dropdown-item-custom"id="qmSomos-sub" href="https://ts-embalarte-fin.skyone.guru/login" style="color: black; text-decoration: none; cursor: pointer; font-size: 16px;">
                         INTERNO
                       </a> 
                   </div>

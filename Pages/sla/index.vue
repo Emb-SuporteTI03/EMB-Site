@@ -1181,7 +1181,7 @@ import { useAuthStore } from '~/stores/auth';
           <div class="WIDTH-100 D-flex JC-space-between HEIGHT-6">
 
             <div class="abas WIDTH-40">
-              <button class="aba-button FSIZE-14px" @click="showTab('tab1')" :class="{ active: currentTab === 'tab1' }">Todos</button>
+              <button class="aba-button FSIZE-14px" @click="showTab('tab1')" :class="{ active: currentTab === 'tab1' }">Pedidos Processados</button>
               <button class="aba-button FSIZE-14px" @click="showTab('tab2')" :class="{ active: currentTab === 'tab2' }">Corte Lógico Atual</button>
               <button class="aba-button FSIZE-14px" @click="showTab('tab3')" :class="{ active: currentTab === 'tab3' }">Pedidos Aguardando</button>
               <button class="aba-button FSIZE-14px" @click="showTab('tab4')" :class="{ active: currentTab === 'tab4' }">Pedidos Cancelados</button>
