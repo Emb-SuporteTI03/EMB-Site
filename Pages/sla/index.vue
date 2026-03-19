@@ -29,9 +29,8 @@ DELETE FROM dsMatriz.log.Entrada_Componente_Reservado -->
   import { applyTableStipedRows, getStatusClass, shortenInfo } from '~/composables/visualization';
   import axios from 'axios'
   import { ToastError, ToastSuccess, ToastWarning } from '~/composables/toasts';
-  
+  import { useAuthStore } from '~/stores/auth';
   import { RequestManager } from '@/composables/functions';
-import { useAuthStore } from '~/stores/auth';
   const requests = new RequestManager();
 
   // Interfaces: ------------------\
@@ -175,6 +174,7 @@ import { useAuthStore } from '~/stores/auth';
   // Caminho da logo do cliente 
   const logoPath = `/CLIENTES/${ID_Carteira.value}.png`
   const querieProcura = ref<string>('');
+  const querieProcuraTab2 = ref<string>('');
 
   // Variáveis para controle da tabela principal
   const infoPedidosTabela = ref<PedidoTabelaWEB[]>([]);
@@ -196,8 +196,20 @@ import { useAuthStore } from '~/stores/auth';
   // SUB TABELA PEDIDOS ITENS
   const linhaExpandidaDaTabelaPedidos = ref<number|null>(null);
   const linhaExpandidaDaTabelaAreaCliente = ref<number|null>(null);
-  const infoPedidoItens = ref<PedidoItensTabelaAreaCliente[]>([]);
-  const infoPedidoAreaClienteItens = ref<PedidoItensTabelaAreaCliente[]>([]);
+  const infoPedidoItens = ref<PedidoItensTabelaAreaCliente[]|null>([]);
+  const infoPedidoAreaClienteItens = ref<PedidoItensTabelaAreaCliente[]|null>([]);
+
+  const tabelaPedidosAguardandoCarregada = ref<boolean>(false);
+  const infoPedidosAguardandoStatic = ref<any[]>([]);
+  const infoQuantidadePedidosItensAguardando = ref<number>(0);
+  const infoPedidosSelecionado = ref<any[]>([]);
+  const infoAnaliseCorteLogico = ref<any[]>([]);
+  const infoPedidosItens = ref<any[]>([]);
+  const infoPedidosAguardando = ref<any[]>([]);
+  const tabelaPedidoItensCarregada = ref<boolean>(false);
+  const corteLogicoPedidoCarregado = ref<boolean>(false);
+  const corteLogicoPedidoItemCarregado = ref<boolean>(false);
+  const infoPedidosAguardandoCarregado = ref<boolean>(false);
 
   const isLoadingEXCELRelatorio = ref<boolean>(false);
 
@@ -216,7 +228,8 @@ import { useAuthStore } from '~/stores/auth';
     if(tabName == 'tab1') {
       await carregarTabela();
     } else if(tabName == 'tab2') {
-      await getInfosPedidosAreaCliente('corte-logico');
+      // await getInfosPedidosAreaCliente('corte-logico');
+      await FetchAllPedidosAguardando();
     } else if(tabName == 'tab3') {
       await getInfosPedidosAreaCliente('pendentes');
     } else if(tabName == 'tab4') {
@@ -250,13 +263,13 @@ import { useAuthStore } from '~/stores/auth';
       await getInfosPedidosAreaCliente('corte-logico');
     } else if(currentTab.value == 'tab3') {
       await getInfosPedidosAreaCliente('pendentes');
-      console.log('pedidos aguardando proxima pagina')
     } else if(currentTab.value == 'tab4') {
       await getInfosPedidosAreaCliente('cancelados');
     }
   };
   const buscarPedidos50 = async () => {
     tabelaPedidosCarregada.value = false;
+
     try {
       const response = await axios.get<PedidoPaginadoResponseDTO>(
         `${urlBase}/sla/pedido/selecionar-pedidos-50/${ID_Carteira.value}/${paginaAtual.value}/${numeroRegistrosPagina.value}/${querieProcura.value}`,
@@ -269,24 +282,10 @@ import { useAuthStore } from '~/stores/auth';
       totalPaginas.value = Math.ceil(response.data.totalRegistros/numeroRegistrosPagina.value);
 
     } catch (error: any) {
-
-      // request cancelada → ignora
       if (error.name === "CanceledError" || error.code === "ERR_CANCELED") {
         return;
       }
-
-      // ✅ token inválido / expirado
-      if (error.response?.status === 401) {
-        const authStore = useAuthStore();
-
-        authStore.logout();
-        LimpaLocalStor();
-
-        return navigateTo('/');
-      }
-
       console.error(error);
-
     } finally {
       tabelaPedidosCarregada.value = true;
     }
@@ -310,6 +309,7 @@ import { useAuthStore } from '~/stores/auth';
         response.data.totalRegistros / numeroRegistrosPagina.value
       )
 
+
     } catch (error: any) {
       if (error.name === 'CanceledError' || error.code === 'ERR_CANCELED') {
         return
@@ -322,24 +322,29 @@ import { useAuthStore } from '~/stores/auth';
   async function getInfosPedidosInfoAreaCliente(idPedido: number) {
 
     mostrarTodosPedidosItensAreaCliente.value = false
+    
+    if (currentTab.value == 'tab2') {
+      await FetchPedidoItens(idPedido);
+      await AplicaAnaliseCorteLogicoItens(idPedido);
+      return null;
+    } else {
+      try {
+        const response = await axios.get(`${urlProd}/consultas-sla/area-cliente-pedidos/itens/${idPedido}`,
+          { headers: { Authorization: `Bearer ${token ?? ""}`, } }
+        );
 
-    try {
-      const response = await axios.get(`${urlProd}/consultas-sla/area-cliente-pedidos/itens/${idPedido}`,
-        { headers: { Authorization: `Bearer ${token ?? ""}`, } }
-      );
+        infoPedidosItensTabelaAreaCliente.value = response.data
+        infoPedidosItensTabelaAreaClienteStatic.value = response.data
 
-      infoPedidosItensTabelaAreaCliente.value = response.data
-      infoPedidosItensTabelaAreaClienteStatic.value = response.data
+        mostrarTodosPedidosItensAreaCliente.value = true
 
-      mostrarTodosPedidosItensAreaCliente.value = true
+        return infoPedidosItensTabelaAreaCliente.value
+      } catch (error) {
+        mostrarTodosPedidosItensAreaCliente.value = false
 
-      return infoPedidosItensTabelaAreaCliente.value
-    } catch (error) {
-      mostrarTodosPedidosItensAreaCliente.value = false
-
-      throw error
+        throw error
+      }
     }
-
   };
   async function abrirModalPedidosItens() {
     const el = document.getElementById('PedidoItensModal');
@@ -389,11 +394,7 @@ import { useAuthStore } from '~/stores/auth';
       console.error("Erro ao buscar PDF Pedido", err);
     }
   };
-const isMobile = ref(window.innerWidth <= 768);
 
-window.addEventListener("resize", () => {
-  isMobile.value = window.innerWidth <= 768;
-});
   const getPDFDanfe = async (ID_Pedido: number): Promise<boolean> => {
     try {
       const response = await axios.post(
@@ -474,7 +475,7 @@ window.addEventListener("resize", () => {
       infoPedidoItens.value = await getInfosPedidosInfoAreaCliente(ID_Pedido);
     }
   };
-    const ativarSubLinhaItensAreaCliente = async (ID_Pedido: number) => {
+  const ativarSubLinhaItensAreaCliente = async (ID_Pedido: number) => {
     infoPedidoAreaClienteItens.value = [];
 
     if (linhaExpandidaDaTabelaAreaCliente.value ===  ID_Pedido) {
@@ -586,6 +587,12 @@ window.addEventListener("resize", () => {
 
 
   const clickRefreshPedidosButton = async () => {
+    if(currentTab.value == 'tab2'){
+      await FetchAllPedidosAguardando();
+      filtrarPedidosGuia2()
+      return;
+    }
+
     try {
       await buscarPedidos50();
       ToastSuccess("Lista de pedidos atualizada com sucesso!")
@@ -612,10 +619,11 @@ window.addEventListener("resize", () => {
   // ---------------------------------------------/
 
   // FORMATAÇÕES DE DADOS ------------------------\
-  // watch(querieProcura, () => {
-  //   OnKeyUpBarraPesquisa();
-  //   // filtrarPedidosGuia1();
-  // });
+  watch(querieProcuraTab2, () => {
+    if(currentTab.value == 'tab2') {
+      filtrarPedidosGuia2();
+    }
+  });
 
 
   // watch(tabelaPedidosCarregada, async (loaded) => {
@@ -627,7 +635,7 @@ window.addEventListener("resize", () => {
     if(currentTab.value == 'tab1') {
       await carregarTabela();
     } else if(currentTab.value == 'tab2') {
-      await getInfosPedidosAreaCliente('corte-logico');
+      // await getInfosPedidosAreaCliente('corte-logico');
     } else if(currentTab.value == 'tab3') {
       await getInfosPedidosAreaCliente('pendentes');
     } else if(currentTab.value == 'tab4') {
@@ -651,15 +659,7 @@ window.addEventListener("resize", () => {
   const OnKeyUpBarraPesquisa = async (event: KeyboardEvent) => {
     if (event.key === 'Enter' || querieProcura.value === '') {
       event.preventDefault(); // evita submit de form
-    if(currentTab.value == 'tab1') {
-      await carregarTabela();
-    } else if(currentTab.value == 'tab2') {
-      await getInfosPedidosAreaCliente('corte-logico');
-    } else if(currentTab.value == 'tab3') {
-      await getInfosPedidosAreaCliente('pendentes');
-    } else if(currentTab.value == 'tab4') {
-      await getInfosPedidosAreaCliente('cancelados');
-    } 
+      OnClickLupaBarraPesquisa();
     }
   };
 
@@ -683,6 +683,22 @@ window.addEventListener("resize", () => {
       );
     });
   };
+
+const filtrarPedidosGuia2 = () => { 
+  const query = querieProcuraTab2.value.toLowerCase();
+
+  infoPedidosTabelaAreaCliente.value = infoPedidosTabelaAreaClienteStatic.value.filter((item) => {
+
+    const guia = item.guiaRemessa?.toString().toLowerCase().includes(query);
+    const pedido = item.pedido?.toString().toLowerCase().includes(query);
+    const ov = item.ov?.toString().toLowerCase().includes(query);
+    const nfe = item.nfe?.toString().toLowerCase().includes(query);
+    const status = item.status?.toString().toLowerCase().includes(query);
+    const destinatario = item.destinatario?.toString().toLowerCase().includes(query);
+    const uf = item.uF?.toString().toLowerCase().includes(query);
+    return guia || pedido || ov || nfe || status || destinatario || uf;
+  });
+};
   
   const normalizar = (str: string) => {
     if (!str) return "";
@@ -798,20 +814,34 @@ window.addEventListener("resize", () => {
   const infoPedidosGuiaRemessa = ref<objetoPadrao[]>();
   const infoPedidosGuiaRemessaStatic = ref<objetoPadrao[]>();
 
-  const FetchPedidoGuiaRemessa = async () => {
-    // this.$refs.selectedPedidoCorteLogico.isLoadingInputValue(true);
-    try {
-      let res = await axios.get(`${urlBase}/sla/pedido/pedido-guia-remessa/${ID_Carteira.value}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+  // const FetchPedidoGuiaRemessa = async () => {
+  //   // this.$refs.selectedPedidoCorteLogico.isLoadingInputValue(true);
+  //   try {
+  //     let res = await axios.get(`${urlBase}/sla/pedido/pedido-guia-remessa/${ID_Carteira.value}`, {
+  //       headers: { Authorization: `Bearer ${token}` }
+  //     });
 
-      // Aqui vai os pedidos que estão na tabela no momento:
-      infoPedidosGuiaRemessaStatic.value = res.data;
-      infoPedidosGuiaRemessa.value = res.data;
+  //     // Aqui vai os pedidos que estão na tabela no momento:
+  //     infoPedidosGuiaRemessaStatic.value = res.data;
+  //     infoPedidosGuiaRemessa.value = res.data;
+  //   } catch (error) {
+  //     console.error(error);
+  //   } finally {
+  //     // this.$refs.selectedPedidoCorteLogico.isLoadingInputValue(false);
+  //   }
+  // };
+  const FetchPedidoGuiaRemessa = async () => {
+    try {
+      const lista: objetoPadrao[] = infoPedidosTabelaAreaClienteStatic.value.map((item, index) => ({
+        id: item.idPedido,
+        cNome: `${item.pedido} • ${item.guiaRemessa}`
+      }));
+
+      infoPedidosGuiaRemessaStatic.value = lista;
+      infoPedidosGuiaRemessa.value = lista;
+
     } catch (error) {
       console.error(error);
-    } finally {
-      // this.$refs.selectedPedidoCorteLogico.isLoadingInputValue(false);
     }
   };
 
@@ -875,16 +905,19 @@ window.addEventListener("resize", () => {
       isLoadingPDF.value = true;
       let body = {};
 
+      const listaPedidos = infoPedidosTabelaAreaCliente.value.map(item => item.idPedido);
+
       if (isAguardandoOption.value) {
         body = {
           ID_Carteira: ID_Carteira.value,
           // listaID_Pedidos: [] // substituida pelo novo formato da query
-          query: querieProcura.value // substituida pelo novo formato da query
+          query: querieProcuraTab2.value // substituida pelo novo formato da query
         };
       } else {
+
         body = {
           ID_Carteira: ID_Carteira.value,
-          listaID_Pedidos: [] // substituida pelo novo formato da query
+          listaID_Pedidos: [selectedPedidoGuiaRemessa.value?.id] // substituida pelo novo formato da query
         };
       }
 
@@ -1018,6 +1051,187 @@ window.addEventListener("resize", () => {
     }
   };
 
+// NOVA QUESTÃO DO CORTE LÓGICO --------------------------------------------------------\
+//
+function mapPedidoAguardandoParaTabela(pedido: any) {
+  return {
+    idPedido:                   pedido.iD_Pedido,
+    data:                       pedido.dInput,
+    guiaRemessa:                pedido.cGuiaRemessa,
+    pedido:                     pedido.cNumPedido,
+    ov:                         pedido.cCK,
+    nfe:                        pedido.cNumNFE,
+    volume:                     pedido.cVolume,
+    destinatario:               pedido.cNomeEntrega,
+    uF:                         pedido.cUFEntrega,
+    status:                     pedido.cSituacao,
+    transportadora:             pedido.cTransportadora,
+    dataRecebimentoAPIPedido:   pedido.dInput,       // tab3 - ajuste se houver campo específico
+    dataCancelamentoPedido:     null,                // tab4 - ajuste se houver campo específico
+  };
+}
+
+async function FetchAllPedidosAguardando() {
+  tabelaPronta.value = false;
+
+  const auth = useAuthStore();
+
+  try {
+    const res = await axios.get(
+      `${useUrlProd()}/sla/pedido/tela-selecionar-pedidos/${auth.idCarteira}`,
+      { headers: { Authorization: `Bearer ${auth.token}` } }
+    );
+
+    const data = res.data;
+
+    infoPedidosAguardandoStatic.value = data;
+    infoPedidosAguardando.value = data;
+
+    // roda em paralelo
+    const [_, quantidade] = await Promise.all([
+      FetchAnaliseCorteLogico(),
+      FetchQuantidadePedidosItensSKUsDeUmaListaPedidos(false)
+    ]);
+
+    infoQuantidadePedidosItensAguardando.value = quantidade;
+
+    // map + filter em uma passada
+    const tabela = data
+      .map(mapPedidoAguardandoParaTabela)
+      .filter((ped: PedidoTabelaAreaCliente) => ped.status === 'CORTE LÓGICO');
+
+    infoPedidosTabelaAreaClienteStatic.value = tabela;
+    infoPedidosTabelaAreaCliente.value = tabela;
+
+  } catch (error) {
+    console.error(error);
+  } finally {
+    tabelaPronta.value = true;
+  }
+};
+// //-----------------------
+  async function FetchQuantidadePedidosItensSKUsDeUmaListaPedidos(selecionado: boolean) {
+    try {
+      infoPedidosAguardandoCarregado.value = false;
+      let body;
+      if (selecionado) {
+        body = infoPedidosSelecionado.value.map(ped => ped.iD_Pedido);
+      } else {
+        body = infoPedidosAguardando.value.filter(ped => ped.bSelecionado === false).map(ped => ped.iD_Pedido);
+      }
+      const response = await axios.post(
+      `${useUrlProd()}/sla/pedido/quantidade-pedidos-itens-lista-de-pedidos`,
+      body,
+      { headers: { Authorization: `Bearer ${useAuthStore().token}` } }
+      );
+
+      return response.data;
+    } catch (error) {
+      console.error(error);
+    } finally {
+      infoPedidosAguardandoCarregado.value = true;
+    }
+  };
+// ---------------------
+  async function FetchAnaliseCorteLogico() {
+    // this.disableBottomButtons(true);
+    try {
+      const body = {
+      ID_Carteira: useAuthStore().idCarteira,
+      listaID_Pedidos: infoPedidosAguardando.value
+      .filter(ped => ped.iD_TipoProcessamento === 1)
+      .map(ped => ped.iD_Pedido)
+      };
+
+      const response = await axios.post(
+      `${useUrlProd()}/sla/pedido/analisa-corte-logico`,
+      body,
+      { headers: { Authorization: `Bearer ${useAuthStore().token}` } }
+      );
+
+      infoAnaliseCorteLogico.value = response.data;
+      AplicaAnaliseCorteLogico();
+    } catch (error) {
+      console.error(error);
+    } finally {
+      // this.disableBottomButtons(false);
+    }
+  };
+// ---------------------
+  async function AplicaAnaliseCorteLogico() {
+    corteLogicoPedidoCarregado.value = false;
+
+    // Cria um mapa para acesso rápido por iD_Pedido
+    const analiseMap = new Map();
+    for (const analise of infoAnaliseCorteLogico.value) {
+    analiseMap.set(analise.iD_Pedido, analise.situacao);
+    }
+
+    // Atualiza a lista de pedidos
+    for (const pedido of infoPedidosAguardando.value) {
+    const situacao = analiseMap.get(pedido.iD_Pedido);
+    if (situacao !== undefined) {
+    pedido.cSituacao = situacao === 1 ? 'DISPONÍVEL' : 'CORTE LÓGICO';
+    pedido.bSelecionado = situacao === 1 ? pedido.bSelecionado : false;
+    }
+    }
+    corteLogicoPedidoCarregado.value = true;
+  };
+  async function AplicaAnaliseCorteLogicoItens(ID_Pedido: number) {
+    corteLogicoPedidoItemCarregado.value = false;
+
+    // Encontra a análise referente ao pedido
+    const pedidoItens = infoAnaliseCorteLogico.value.find(a => a.iD_Pedido === ID_Pedido);
+    if (!pedidoItens) return; // Sai se não encontrar
+
+    // Cria um mapa rápido dos itens da análise: key = iD_pedido_Item, value = situacao
+    const analiseItensMap = new Map();
+    for (const item of pedidoItens.itens) {
+      analiseItensMap.set(item.iD_pedido_Item, item.situacao);
+    }
+
+  // Atualiza os itens correspondentes em infoPedidosItens
+  for (const item of infoPedidosItens.value) {
+    const situacao = analiseItensMap.get(item.iD_Pedido_Item);
+
+  if (situacao !== undefined) {
+    item.cSituacao = situacao === 1 ? 'DISPONÍVEL' : 'CORTE LÓGICO';
+  }
+  }
+
+   corteLogicoPedidoItemCarregado.value = true;
+  };
+  async function FetchPedidoItens(ID_Pedido: number) {
+    mostrarTodosPedidosItensAreaCliente.value = false;
+    try {
+      const res = await axios.get(`${useUrlProd()}/sla/pedido-item/por-pedido/${ID_Pedido}`,
+      { headers: { Authorization: `Bearer ${useAuthStore().token}` } }
+      );
+
+      infoPedidosItens.value = res.data;
+
+     AplicaAnaliseCorteLogicoItens(ID_Pedido);
+     
+     infoPedidosItensTabelaAreaCliente.value = infoPedidosItens.value.map(traduzirPedidoItem)
+
+     return res.data;
+
+    } catch (error) {
+      console.error(error);
+    } finally {
+      mostrarTodosPedidosItensAreaCliente.value = true;
+    }
+  };  
+  const traduzirPedidoItem = (item: any): PedidoItensTabelaAreaCliente => {
+    return {
+      iD_Pedido: item.iD_Pedido ?? null,
+      cdProduto: item.cCodComponente ?? null,
+      nmProduto: item.cDescricao ?? null,
+      quantidade: item.iQuantidade ?? null,
+      guiaRemessa: null, 
+      itemComCorteLogico: item.cSituacao === "CORTE LÓGICO" ? "SIM" : null
+    }
+  }
   // MOUNTED --------------------------------------
   onMounted(async () => {
     await carregarTabela();
@@ -1152,7 +1366,7 @@ window.addEventListener("resize", () => {
     <!-- DIV CABEÇALHO -->
     <SetorProducaoSLAMenuSuperior 
       funcionalidadeProp="SLA - PEDIDOS"
-      destinoVoltarProp="/"
+      destinoVoltarProp="/SLA"
       :srcFoto="logoPath"
     /> 
     
@@ -1201,7 +1415,7 @@ window.addEventListener("resize", () => {
                   data-bs-target="#relatorioCorteLogicoModal"
                   @click="OnClickRelatorioCorteLogico()">
                   <IconsExcel corProp="currentColor" alturaProp="1" larguraProp="1"/> 
-                  Exportar PDF • HISTÓRICO</button>
+                  Exportar PDF • CORTE LÓGICO</button>
 
                 <!-- EXCEL  -->
                 <!-- <button :disabled="isLoadingEXCELRelatorio" id="exportar-EXCEL-button" type="button"
@@ -1220,7 +1434,17 @@ window.addEventListener("resize", () => {
               </div>
   
               <div class="input-group input-group-sm WIDTH-28 HEIGHT-100">
-                <input
+                <input v-if="currentTab === 'tab2'"
+                  autocomplete="off"
+                  v-model="querieProcuraTab2"
+                  id="barra-procura"
+                  type="text"
+                  class="form-control BOR-grey FSIZE-12px HEIGHT-90"
+                  placeholder="Buscar"
+                  />
+                  <!-- @keyup="OnKeyUpBarraPesquisa" -->
+
+                  <input v-else
                   autocomplete="off"
                   v-model="querieProcura"
                   id="barra-procura"
@@ -1240,49 +1464,37 @@ window.addEventListener("resize", () => {
           </div>
 
           <!-- DIV PARA A TABELA - PARTE BRANCA - CORPO -->
-          <div ref="tableContainer" class="table-container WIDTH-100 BOR-SensacaoAfundado HEIGHT-94" :class="{ 'com-scroll': linhaExpandidaDaTabelaAreaCliente !== null }" :style="{ '--row-h': rowHeightPx + 'px' }">
+          <div ref="tableContainer" class="table-container WIDTH-100 BOR-SensacaoAfundado HEIGHT-94" :class="{ 'com-scroll': ( linhaExpandidaDaTabelaAreaCliente !== null || currentTab == 'tab2') }" :style="{ '--row-h': rowHeightPx + 'px' }">
             <!-- TABELA -->
             <table class="table-responsive table-sm table-striped table-fixed WIDTH-100 BORRAD-5 FSIZE-PADRAO-TABLE">
               <thead class="BGC-cinza-secondary POSITION-sticky TOP-0">
                
                 <!-- CABEÇALHO QUANDO A TABELA FOR DA TAB1 -->
-                <tr v-if="currentTab == 'tab1'">
-                  <th :class="[isMobile ? 'WIDTH-4' : 'WIDTH-2', 'TEXTALI-center no-wrap-text']"></th>
-                  <th :class="[isMobile ? 'WIDTH-4' : 'WIDTH-2', 'TEXTALI-center no-wrap-text']"></th>
-                  <th :class="[isMobile ? 'WIDTH-4' : 'WIDTH-2', 'TEXTALI-center no-wrap-text']"></th>
-                  <th :class="[isMobile ? 'WIDTH-4' : 'WIDTH-2', 'TEXTALI-center no-wrap-text']"></th>
-
-                  <th class="WIDTH-7 TEXTALI-center no-wrap-text">DATA</th>
-                  <th class="WIDTH-7 TEXTALI-center no-wrap-text">CK</th>
-
-                  <th :class="[isMobile ? 'WIDTH-8' : 'WIDTH-10', 'TEXTALI-center no-wrap-text']">
-                    GUIA REMESSA
-                  </th>
-
-                  <th :class="[isMobile ? 'WIDTH-8' : 'WIDTH-10', 'TEXTALI-center no-wrap-text']">
-                    PEDIDO
-                  </th>
-
-                  <th class="WIDTH-6 TEXTALI-center no-wrap-text">O.V.</th>
-                  <th class="WIDTH-8 TEXTALI-center no-wrap-text">NFE</th>
-                  <th class="WIDTH-4 TEXTALI-center no-wrap-text">VOL.</th>
-
-                  <th :class="[isMobile ? 'WIDTH-13' : 'WIDTH-17', 'TEXTALI-center no-wrap-text']">
-                    DESTINATÁRIO
-                  </th>
-
-                  <th class="WIDTH-4 TEXTALI-center no-wrap-text">UF</th>
-                  <th class="WIDTH-8 TEXTALI-center no-wrap-text">STATUS</th>
+                <tr v-if="currentTab == 'tab1' ">
+                  <th class="WIDTH-2  TEXTALI-center no-wrap-text"></th>
+                  <th class="WIDTH-2  TEXTALI-center no-wrap-text"></th>
+                  <th class="WIDTH-2  TEXTALI-center no-wrap-text"></th>
+                  <th class="WIDTH-2  TEXTALI-center no-wrap-text"></th>
+                  <th class="WIDTH-7  TEXTALI-center no-wrap-text">DATA</th>
+                  <th class="WIDTH-7  TEXTALI-center no-wrap-text">CK</th>
+                  <th class="WIDTH-10  TEXTALI-center no-wrap-text">GUIA REMESSA</th>
+                  <th class="WIDTH-10 TEXTALI-center no-wrap-text">PEDIDO</th>
+                  <th class="WIDTH-6  TEXTALI-center no-wrap-text">O.V.</th>
+                  <th class="WIDTH-8  TEXTALI-center no-wrap-text">NFE</th>
+                  <th class="WIDTH-4  TEXTALI-center no-wrap-text">VOL.</th>
+                  <th class="WIDTH-17 TEXTALI-center no-wrap-text">DESTINATÁRIO</th>
+                  <th class="WIDTH-4  TEXTALI-center no-wrap-text">UF</th>
+                  <th class="WIDTH-8  TEXTALI-center no-wrap-text">STATUS</th>
                   <th class="WIDTH-14 TEXTALI-center no-wrap-text">TRANSPORTADORA</th>
                 </tr>
 
                 <!-- CABEÇALHO QUANDO A TABELA FOR DA TAB2, 3 OU 4 (ERA ÁREA DO CLIENTE) -->
                 <tr v-if="currentTab != 'tab1'">
-                  <th :class="[isMobile ? 'WIDTH-4' : 'WIDTH-2', 'TEXTALI-center no-wrap-text']"></th>
-                  <th :class="[isMobile ? 'WIDTH-9' : 'WIDTH-9', 'TEXTALI-center no-wrap-text']">DATA</th>
+                  <th class="TEXTALI-center WIDTH-2 no-wrap-text"></th>
+                  <th class="TEXTALI-center WIDTH-9 no-wrap-text">DATA</th>
                   <th class="TEXTALI-center WIDTH-9 no-wrap-text">GUIA REMESSA</th>
                   <th class="TEXTALI-center WIDTH-10 no-wrap-text">PEDIDO</th>
-                  <th class="TEXTALI-center WIDTH-8 no-wrap-text">O.V.</th>
+                  <th class="TEXTALI-center WIDTH-8 no-wrap-text">CK</th>
                   <th class="TEXTALI-center WIDTH-9 no-wrap-text">NFE</th>
                   <th class="TEXTALI-center WIDTH-5 no-wrap-text">VOL.</th>
                   <th v-if="currentTab == 'tab2'" class="TEXTALI-center WIDTH-17 no-wrap-text">DESTINATÁRIO</th>
@@ -1477,8 +1689,8 @@ window.addEventListener("resize", () => {
 
         
         <div class="WIDTH-100 HEIGHT-5">
-
-          <LayoutPaginacaoTabelas
+          
+          <LayoutPaginacaoTabelas v-if="currentTab !== 'tab2'"
             v-model:currentPage="paginaAtual"
             :totalPages="totalPaginas"
             @page-change="btnProxClicado"
@@ -1526,9 +1738,9 @@ window.addEventListener("resize", () => {
             <button
               type="button"
               class="btn btn-azul-claro WIDTH-18 HEIGHT-80 D-flex JC-center ALITEM-center"
-              @click="ToastWarning(`Indicadores desempenho em desenvolvimento.`)"
+              @click="IrParaRota(`/sla/indicadores-desempenho`)"
               >
-              <!-- @click="IrParaRota(`/sla/${idCliente}/estoque`)" -->
+              <!-- @click="ToastWarning('Em desenvolvimento')" -->
               Indic. Desempenho
             </button>
 
@@ -1539,12 +1751,13 @@ window.addEventListener("resize", () => {
                  class="btn btn-azul-claro WIDTH-100 HEIGHT-100 D-flex JC-center ALITEM-center"
                  disabled
                  >
-                 <!-- @click="OnClickGerenciadorAPI(`/sla/gerenciadorAPI`)" -->
-                 <!-- style="color: blue;" -->
-                 <!-- @click="IrParaRota(`/sla/gerenciadorAPI`)" -->
                  Gerenciador API
-               </button>
-             </div>
+                </button>
+              </div>
+              <!-- :disabled="userRole != 'Administrador'" -->
+              <!-- @click="OnClickGerenciadorAPI(`/sla/gerenciadorAPI`)" -->
+              <!-- style="color: blue;" -->
+              <!-- @click="IrParaRota(`/sla/gerenciadorAPI`)" -->
 
           </div>
           <div class="WIDTH-100 HEIGHT-50 D-flex ALITEM-center JC-space-between">
@@ -1586,20 +1799,20 @@ window.addEventListener("resize", () => {
 
             <!-- Area do cliente -->
             <button
-              type="button"
+              type="button"    
               class="btn btn-azul-claro WIDTH-18 HEIGHT-80 D-flex JC-center ALITEM-center"
               disabled
               >
-              <!-- @click="IrParaRota(`/sla/pcp`)" -->
               P.C.P.
-
+              
               <span
-                v-if="reservasEmAbertoPCP > 0"
-                class="btn-badge"
+              v-if="reservasEmAbertoPCP > 0"
+              class="btn-badge"
               >
-                {{ reservasEmAbertoPCP }}
-              </span>
-            </button>
+              {{ reservasEmAbertoPCP }}
+            </span>
+          </button>
+          <!-- @click="IrParaRota(`/sla/pcp`)" -->
           </div>
 
         </div>
@@ -1683,7 +1896,7 @@ window.addEventListener("resize", () => {
               <strong v-if="infosEtapasSistemicas?.dataCorteLogico !== 'N/C'" class="COLOR-red">{{ infosEtapasSistemicas?.dataCorteLogico }}</strong>
               <!-- ============================= -->
 
-              <strong>{{ infosEtapasSistemicas?.dataGerado }}</strong>         
+              <strong >{{ infosEtapasSistemicas?.dataGerado }}</strong>         
               <strong>{{ infosEtapasSistemicas?.dataSeparado }}</strong>       
               <strong>{{ infosEtapasSistemicas?.dataProcessado }}</strong>     
               <strong>{{ infosEtapasSistemicas?.dataExpedido }}</strong>       
@@ -1704,61 +1917,61 @@ window.addEventListener("resize", () => {
     </div>
   </div>
 
-<div class="modal fade" id="VisualizarPDFs" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="PDFsModalLabel" aria-hidden="false">
-  <div class="modal-dialog modal-xl MAX-WIDTH-80 modal-dialog-centered">
-    <div class="modal-content">
+  <div class="modal fade" id="VisualizarPDFs" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="PDFsModalLabel" aria-hidden="false">
+    <div class="modal-dialog modal-xl MAX-WIDTH-80 modal-dialog-centered">
+      <div class="modal-content">
 
-      <!-- CABEÇALHO MODAL -->
-      <div class="MAX-HEIGHT-8vh PADDING-T5-R10-B5-L10 D-flex JC-space-between ALITEM-center BOR-B-grey-5">
+        <!-- CABEÇALHO MODAL -->
+        <div class="MAX-HEIGHT-8vh PADDING-T5-R10-B5-L10 D-flex JC-space-between ALITEM-center BOR-B-grey-5">
+        
+          <img src="assets\images\Logo-E-azul-enhanced.png" alt="Logo Grupo Embalarte" class="WIDTH-2 HEIGHT-2" title="Grupo Embalarte">
       
-        <img src="assets\images\Logo-E-azul-enhanced.png" alt="Logo Grupo Embalarte" class="WIDTH-2 HEIGHT-2" title="Grupo Embalarte">
-     
-        <h1 class="modal-title fs-5 WIDTH-58 D-flex JC-center ALITEM-center" id="PDFsModalLabel">{{ tituloModalPdfs }}</h1>
+          <h1 class="modal-title fs-5 WIDTH-58 D-flex JC-center ALITEM-center" id="PDFsModalLabel">{{ tituloModalPdfs }}</h1>
 
-        <!-- Botão de Fechar a modal -->
-        <button id="insert-modal-close-button" @click="fecharModalVisualizaPDFs()"
-          data-bs-dismiss="modal" type="button" class="btn-close" aria-label="Close">
-        </button>
+          <!-- Botão de Fechar a modal -->
+          <button id="insert-modal-close-button" @click="fecharModalVisualizaPDFs()"
+            data-bs-dismiss="modal" type="button" class="btn-close" aria-label="Close">
+          </button>
 
-      </div>
-
-        <!-- Corpo MODAL -->
-        <div id="insert-modal-corpo" class="BOR-B-grey-2 HEIGHT-80vh D-flex FD-column PADDING-5">
-    
-          <!-- DIV com PDFs -->
-          <div class="D-flex WIDTH-100 HEIGHT-93">
-         
-            <!-- PDF 1 -->
-            <div v-show="!carregandoPDF" class="D-flex WIDTH-100 FD-column JC-space-between HEIGHT-100 PADDING-R5">
-              <div class="D-flex JC-center ALITEM-center WIDTH-100 HEIGHT-100 BORRAD-5">
-                <iframe id="iframePDF"
-                  class="HEIGHT-100 WIDTH-100 PADDING-0 BORRAD-5 MARGIN-0 ANIMATION-OPA-0-1-125 BOR-B-grey"
-                ></iframe>
-              </div>
-            </div>
-
-            <!-- Carregamento PDF -->
-            <div v-show="carregandoPDF" class="WIDTH-100 HEIGHT-100 BGC-cinza-10 PADDING-B5 MARGIN-0 D-flex JC-center ALITEM-center">
-              <img src="/assets/images/Embys-PDF.png" alt="Carregando..." class=""
-                style="width: 300px; height: auto;"/>
-            </div>
-
-          </div>
-
-          <div class="D-flex WIDTH-100 HEIGHT-7 p-1 JC-start ALITEM-center">
-            <button type="button" class="btn btn-dark WIDTH-10 FSIZE-11px HEIGHT-90"
-            @click="enviaEmailPDF(idPedidoPDF, userID, tituloModalPdfs)"
-            >
-              ENVIAR E-MAIL
-            </button>
-          </div>
-
-          
         </div>
 
+          <!-- Corpo MODAL -->
+          <div id="insert-modal-corpo" class="BOR-B-grey-2 HEIGHT-80vh D-flex FD-column PADDING-5">
+      
+            <!-- DIV com PDFs -->
+            <div class="D-flex WIDTH-100 HEIGHT-93">
+          
+              <!-- PDF 1 -->
+              <div v-show="!carregandoPDF" class="D-flex WIDTH-100 FD-column JC-space-between HEIGHT-100 PADDING-R5">
+                <div class="D-flex JC-center ALITEM-center WIDTH-100 HEIGHT-100 BORRAD-5">
+                  <iframe id="iframePDF"
+                    class="HEIGHT-100 WIDTH-100 PADDING-0 BORRAD-5 MARGIN-0 ANIMATION-OPA-0-1-125 BOR-B-grey"
+                  ></iframe>
+                </div>
+              </div>
+
+              <!-- Carregamento PDF -->
+              <div v-show="carregandoPDF" class="WIDTH-100 HEIGHT-100 BGC-cinza-10 PADDING-B5 MARGIN-0 D-flex JC-center ALITEM-center">
+                <img src="/assets/images/Embys-PDF.png" alt="Carregando..." class=""
+                  style="width: 300px; height: auto;"/>
+              </div>
+
+            </div>
+
+            <div class="D-flex WIDTH-100 HEIGHT-7 p-1 JC-start ALITEM-center">
+              <button type="button" class="btn btn-dark WIDTH-10 FSIZE-11px HEIGHT-90"
+              @click="enviaEmailPDF(idPedidoPDF, userID, tituloModalPdfs)"
+              >
+                ENVIAR E-MAIL
+              </button>
+            </div>
+
+            
+          </div>
+
+      </div>
     </div>
   </div>
-</div>
 
   <div class="modal fade" id="PedidoItensModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="PedidoItensModalLabel" aria-hidden="true">
     <div class="modal-dialog MIN-WIDTH-80  modal-dialog-scrollable">
@@ -1841,8 +2054,6 @@ window.addEventListener("resize", () => {
     </div>
   </div>
 
-
-
 </template>
 
 <style scoped>
@@ -1920,20 +2131,4 @@ window.addEventListener("resize", () => {
   width: 20px;
   height: 20px;
 }
-
-@media (max-width: 768px) {
-  .table-container {
-    overflow-x: auto;
-  }
-
-  .table-container table {
-    min-width: 700px;
-  }
-}
-
-.table-container {
-  cursor: grab;
-}
-
-
 </style>

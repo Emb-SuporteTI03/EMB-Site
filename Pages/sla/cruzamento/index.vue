@@ -14,12 +14,12 @@ const urlBase = useUrlProd();
 
 const authStore = useAuthStore();
 const userID = ref(authStore.idUsuario);
-// const userID_Unidade = ref(authStore.ID_Unidade).value;
-// const userNome = ref(authStore.nome);
-// const siglaUsuario = ref(authStore.sigla);
-// const ID_Area = ref(authStore.ID_Unidade ?? 0);
+const userID_Unidade = ref(authStore.ID_Unidade).value;
+const userNome = ref(authStore.nome);
+const siglaUsuario = ref(authStore.sigla);
+const ID_Area = ref(authStore.ID_Unidade ?? 0);
 const ID_Carteira = ref(authStore.idCarteira ?? 0);
-const userRole = ref(authStore.idFuncao ?? "");
+const userRole = ref(authStore.userRole ?? "");
 
 const logoPath = `/CLIENTES/${ID_Carteira.value}.png`;
 const dataInicial = ref("")
@@ -152,7 +152,7 @@ const totalQuantidadeAbastecimento = computed(() => {
 
       return (
         (codProduto  ? comp.codigoComponente?.toLowerCase().includes(codProduto) : true) &&
-        (descProduto ? comp.descricaoComponente?.toLowerCase().includes(descProduto) : true) &&
+        // (descProduto ? comp.descricaoComponente?.toLowerCase().includes(descProduto) : true) &&
         dentroIntervalo
       );
     })
@@ -180,7 +180,7 @@ const totalQuantidadeConsumo = computed(() => {
 
       return (
         (codProduto  ? comp.codigoComponente?.toLowerCase().includes(codProduto) : true) &&
-        (descProduto ? comp.descricaoComponente?.toLowerCase().includes(descProduto) : true) &&
+        // (descProduto ? comp.descricaoComponente?.toLowerCase().includes(descProduto) : true) &&
         dentroIntervalo
       );
     })
@@ -341,12 +341,10 @@ const onchangeDescComponente = async () => {
   if (!registroEncontrado) {
     selectedCodProduto.value = infosTableConsumoSLA.value.find(comp => comp.descricaoComponente === selectedDescProduto.value.cNome) || null
   }
-    
   selectedCodProduto.value = {
     id: null,
     cNome: null
   }
-
   const registroCodigo = produtoEscolhaFiltro.value.find(comp => comp.id === selectedDescProduto.value.id) || null;
   selectedCodProduto.value = {
     id: null,
@@ -362,55 +360,76 @@ const onchangeDescComponente = async () => {
 }
 
 const aplicarFiltros = async () => {
-  const codProduto =
-    selectedCodProduto.value?.cNome?.toLowerCase() ?? "";
+const codProduto =
+selectedCodProduto.value?.cNome?.toLowerCase() ?? "";
 
-  const descProduto =
-    selectedDescProduto.value?.cNome?.toLowerCase() ?? "";
+const descProduto =
+selectedDescProduto.value?.cNome?.toLowerCase() ?? "";
 
-  infosTableAbastecimentoSLA.value = staticInfosTableAbastecimentoSLA.value.filter(comp => {
-    // Validação de datas (comp.dataTramite vem como dd/MM/yyyy)
-    let dentroIntervalo = true;
-    if (comp.dataTramite && dataInicial.value && dataFinal.value) {
-      const [dia, mes, ano] = comp.dataTramite.split("/");
-      const dataItem = new Date(`${ano}-${mes}-${dia}`); // normaliza para yyyy-MM-dd
-      const inicio = new Date(dataInicial.value);
-      const fim    = new Date(dataFinal.value);
+infosTableAbastecimentoSLA.value = staticInfosTableAbastecimentoSLA.value.filter(comp => {
+let dentroIntervalo = true;
 
-      dentroIntervalo = dataItem >= inicio && dataItem <= fim;
-    }
+if (comp.dataTramite && dataInicial.value && dataFinal.value) {
+  const [dia, mes, ano] = comp.dataTramite.split("/");
+  const dataItem = new Date(`${ano}-${mes}-${dia}`);
+  const inicio = new Date(dataInicial.value);
+  const fim = new Date(dataFinal.value);
 
-    return (
-      (codProduto     ? comp.codigoComponente?.toLowerCase().includes(codProduto) : true) &&
-      (descProduto    ? comp.descricaoComponente?.toLowerCase().includes(descProduto) : true) &&
-      dentroIntervalo
-    );
-  });
+  dentroIntervalo = dataItem >= inicio && dataItem <= fim;
+}
 
-  infosTableConsumoSLA.value = staticInfosTableConsumoSLA.value.filter(comp => {
-    // Validação de datas (comp.dataTramite vem como dd/MM/yyyy)
-    let dentroIntervalo = true;
-    if (comp.dataTramite && dataInicial.value && dataFinal.value) {
-      const [dia, mes, ano] = comp.dataTramite.split("/");
-      const dataItem = new Date(`${ano}-${mes}-${dia}`); // normaliza para yyyy-MM-dd
-      const inicio = new Date(dataInicial.value);
-      const fim    = new Date(dataFinal.value);
+const descricaoNormalizada = comp.descricaoComponente
+  ?.split("(")[0]
+  ?.trim()
+  ?.toLowerCase();
 
-      dentroIntervalo = dataItem >= inicio && dataItem <= fim;
-    }
+return (
+  (codProduto
+    ? comp.codigoComponente?.toLowerCase().includes(codProduto)
+    : true) &&
+  (descProduto
+    ? descricaoNormalizada?.includes(descProduto)
+    : true) &&
+  dentroIntervalo
+);
 
-    return (
-      (codProduto     ? comp.codigoComponente?.toLowerCase().includes(codProduto) : true) &&
-      (descProduto    ? comp.descricaoComponente?.toLowerCase().includes(descProduto) : true) &&
-      dentroIntervalo
-    );
-  });
+});
 
-  await nextTick();
+infosTableConsumoSLA.value = staticInfosTableConsumoSLA.value.filter(comp => {
+let dentroIntervalo = true;
 
-  ajustarCompensacaoScrollAbastecimento();
-  ajustarCompensacaoScrollConsumo();
+if (comp.dataTramite && dataInicial.value && dataFinal.value) {
+  const [dia, mes, ano] = comp.dataTramite.split("/");
+  const dataItem = new Date(`${ano}-${mes}-${dia}`);
+  const inicio = new Date(dataInicial.value);
+  const fim = new Date(dataFinal.value);
+
+  dentroIntervalo = dataItem >= inicio && dataItem <= fim;
+}
+
+const descricaoNormalizada = comp.descricaoComponente
+  ?.split("(")[0]
+  ?.trim()
+  ?.toLowerCase();
+
+return (
+  (codProduto
+    ? comp.codigoComponente?.toLowerCase().includes(codProduto)
+    : true) &&
+  (descProduto
+    ? descricaoNormalizada?.includes(descProduto)
+    : true) &&
+  dentroIntervalo
+);
+
+});
+
+await nextTick();
+
+ajustarCompensacaoScrollAbastecimento();
+ajustarCompensacaoScrollConsumo();
 };
+
 const analisaEstoqueLogicoXSintetico = () => {
   estoqueLogico.value = null;
   estoqueSintetico.value = null;
@@ -427,7 +446,7 @@ const analisaEstoqueLogicoXSintetico = () => {
     // labelEstoqueSintetico.classList.add('BGC-input-disabled');
   }
 
-  estoqueLogico.value = (totalEntradas.value || 0) - (totalSaidas.value || 0);
+  estoqueLogico.value = (totalQuantidadeAbastecimento.value || 0) - (totalQuantidadeConsumo.value || 0);
   estoqueSintetico.value = estoqueSinteticoComponente?.value || 0;
 
   if (estoqueLogico.value != estoqueSintetico.value) {
@@ -448,7 +467,6 @@ const analisaEstoqueLogicoXSintetico = () => {
 // REQUISIÇÕES
 async function getInfosAbastecimentoSLA() {
   const authStore = useAuthStore();
-
   try {
     const response = await axios.get(
       `${urlProd}/consultas-sla/sla-abastecimento/${ID_Carteira.value}?idComponente=${selectedCodProduto.value.id}`,
@@ -466,7 +484,11 @@ async function getInfosAbastecimentoSLA() {
     console.error("Erro ao buscar dados:");
   }
 };
-
+async function onClickRefresh() {
+  await getAbastConsu();
+  await getEstoqueSintetico();
+  analisaEstoqueLogicoXSintetico();
+}
 async function getInfosConsumoSLA() {
   const authStore = useAuthStore();
   try {
@@ -563,7 +585,7 @@ const getAbastConsu = async () => {
   await getInfosAbastecimentoSLA();
   await getInfosConsumoSLA();
   
-  await aplicarFiltros();
+  // await aplicarFiltros();
 
   tabelaConsumoCarregada.value = true;
   tabelaAbastecimentoCarregada.value = true;
@@ -829,7 +851,7 @@ onMounted(async () => {
       />
       
       <!-- ESPAÇO CORPO -->
-      <div class="D-flex FD-column HEIGHT-88vh WIDTH-100 JC-center ALITEM-center BGC-cinza-9 BOR-branca">
+      <div class="D-flex FD-column HEIGHT-90vh WIDTH-100 JC-center ALITEM-center BGC-cinza-9 BOR-branca">
         <div class="D-flex FD-column ALITEM-center JC-center HEIGHT-95 WIDTH-98 BORRAD-5 BGC-branco PADDING-T5-B10">
 
           <!-- Filtros -->
@@ -1029,15 +1051,11 @@ onMounted(async () => {
               <!-- BOTÕES -->
               <div class="WIDTH-30 HEIGHT-100 D-flex FD-column JC-flex-end ALITEM-flex-end BOR-L-solidgrey-1 PADDING-T5-R5-B5-L10">
                 <div class="WIDTH-100 HEIGHT-50 D-flex JC-flex-end ALITEM-flex-start">
-                  <button id="exportar-EXCEL-button" type="button"
-                    class="btn btn-success FSIZE-14px PADDING-4" @click="onClickExportarExcelAnaliseCompleta()">
-                    <IconsExcel corProp="currentColor" alturaProp="1" larguraProp="1"/> 
-                    Exportar EXCEL - Análise completa</button>
-                </div>
+                      </div>
 
                 <div class="WIDTH-100 HEIGHT-50 D-flex JC-flex-end ALITEM-flex-end " >
 
-                  <div style="margin-right: 10px; cursor: pointer;" @click="getAbastConsu()" title="Atualizar informações">
+                  <div style="margin-right: 10px; cursor: pointer;" @click="onClickRefresh()" title="Atualizar informações">
                     <IconsRefresh
                       corProp="rgb(24, 134, 84)"
                       alturaProp="1.6"
@@ -1048,9 +1066,9 @@ onMounted(async () => {
                   <!-- Botões de EXPORTAR -->
                   <div>
                     <button id="exportar-EXCEL-button" type="button"
-                      class="btn btn-success MARGIN-R5 FSIZE-14px PADDING-4" @click="onClickExportarExcel()">
+                      class="btn btn-success MARGIN-R5 FSIZE-14px PADDING-4" @click="onClickExportarExcelAnaliseCompleta()">
                       <IconsExcel corProp="currentColor" alturaProp="1" larguraProp="1"/> 
-                      Exportar EXCEL</button>
+                      Exportar EXCEL - Análise completa</button>
                       
                     <button id="exportar-PDF-button" type="button"
                       class="btn btn-warning FSIZE-14px PADDING-4" @click="onClickExportarPDF()">

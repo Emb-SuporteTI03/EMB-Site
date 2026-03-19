@@ -37,7 +37,7 @@ export default {
       informacaoIncorreta: 'Informação inválida para este campo.',
       userNome: useAuthStore().nome,
       clienteSigla: {},
-      cliente: {},
+      cliente: '',
       // //////////////////////////////////////////////////
 
       infoEstoque: [],

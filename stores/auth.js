@@ -9,7 +9,7 @@ export const useAuthStore = defineStore('auth', {
   }),
 
   // persistência automática opcional via plugin (ou manual abaixo)
-  // persist: true, 
+  persist: process.dev, 
 
   actions: {
     setAuth(response) {
