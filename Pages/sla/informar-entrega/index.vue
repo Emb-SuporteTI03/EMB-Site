@@ -505,7 +505,6 @@ async function getTransportadorasApenasSLA() {
     isTabelaPedidosCarregada.value = false;
     const url = isERP.value ? `${urlProd}/sla/pedido-entrega/obter-pedido-possivel-informar-entrega/${ID_Carteira}` :
       `${urlProd}/sla/pedido-entrega/obter-pedido-possivel-informar-entrega-transp/${transpID.value}`;
-console.log(url)
     try {
       const response = await axios.get(url,
         { headers: { Authorization: `Bearer ${token.value}` }, }
