@@ -138,6 +138,219 @@ const token = ref(authStore.token ?? "");
     listaIDsPedidos: []
   });
 
+// VARIÁVEIS E MÉTODOS PARA O RELATÓRIO ============
+const selectedTranspFiltroRELATORIOREF = ref(null);
+const selectedClienteRELATORIOREF = ref(null);
+const pedidosRelatorio = ref([]);
+const tablePedidosRelatorioCarregada = ref(false);
+const tabelaWrapperRelatorio = ref(null);
+const paginaAtual = ref(1);
+const totalPaginas = ref(1);
+const itensPorPagina = ref(1); 
+const alturaLinhaDinamica = ref(null);
+const clientesPossiveisRelatorio = ref([])
+const selectedClienteRelatorio = ref(null)
+const baixandoExcelRelatorio = ref(false);
+
+// Computed para o estilo das linhas
+const estiloLinhaTabela = computed(() => {
+  return alturaLinhaDinamica.value 
+    ? { height: `${alturaLinhaDinamica.value}px` }
+    : {};
+});
+
+// Função para calcular quantas linhas cabem perfeitamente
+async function calcularLinhasPorPagina() {
+  await nextTick();
+
+  const wrapper = tabelaWrapperRelatorio.value;
+  if (!wrapper) return;
+
+  const alturaDisponivel = wrapper.clientHeight;
+
+  if (!alturaDisponivel) {
+    setTimeout(calcularLinhasPorPagina, 50);
+    return;
+  }
+
+  const thead = wrapper.querySelector('thead');
+  const alturaHeader = thead ? thead.offsetHeight : 0;
+
+  const alturaCorpo = alturaDisponivel - alturaHeader;
+
+  const alturaMinLinha = 28;
+  const alturaMaxLinha = 60;
+
+  let linhasPossiveis = Math.floor(alturaCorpo / alturaMinLinha);
+
+  // 🔴 proteção ESSENCIAL
+  if (linhasPossiveis <= 0) linhasPossiveis = 1;
+
+  let alturaCalculada = alturaCorpo / linhasPossiveis;
+
+  if (alturaCalculada > alturaMaxLinha) {
+    linhasPossiveis = Math.floor(alturaCorpo / alturaMaxLinha);
+    if (linhasPossiveis <= 0) linhasPossiveis = 1;
+
+    alturaCalculada = alturaCorpo / linhasPossiveis;
+  }
+
+  itensPorPagina.value = linhasPossiveis;
+  alturaLinhaDinamica.value = alturaCalculada;
+
+  await getPedidosParaRelatorio();
+}
+
+const cksPossiveisRelatorio = ref([])
+const selectedCKRelatorio = ref(null)
+
+// const transportadorasPossiveisRelatorio = ref([])
+// const selectedTransportadoraRelatorio = ref(null)
+
+const tramitesPossiveisRelatorio = ref([])
+const selectedTramiteRelatorio = ref(null)
+
+const pedidosPossiveisRelatorio = ref([])
+const selectedPedidoRelatorio = ref(null)
+
+const NFsPossiveisRelatorio = ref([])
+const selectedNFRelatorio = ref(null)
+
+const NFTranspPossiveisRelatorio = ref([])
+const selectedNFTranspRelatorio = ref(null)
+
+const statusPossiveisRelatorio = ref([])
+const selectedStatusPedidoRelatorio = ref(null)
+
+const abrirModalRelatorioSaidas = async () => {
+  showModal('RelatorioSaidasModal', true);
+
+  setTimeout(() => {
+    calcularLinhasPorPagina();
+  }, 150);
+
+  window.addEventListener('resize', calcularLinhasPorPagina);
+  selectedTranspFiltroRELATORIOREF.value?.desabilitar();
+};
+const fecharModalRelatorioSaidas = () => {
+  showModal('RelatorioSaidasModal', false);
+  limpaInfosRelatorioSaidasModal();
+  window.removeEventListener('resize', calcularLinhasPorPagina);
+};
+async function limpaInfosRelatorioSaidasModal() {
+  selectedCKRelatorio.value = null;
+  selectedTramiteRelatorio.value = null;
+  selectedPedidoRelatorio.value = null;
+  selectedNFRelatorio.value = null;
+  selectedNFTranspRelatorio.value = null;
+  selectedStatusPedidoRelatorio.value = null;
+
+  cksPossiveisRelatorio.value = [];
+  tramitesPossiveisRelatorio.value = [];
+  pedidosPossiveisRelatorio.value = [];
+  NFsPossiveisRelatorio.value = [];
+  NFTranspPossiveisRelatorio.value = [];
+  statusPossiveisRelatorio.value = [];
+
+  await calcularLinhasPorPagina();
+};
+async function getPedidosParaRelatorio() {
+  tablePedidosRelatorioCarregada.value = false;
+
+  const url = `${urlProd}/consultas-sla/busca-pedidos-possiveis-relatorio`;
+  try {
+    const response = await axios.get(url, {
+      headers: { 
+        Authorization: `Bearer ${token.value}` 
+      },
+      params: {
+        iDTransportadora: ID_Carteira.value,
+
+        pagina: paginaAtual.value,
+        itensPorPagina: itensPorPagina.value,
+
+        ck: selectedCKRelatorio.value?.value || null,
+        cliente: selectedClienteRelatorio.value?.value || null,
+        pedidoId: selectedPedidoRelatorio.value?.value || null,
+        nf: selectedNFRelatorio.value || null,
+        nfTransp: selectedNFTranspRelatorio.value || null,
+        status: selectedStatusPedidoRelatorio.value?.value || null
+      }
+    });
+
+    const data = response.data;
+
+    pedidosRelatorio.value = data.pedidos;
+    totalPaginas.value = data.totalPaginas;
+    paginaAtual.value = data.paginaAtual;
+
+    cksPossiveisRelatorio.value = data.cksPossiveis || [];
+    pedidosPossiveisRelatorio.value = data.pedidosPossiveis || [];
+    NFsPossiveisRelatorio.value = data.nFsPossiveis || [];
+    NFTranspPossiveisRelatorio.value = data.nfTranspPossiveis || [];
+    statusPossiveisRelatorio.value = data.statusPossiveis || [];
+    clientesPossiveisRelatorio.value = data.clientesPossiveis || [];
+
+  } catch (err) {
+    console.error('Erro ao buscar pedidos:', err);
+  } finally {
+    tablePedidosRelatorioCarregada.value = true;
+  }
+}
+async function aplicarFiltrosRelatorio() {
+  paginaAtual.value = 1;
+  await getPedidosParaRelatorio();
+};
+async function downloadExcelRelatorio() {
+
+  baixandoExcelRelatorio.value = true;
+  ToastWarning("Gerando relatório, aguarde")
+
+  try {
+    const url = `${urlProd}/consultas-sla/excel-relatorio-pedidos`;
+
+    const response = await axios.post(url,
+      {
+        IDTransportadora: ID_Carteira.value,
+        ck: selectedCKRelatorio.value?.value || null,
+        cliente: selectedClienteRelatorio.value?.value || null,
+        pedidoId: selectedPedidoRelatorio.value?.value || null,
+        nf: selectedNFRelatorio.value || null,
+        nfTransp: selectedNFTranspRelatorio.value || null,
+        status: selectedStatusPedidoRelatorio.value?.value || null,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token.value}`
+        },
+        responseType: 'blob'
+      }
+    );
+
+    // 🔽 Criar download do arquivo
+    const blob = new Blob([response.data], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    });
+
+    const link = document.createElement('a');
+    link.href = window.URL.createObjectURL(blob);
+
+    link.download = `SLA_SAIDAS_${new Date().toLocaleDateString('pt-BR')}.xlsx`;
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    ToastWarning("Relatório gerado com sucesso!")
+
+  } catch (err) {
+    console.error('Erro ao baixar Excel:', err);
+  }
+
+  baixandoExcelRelatorio.value = false;
+
+};
+
   // PARA A BARRA DE TOTAL FICAR CORRETAMENTE ALINHADA ===========================\
   const compensacaoScrollPossiveis = ref('17');
   const compensacaoScrollSelecionados = ref('17');
@@ -305,6 +518,7 @@ const token = ref(authStore.token ?? "");
   };
 
   // MODAL 
+
   const abrirModalEtapasSistema = async (ID_Pedido) => {
     showModal('EtapasSistemaModal', true);
 
@@ -1374,6 +1588,247 @@ async function getTransportadorasApenasSLA() {
 
 <template>
 
+  <div class="modal fade" id="RelatorioSaidasModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="RelatorioSaidasModalLabel">
+    <div class="modal-dialog modal-xl WIDTH-89">
+      <div class="modal-content" id="modalRelatorioSaidasClick">
+
+        <!-- CABEÇALHO  -->
+        <div class="MAX-HEIGHT-8vh PADDING-T5-R10-B5-L10 D-flex JC-space-between ALITEM-center BOR-B-grey-5">
+        
+          <img src="assets\images\Logo-E-azul-enhanced.png" alt="Logo Grupo Embalarte" class="WIDTH-2 HEIGHT-2" title="Grupo Embalarte">
+      
+          <h1 class="modal-title fs-5 WIDTH-58 D-flex JC-center ALITEM-center">RELATÓRIO ENTREGAS</h1>
+
+          <!-- Botão de Fechar a modal -->
+          <button id="insert-modal-close-button" @click="fecharModalRelatorioSaidas()"
+            data-bs-dismiss="modal" type="button" class="btn-close" aria-label="Close">
+          </button>
+
+        </div>
+
+        <!-- CORPO -->
+        <div class="BOR-B-grey-2 D-flex FD-column p-1" style="height: 70vh;">
+
+          <!-- FILTROS -->
+          <div class="D-flex WIDTH-100 JC-space-between mb-4" style="height: 12vh;">
+
+            <div class="D-flex WIDTH-33 FD-column ALITEM-center JC-space-between PADDING-T0-R5-B5-L5">
+              
+              <!-- CLIENTE -->
+              <BasicElementVue3SelectPequeno
+                ref="selectedClienteREF"
+
+                :options="clientesPossiveisRelatorio"
+                v-model="selectedClienteRelatorio"
+
+                label="CLIENTE"
+                :titulo="selectedClienteRelatorio ? selectedClienteRelatorio.label : ''"
+
+                @update:modelValue="aplicarFiltrosRelatorio"
+
+                :divClass="'MARGIN-T21-R-8 WIDTH-100'"
+                :selectClass="''"
+                :labelClass="'FSIZE-12px MARGIN-T-15-L-5'"
+                :widthLista="''"
+                
+                option-label="label"
+                option-value="value"
+              />
+ 
+              
+              <!-- CK -->
+              <BasicElementVue3SelectPequeno
+                ref="selectedCKREF"
+
+                :options="cksPossiveisRelatorio"
+                v-model="selectedCKRelatorio"
+
+                label="CK"
+                :titulo="selectedCKRelatorio ? selectedCKRelatorio.label : ''"
+
+                @update:modelValue="aplicarFiltrosRelatorio"
+            
+                :divClass="'MARGIN-T21-R-8 WIDTH-100'"
+                :selectClass="''"
+                :labelClass="'FSIZE-12px MARGIN-T-15-L-5'"
+                :widthLista="''"
+
+                option-label="label"
+                option-value="value"
+              />
+ 
+            </div>
+          
+            <div class="D-flex WIDTH-33 FD-column JC-space-between PADDING-T0-R5-B5-L10 BOR-L-solidgrey-1">
+              <!-- PEDIDOS -->
+              <BasicElementVue3SelectPequeno
+                :options="pedidosPossiveisRelatorio"
+                v-model="selectedPedidoRelatorio"
+
+                label="PEDIDOS"
+                :titulo="selectedPedidoRelatorio ? selectedPedidoRelatorio.label : ''"
+
+                @update:modelValue="aplicarFiltrosRelatorio"
+
+                :divClass="'MARGIN-T21 WIDTH-100'"
+                :selectClass="''"
+                :labelClass="'FSIZE-12px MARGIN-T-15-L-5'"
+                :widthLista="''"
+
+                option-label="label"
+                option-value="value"
+              />
+
+              <!-- NF -->
+              <BasicElementVue3SelectPequeno
+                :options="NFsPossiveisRelatorio"
+                v-model="selectedNFRelatorio"
+
+                label="NF PEDIDO"
+                :titulo="selectedNFRelatorio ? selectedNFRelatorio.label : ''"
+
+                @update:modelValue="aplicarFiltrosRelatorio"
+
+                :divClass="'MARGIN-T21 WIDTH-100'"
+                :selectClass="''"
+                :labelClass="'FSIZE-12px MARGIN-T-15-L-5'"
+                :widthLista="''"
+
+                option-label="label"
+                option-value="value"
+              />
+
+            </div>
+
+            <div class="D-flex WIDTH-33 FD-column JC-space-between PADDING-T0-R5-B5-L10 BOR-L-solidgrey-1">
+
+              <!-- NF ENTREGA -->
+              <BasicElementVue3SelectPequeno
+                :options="NFTranspPossiveisRelatorio"
+                v-model="selectedNFTranspRelatorio"
+
+                label="NF DE TRANSPORTE"
+                :titulo="selectedNFTranspRelatorio ? selectedNFTranspRelatorio.label : ''"
+
+                @update:modelValue="aplicarFiltrosRelatorio"
+
+                :divClass="'MARGIN-T21 WIDTH-100'"
+                :selectClass="''"
+                :labelClass="'FSIZE-12px MARGIN-T-15-L-5'"
+                :widthLista="''"
+
+                option-label="label"
+                option-value="value"
+              />
+
+              <!-- STATUS PEDIDO -->
+              <BasicElementVue3SelectPequeno
+                :options="statusPossiveisRelatorio"
+                v-model="selectedStatusPedidoRelatorio"
+
+                label="STATUS DO PEDIDO"
+                :titulo="selectedStatusPedidoRelatorio ? selectedStatusPedidoRelatorio.label : ''"
+
+                @update:modelValue="aplicarFiltrosRelatorio"
+
+                :divClass="'MARGIN-T21 WIDTH-100'"
+                :selectClass="''"
+                :labelClass="'FSIZE-12px MARGIN-T-15-L-5'"
+                :widthLista="''"
+
+                option-label="label"
+                option-value="value"
+              />
+
+
+            </div>
+
+          </div>
+
+          <!-- Tabela -->
+          <div class="BOR-SensacaoAfundado OFLOW-auto WIDTH-98 BGC-branco MARGIN-L1P" style="height: 55vh;">
+            <div class="WIDTH-100 HEIGHT-100 OFLOW-auto BGC-branco" ref="tabelaWrapperRelatorio">
+              <table class="table-responsive table-sm table-striped WIDTH-100 BORRAD-5 table-fixed FSIZE-PADRAO-TABLE" style="overflow-x: hidden; width: 100%;">
+                <thead class="BGC-cinza-secondary POSITION-sticky TOP-0">
+                  <tr>
+                    <th class="WIDTH-6  TEXTALI-center no-wrap-text" scope="col">CK</th>
+                    <th class="WIDTH-8  TEXTALI-center no-wrap-text" scope="col">TRÂMITE</th>
+                    <th class="WIDTH-8  TEXTALI-center no-wrap-text" scope="col">NF</th>
+                    <th class="WIDTH-8  TEXTALI-center no-wrap-text" scope="col">G. R.</th>
+                    <th class="WIDTH-10 TEXTALI-center no-wrap-text" scope="col">PEDIDO</th>
+                    <th class="WIDTH-9  TEXTALI-center no-wrap-text" scope="col">OV</th>
+                    <th class="WIDTH-5  TEXTALI-center no-wrap-text" scope="col">VOL.</th>
+                    <th class="WIDTH-5  TEXTALI-center no-wrap-text" scope="col">ITENS</th>
+                    <th class="WIDTH-10 TEXTALI-center no-wrap-text" scope="col">DEST.</th>
+                    <th class="WIDTH-4  TEXTALI-center no-wrap-text" scope="col">UF</th>
+                    <th class="WIDTH-9  TEXTALI-center no-wrap-text" scope="col">CEP</th>
+                    <th class="WIDTH-9  TEXTALI-center no-wrap-text" scope="col">NF TRANSP.</th>
+                    <th class="WIDTH-9  TEXTALI-center no-wrap-text" scope="col">STATUS</th>
+                  </tr>
+                </thead>
+                <LayoutTabelaCarregarEsqueleto
+                  :Linhas="pedidosRelatorio.length === 0 ? itensPorPagina : pedidosRelatorio.length"
+                  :Colunas="13" 
+                  v-if="!tablePedidosRelatorioCarregada" 
+                />
+                <tbody v-if="tablePedidosRelatorioCarregada" class="BORRAD-5">
+                  <template v-for="(pedido, i) in pedidosRelatorio" :key="pedido.iD_Pedido">
+                    <!-- LINHA PRINCIPAL -->
+                    <tr 
+                      class="CURSOR-default BGC-H-cinza-8"
+                      :class="applyTableStipedRows(i)"
+                      :style="estiloLinhaTabela"
+                      :id="pedido.iD_Pedido"
+                    >
+                      <td class="WIDTH-6  TEXTALI-center CTTABLEELPIS" :title="pedido.cCK"           >{{ pedido.cCK }}</td>
+                      <td class="WIDTH-8  TEXTALI-center CTTABLEELPIS" :title="pedido.cTramite"      >{{ pedido.cTramite }}</td>
+                      <td class="WIDTH-8  TEXTALI-center CTTABLEELPIS" :title="pedido.cNumNFe"       >{{ pedido.cNumNFe }}</td>
+                      <td class="WIDTH-8  TEXTALI-center CTTABLEELPIS" :title="pedido.cGuiaRemessa"  >{{ pedido.cGuiaRemessa }}</td>
+                      <td class="WIDTH-10 TEXTALI-center CTTABLEELPIS" :title="pedido.cNumPedido"    >{{ pedido.cNumPedido }}</td>
+                      <td class="WIDTH-9  TEXTALI-center CTTABLEELPIS" :title="pedido.cOV"           >{{ pedido.cOV }}</td>
+                      <td class="WIDTH-5  TEXTALI-right  CTTABLEELPIS" :title="pedido.iVolume"       >{{ pedido.iVolume }}</td>
+                      <td class="WIDTH-5  TEXTALI-right  CTTABLEELPIS" :title="pedido.iQtdeItens"    >{{ pedido.iQtdeItens }}</td>
+                      <td class="WIDTH-10 TEXTALI-left   CTTABLEELPIS" :title="pedido.cDestinatario" >{{ pedido.cDestinatario }}</td>
+                      <td class="WIDTH-4  TEXTALI-center CTTABLEELPIS" :title="pedido.cUF"           >{{ pedido.cUF }}</td>
+                      <td class="WIDTH-9  TEXTALI-center CTTABLEELPIS" :title="pedido.cCEP"          >{{ pedido.cCEP }}</td>
+                      <td class="WIDTH-9  TEXTALI-center CTTABLEELPIS" :title="pedido.cNFTransp"     >{{ pedido.cNFTransp }}</td>
+                      <td class="WIDTH-9  TEXTALI-center CTTABLEELPIS" :title="pedido.cStatus"       >{{ pedido.cStatus }}</td>
+                    </tr>
+                  </template>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="WIDTH-100 HEIGHT-5">
+            <LayoutPaginacaoTabelas
+              v-model:currentPage="paginaAtual"
+              :totalPages="totalPaginas"
+              @page-change="getPedidosParaRelatorio"
+              :enabled="tablePedidosRelatorioCarregada"
+            />
+          </div>
+
+        </div>
+
+        <!-- Rodapé -->
+        <div class="PADDING-T5-R10-B5-L10 D-flex JC-flex-end ALITEM-center BOR-B-grey-5">
+        
+          <button type="button" class="btn btn-dark MARGIN-R10 FSIZE-12px PADDING-4" @click="limpaInfosRelatorioSaidasModal">Limpar</button>
+
+          <!-- EXCEL -->
+          <button :disabled="baixandoExcelRelatorio" id="exportar-EXCEL-button" type="button"
+            class="btn btn-success MARGIN-R5 FSIZE-12px PADDING-4 " @click="downloadExcelRelatorio">
+            <IconsExcel corProp="currentColor" alturaProp="1" larguraProp="1"/> 
+          Relatório de Saídas</button>
+        
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+
+
   <!-- MODAL DE INFORMAR ENTREGA -->
   <div class="modal fade" id="entregaModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="entregaModalLabel">
     <div class="modal-dialog modal-xl WIDTH-35">
@@ -1832,8 +2287,17 @@ async function getTransportadorasApenasSLA() {
                 />
 
                 
-              <div style="margin-right: 10px; cursor: pointer;" @click="clickRefreshPedidosButton()" title="Atualizar informações">
+              <div style="margin-right: 10px; cursor: pointer;">
+
+                <!-- EXCEL -->
+                <button id="exportar-EXCEL-button" type="button"
+                  class="btn btn-success MARGIN-R5 FSIZE-12px PADDING-4 " @click="abrirModalRelatorioSaidas()">
+                  <IconsCaminhao corProp="currentColor" alturaProp="1" larguraProp="1"/> 
+                  Relatório de Saídas</button>
+
+
                 <IconsRefresh
+                  @click="clickRefreshPedidosButton()"
                   corProp="rgb(24, 134, 84)"
                   alturaProp="1.6"
                   larguraProp="1.6"
