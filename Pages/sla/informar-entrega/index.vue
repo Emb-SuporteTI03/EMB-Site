@@ -70,6 +70,9 @@ const token = ref(authStore.token ?? "");
 
   const isTabelaPedidosCarregada = ref(false);
   const selectedClienteREF = ref();
+  const selectedDestinatarioREF = ref();
+  const selectedNumPedidoREF = ref();
+  const selectedUFREF = ref();
   const arquivoSelecionado = ref(null);
   const fileInput = ref(null);
   const excluirFoto = ref(false);
@@ -97,6 +100,9 @@ const token = ref(authStore.token ?? "");
 
   const selectedCK = ref(null);
   const selectedCliente = ref({iD: 0, cNome: ""});
+  const selectedDestinatario = ref({iD: 0, cNome: ""});
+  const selectedUF = ref({iD: 0, cNome: ""});
+  const selectedNumPedido = ref({iD: 0, cNome: ""});
   const selectedNF = ref(null);
   const selectedGuiaRemessa = ref(null);
   const selectedTramite = ref(null);
@@ -219,8 +225,19 @@ const selectedNFRelatorio = ref(null)
 const NFTranspPossiveisRelatorio = ref([])
 const selectedNFTranspRelatorio = ref(null)
 
+const DestinatariosPossiveisRelatorio = ref([])
+const selectedDestinatarioRelatorio = ref(null)
+
+const UFsPossiveisRelatorio = ref([])
+const selectedUFRelatorio = ref(null)
+
 const statusPossiveisRelatorio = ref([])
 const selectedStatusPedidoRelatorio = ref(null)
+
+const totalPedidosRelatorio = ref(null);
+const totalItensRelatorio = ref(null);
+const totalVolumesRelatorio = ref(null);
+
 
 const abrirModalRelatorioSaidas = async () => {
   showModal('RelatorioSaidasModal', true);
@@ -234,6 +251,7 @@ const abrirModalRelatorioSaidas = async () => {
 };
 const fecharModalRelatorioSaidas = () => {
   showModal('RelatorioSaidasModal', false);
+  
   limpaInfosRelatorioSaidasModal();
   window.removeEventListener('resize', calcularLinhasPorPagina);
 };
@@ -244,6 +262,8 @@ async function limpaInfosRelatorioSaidasModal() {
   selectedNFRelatorio.value = null;
   selectedNFTranspRelatorio.value = null;
   selectedStatusPedidoRelatorio.value = null;
+  selectedDestinatarioRelatorio.value = null;
+  selectedUFRelatorio.value = null;
 
   cksPossiveisRelatorio.value = [];
   tramitesPossiveisRelatorio.value = [];
@@ -251,6 +271,14 @@ async function limpaInfosRelatorioSaidasModal() {
   NFsPossiveisRelatorio.value = [];
   NFTranspPossiveisRelatorio.value = [];
   statusPossiveisRelatorio.value = [];
+  UFsPossiveisRelatorio.value = [];
+  DestinatariosPossiveisRelatorio.value = [];
+
+  totalPedidosRelatorio.value = null;
+  totalItensRelatorio.value = null;
+  totalVolumesRelatorio.value = null;
+
+  paginaAtual.value = 1;
 
   await calcularLinhasPorPagina();
 };
@@ -274,7 +302,9 @@ async function getPedidosParaRelatorio() {
         pedidoId: selectedPedidoRelatorio.value?.value || null,
         nf: selectedNFRelatorio.value || null,
         nfTransp: selectedNFTranspRelatorio.value || null,
-        status: selectedStatusPedidoRelatorio.value?.value || null
+        status: selectedStatusPedidoRelatorio.value?.value || null,
+        destinatario: selectedDestinatarioRelatorio.value?.value || null,
+        uf: selectedUFRelatorio.value?.value || null
       }
     });
 
@@ -290,6 +320,11 @@ async function getPedidosParaRelatorio() {
     NFTranspPossiveisRelatorio.value = data.nfTranspPossiveis || [];
     statusPossiveisRelatorio.value = data.statusPossiveis || [];
     clientesPossiveisRelatorio.value = data.clientesPossiveis || [];
+    DestinatariosPossiveisRelatorio.value = data.destinatariosPossiveis || [];
+    UFsPossiveisRelatorio.value = data.uFsPossiveis || [];
+    totalPedidosRelatorio.value = data.totalPedidosRelatorio || 0;
+    totalItensRelatorio.value = data.totalItensRelatorio || 0;
+    totalVolumesRelatorio.value = data.totalVolumesRelatorio || 0;
 
   } catch (err) {
     console.error('Erro ao buscar pedidos:', err);
@@ -308,7 +343,7 @@ async function downloadExcelRelatorio() {
 
   try {
     const url = `${urlProd}/consultas-sla/excel-relatorio-pedidos`;
-
+console.log(selectedUFRelatorio.value)
     const response = await axios.post(url,
       {
         IDTransportadora: ID_Carteira.value,
@@ -318,6 +353,8 @@ async function downloadExcelRelatorio() {
         nf: selectedNFRelatorio.value || null,
         nfTransp: selectedNFTranspRelatorio.value || null,
         status: selectedStatusPedidoRelatorio.value?.value || null,
+        destinatario: selectedDestinatarioRelatorio.value?.value || null,
+        uf: selectedUFRelatorio.value?.value || null
       },
       {
         headers: {
@@ -427,6 +464,24 @@ async function downloadExcelRelatorio() {
   const clientesUnicos = computed(() => {
     if (!infoPedidosPossiveis.value.filter(x => x.bSelecionado === false)) return []
     return [...new Set(infoPedidosPossiveis.value.filter(x => x.bSelecionado === false).map(e => e.cNmFantasia))]
+      .filter(Boolean) // tira undefined/nulos
+      .map(c => ({ iD: c, cNome: c }))
+  });
+  const numPedidosUnicos = computed(() => {
+    if (!infoPedidosPossiveis.value.filter(x => x.bSelecionado === false)) return []
+    return [...new Set(infoPedidosPossiveis.value.filter(x => x.bSelecionado === false).map(e => e.cNumPedido))]
+      .filter(Boolean) // tira undefined/nulos
+      .map(c => ({ iD: c, cNome: c }))
+  });
+  const destinatariosUnicos = computed(() => {
+    if (!infoPedidosPossiveis.value.filter(x => x.bSelecionado === false)) return []
+    return [...new Set(infoPedidosPossiveis.value.filter(x => x.bSelecionado === false).map(e => e.cDestinatario))]
+      .filter(Boolean) // tira undefined/nulos
+      .map(c => ({ iD: c, cNome: c }))
+  });
+  const ufsUnicos = computed(() => {
+    if (!infoPedidosPossiveis.value.filter(x => x.bSelecionado === false)) return []
+    return [...new Set(infoPedidosPossiveis.value.filter(x => x.bSelecionado === false).map(e => e.cUF))]
       .filter(Boolean) // tira undefined/nulos
       .map(c => ({ iD: c, cNome: c }))
   });
@@ -606,9 +661,12 @@ async function downloadExcelRelatorio() {
     const notaFiscal  = normalize(selectedNF.value?.value);
     const notaFiscalEntrega = normalize(selectedNFEntrega.value?.value);
     const guiaRemessa = normalize(selectedGuiaRemessa.value?.value);
+    const codPedido   = normalize(selectedNumPedido.value?.value);
     const tramite     = normalize(selectedTramite.value?.value);
     const cliente     = normalize(selectedCliente.value?.cNome);
     const transp      = normalize(selectedTranspFiltro.value?.cNome);
+    const destinatario = normalize(selectedDestinatario.value?.cNome);
+    const uf      = normalize(selectedUF.value?.cNome);
 
     infoPedidosPossiveis.value = staticinfoPedidosPossiveis.value.filter(comp => {
       return (
@@ -616,8 +674,11 @@ async function downloadExcelRelatorio() {
         (notaFiscal  ? normalize(comp.cNumNFe).includes(notaFiscal) : true) &&
         (notaFiscalEntrega ? normalize(comp.cNFTransp).includes(notaFiscalEntrega) : true) &&
         (guiaRemessa ? normalize(comp.cGuiaRemessa).includes(guiaRemessa) : true) &&
+        (codPedido      ? normalize(comp.cNumPedido).includes(codPedido) : true) &&
         (tramite     ? normalize(comp.cTramite).includes(tramite) : true) &&
         (transp      ? normalize(comp.cNomeTransportadora).includes(transp) : true) &&
+        (destinatario ? normalize(comp.cDestinatario).includes(destinatario) : true) &&
+        (uf           ? normalize(comp.cUF).includes(uf) : true) &&
         (
           isERP.value
             ? true
@@ -887,10 +948,13 @@ async function getTransportadorasApenasSLA() {
   let onClickLimparFiltros = () => {
     selectedCK.value = null;
     selectedGuiaRemessa.value = null;
+    selectedNumPedido.value = null;
     selectedTramite.value = null;
     selectedNF.value = null;
     selectedTranspFiltro.value = null;
     selectedNFEntrega.value = null;
+    selectedDestinatario.value = null;
+    selectedUF.value = null;
 
     infoPedidosPossiveis.value = staticinfoPedidosPossiveis.value;
     aplicarFiltros();
@@ -1589,7 +1653,7 @@ async function getTransportadorasApenasSLA() {
 <template>
 
   <div class="modal fade" id="RelatorioSaidasModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="RelatorioSaidasModalLabel">
-    <div class="modal-dialog modal-xl WIDTH-89">
+    <div class="modal-dialog modal-xl">
       <div class="modal-content" id="modalRelatorioSaidasClick">
 
         <!-- CABEÇALHO  -->
@@ -1607,7 +1671,7 @@ async function getTransportadorasApenasSLA() {
         </div>
 
         <!-- CORPO -->
-        <div class="BOR-B-grey-2 D-flex FD-column p-1" style="height: 70vh;">
+        <div class="BOR-B-grey-2 D-flex FD-column p-1" style="height: 80vh;">
 
           <!-- FILTROS -->
           <div class="D-flex WIDTH-100 JC-space-between mb-4" style="height: 12vh;">
@@ -1635,7 +1699,6 @@ async function getTransportadorasApenasSLA() {
                 option-value="value"
               />
  
-              
               <!-- CK -->
               <BasicElementVue3SelectPequeno
                 ref="selectedCKREF"
@@ -1740,13 +1803,92 @@ async function getTransportadorasApenasSLA() {
                 option-value="value"
               />
 
+            </div>
+ 
+            <div class="D-flex WIDTH-33 FD-column JC-space-between PADDING-T0-R5-B5-L10 BOR-L-solidgrey-1">
+
+              <!-- DESTINATÁRIO -->
+              <BasicElementVue3SelectPequeno
+                :options="DestinatariosPossiveisRelatorio"
+                v-model="selectedDestinatarioRelatorio"
+
+                label="DESTINATÁRIO"
+                :titulo="selectedDestinatarioRelatorio ? selectedDestinatarioRelatorio.label : ''"
+
+                @update:modelValue="aplicarFiltrosRelatorio"
+
+                :divClass="'MARGIN-T21 WIDTH-100'"
+                :selectClass="''"
+                :labelClass="'FSIZE-12px MARGIN-T-15-L-5'"
+                :widthLista="''"
+
+                option-label="label"
+                option-value="value"
+              />
+
+              <!-- UF -->
+              <BasicElementVue3SelectPequeno
+                :options="UFsPossiveisRelatorio"
+                v-model="selectedUFRelatorio"
+
+                label="UF"
+                :titulo="selectedUFRelatorio ? selectedUFRelatorio.label : ''"
+
+                @update:modelValue="aplicarFiltrosRelatorio"
+
+                :divClass="'MARGIN-T21 WIDTH-100'"
+                :selectClass="''"
+                :labelClass="'FSIZE-12px MARGIN-T-15-L-5'"
+                :widthLista="''"
+
+                option-label="label"
+                option-value="value"
+              />
 
             </div>
+ 
+          </div>
 
+          <!-- TOTAL PEDIDOS, ITENS E SKUS -->
+          <div class="D-flex ALITEM-center JC-flex-end WIDTH-96 mb-1">
+            <div class="D-flex ALITEM-center JC-flex-end WIDTH-100">
+              <span  class="FSIZE-12px FWEIGHT-bold"
+                >
+                •
+                Pedidos: 
+                <img
+                  v-if="!tablePedidosRelatorioCarregada"
+                  src="/assets/images/gif-carregamento-horizontal.gif"
+                  alt="Carregando..."
+                  class="HEIGHT-5px"
+                />
+                <strong v-else>{{ totalPedidosRelatorio }}</strong>
+                •
+                Itens:
+                <img
+                  v-if="!tablePedidosRelatorioCarregada"
+                  src="/assets/images/gif-carregamento-horizontal.gif"
+                  alt="Carregando..."
+                  class="HEIGHT-5px"
+                />
+                <strong v-else>{{ totalItensRelatorio }}</strong>
+                •
+                Volumes:
+                <img
+                  v-if="!tablePedidosRelatorioCarregada"
+                  src="/assets/images/gif-carregamento-horizontal.gif"
+                  alt="Carregando..."
+                  class="HEIGHT-5px"
+                />
+                <strong v-else>{{ totalVolumesRelatorio }}</strong>
+              </span>
+            </div>
           </div>
 
           <!-- Tabela -->
           <div class="BOR-SensacaoAfundado OFLOW-auto WIDTH-98 BGC-branco MARGIN-L1P" style="height: 55vh;">
+            
+
             <div class="WIDTH-100 HEIGHT-100 OFLOW-auto BGC-branco" ref="tabelaWrapperRelatorio">
               <table class="table-responsive table-sm table-striped WIDTH-100 BORRAD-5 table-fixed FSIZE-PADRAO-TABLE" style="overflow-x: hidden; width: 100%;">
                 <thead class="BGC-cinza-secondary POSITION-sticky TOP-0">
@@ -1798,7 +1940,9 @@ async function getTransportadorasApenasSLA() {
                 </tbody>
               </table>
             </div>
+
           </div>
+
           <div class="WIDTH-100 HEIGHT-5">
             <LayoutPaginacaoTabelas
               v-model:currentPage="paginaAtual"
@@ -2136,6 +2280,27 @@ async function getTransportadorasApenasSLA() {
                   :labelClass="'FSIZE-12px MARGIN-T-15-L-5'"
                   :widthLista="''"
                 />
+
+                                
+                <!-- PEDIDO -->
+                <BasicElementVue3SelectPequeno
+                  ref="selectedNumPedidoREF"
+
+                  :options="numPedidosUnicos"
+                  optionLabel="cNome"
+                  v-model="selectedNumPedido"
+
+                  label="PEDIDO"
+                  :titulo="selectedNumPedido ? selectedNumPedido.label : ''"
+
+                  @update:modelValue="aplicarFiltros"
+
+                  :divClass="'MARGIN-T21-R-8 WIDTH-100'"
+                  :selectClass="''"
+                  :labelClass="'FSIZE-12px MARGIN-T-15-L-5'"
+                  :widthLista="''"
+                />
+                
                 
                 <!-- Toggle de CORREIOS ou TRANSPORTADORAS -->
                 <!-- <div class="WIDTH-100 TEXTALI-center HEIGHT-50">
@@ -2161,7 +2326,7 @@ async function getTransportadorasApenasSLA() {
               <div class="D-flex WIDTH-18 FD-column ALITEM-center JC-space-between PADDING-T0-R5-B5-L10 BOR-L-solidgrey-1">
 
                 <!-- TRANSPORTADORA -->
-                <BasicElementVue3SelectPequeno
+                <!-- <BasicElementVue3SelectPequeno
                   ref="selectedTranspFiltroREF"
 
                   :options="transportadorasUnicas"
@@ -2176,6 +2341,25 @@ async function getTransportadorasApenasSLA() {
                   :selectClass="''"
                   :labelClass="'FSIZE-12px MARGIN-T-15-L-5'"
                   :widthLista="'500px'"
+                /> -->
+
+                <!-- NF ENTREGA -->
+                <BasicElementVue3SelectPequeno
+                  :options="NFEntregaUnicas"
+                  v-model="selectedNFEntrega"
+
+                  label="NF DE TRANSPORTE"
+                  :titulo="selectedNFEntrega ? selectedNFEntrega.label : ''"
+
+                  @update:modelValue="aplicarFiltros"
+
+                  :divClass="'MARGIN-T21 WIDTH-100'"
+                  :selectClass="''"
+                  :labelClass="'FSIZE-12px MARGIN-T-15-L-5'"
+                  :widthLista="''"
+
+                  option-label="label"
+                  option-value="value"
                 />
 
                 <!-- CK e TRAMITE -->
@@ -2265,77 +2449,69 @@ async function getTransportadorasApenasSLA() {
               </div>
 
               <!-- DIV DIREITA - Botões -->
-              <div class="D-flex WIDTH-40 FD-column JC-space-between PADDING-T0-R5-B5-L10 BOR-L-solidgrey-1">
+              <div class="D-flex WIDTH-18 FD-column JC-space-between PADDING-T0-R5-B5-L10 BOR-L-solidgrey-1">
 
-                <!-- NF ENTREGA -->
+                <!-- DESTINATÁRIO -->
                 <BasicElementVue3SelectPequeno
-                  :options="NFEntregaUnicas"
-                  v-model="selectedNFEntrega"
+                  ref="selectedDestinatarioREF"
 
-                  label="NF DE TRANSPORTE"
-                  :titulo="selectedNFEntrega ? selectedNFEntrega.label : ''"
+                  :options="destinatariosUnicos"
+                  optionLabel="cNome"
+                  v-model="selectedDestinatario"
+
+                  label="DESTINATÁRIO"
+                  :titulo="selectedDestinatario ? selectedDestinatario.label : ''"
 
                   @update:modelValue="aplicarFiltros"
 
-                  :divClass="'MARGIN-T21 WIDTH-40'"
+                  :divClass="'MARGIN-T21-R-8 WIDTH-100'"
                   :selectClass="''"
                   :labelClass="'FSIZE-12px MARGIN-T-15-L-5'"
                   :widthLista="''"
-
-                  option-label="label"
-                  option-value="value"
                 />
 
+                                
+                <!-- UF -->
+                <BasicElementVue3SelectPequeno
+                  ref="selectedUFREF"
+
+                  :options="ufsUnicos"
+                  optionLabel="cNome"
+                  v-model="selectedUF"
+
+                  label="UF"
+                  :titulo="selectedUF ? selectedUF.label : ''"
+
+                  @update:modelValue="aplicarFiltros"
+
+                  :divClass="'MARGIN-T21-R-8 WIDTH-100'"
+                  :selectClass="''"
+                  :labelClass="'FSIZE-12px MARGIN-T-15-L-5'"
+                  :widthLista="''"
+                />
                 
-              <div style="margin-right: 10px; cursor: pointer;">
 
-                <!-- EXCEL -->
-                <button id="exportar-EXCEL-button" type="button"
-                  class="btn btn-success MARGIN-R5 FSIZE-12px PADDING-4 " @click="abrirModalRelatorioSaidas()">
-                  <IconsCaminhao corProp="currentColor" alturaProp="1" larguraProp="1"/> 
-                  Relatório de Saídas</button>
-
-
-                <IconsRefresh
-                  @click="clickRefreshPedidosButton()"
-                  corProp="rgb(24, 134, 84)"
-                  alturaProp="1.6"
-                  larguraProp="1.6"
-                />
               </div>
-                <!-- <div style="margin-right: 10px; cursor: pointer;" @click="FetchPedidosPossiveisInformarEntrega()" title="Atualizar informações">
+
+              <div class="D-flex  FD-column JC-space-between PADDING-T0-R5-B5-L10 BOR-L-solidgrey-1">
+                <div></div>
+                <div style="margin-right: 10px; cursor: pointer;">
+  
+                  <!-- EXCEL -->
+                  <button id="exportar-EXCEL-button" type="button"
+                    class="btn btn-success MARGIN-R5 FSIZE-12px PADDING-4 " @click="abrirModalRelatorioSaidas()">
+                    <IconsCaminhao corProp="currentColor" alturaProp="1" larguraProp="1"/> 
+                    Relatório de Saídas</button>
+  
+  
                   <IconsRefresh
+                    @click="clickRefreshPedidosButton()"
                     corProp="rgb(24, 134, 84)"
                     alturaProp="1.6"
                     larguraProp="1.6"
                   />
-                </div> -->
-                
-                <!-- INFORMAR ENTREGA -->
-                <!-- :to="`/sla/cliente/informar-entrega`" -->
-                <!-- <NuxtLink
-                :to="`/sla/cliente/informarEntregas`"
-                class="WIDTH-22 MARGIN-R5">
-                  <button
-                    type="button"
-                    class="btn btn-primary FSIZE-12px WIDTH-100"
-                  >
-                    Informar Entrega
-                  </button>
-                </NuxtLink> -->
-
-                <!-- EXCEL -->
-                <!-- <button :disabled="isLoadingEXCELRelatorio" id="exportar-EXCEL-button" type="button" class="btn btn-success MARGIN-R5 FSIZE-12px " @click="fetchEXCELSaidasSLA()">
-                  <IconsExcel corProp="currentColor" alturaProp="1" larguraProp="1"/> 
-                  Exportar EXCEL</button> -->
-                  
-                <!-- PDF -->
-                <!-- <button :disabled="isLoadingPDFRelatorio" id="exportar-PDF-button" type="button" class="btn btn-warning FSIZE-12px" @click="fetchPDFSaidasSLA()">
-                  <IconsPDF corProp="currentColor" alturaProp="1" larguraProp="1"/> 
-                  Exportar PDF
-                </button> -->
-
-              </div>
+                </div>
+              </div>       
 
             </div>
 
