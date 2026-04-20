@@ -99,10 +99,10 @@ const token = ref(authStore.token ?? "");
   const infoTransportadorasHomologadas = ref([]);
 
   const selectedCK = ref(null);
-  const selectedCliente = ref({iD: 0, cNome: ""});
-  const selectedDestinatario = ref({iD: 0, cNome: ""});
-  const selectedUF = ref({iD: 0, cNome: ""});
-  const selectedNumPedido = ref({iD: 0, cNome: ""});
+  const selectedCliente = ref();
+  const selectedDestinatario = ref();
+  const selectedUF = ref();
+  const selectedNumPedido = ref();
   const selectedNF = ref(null);
   const selectedGuiaRemessa = ref(null);
   const selectedTramite = ref(null);
@@ -356,9 +356,6 @@ async function downloadExcelRelatorio() {
       uf: selectedUFRelatorio.value?.value || null
     };
 
-    console.log("URL:", url);
-    console.log("BODY:", body);
-
     const response = await axios.post(
       url,
       body,
@@ -369,7 +366,7 @@ async function downloadExcelRelatorio() {
         responseType: 'blob'
       }
     );
-    
+
     // 🔽 Criar download do arquivo
     const blob = new Blob([response.data], {
       type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
@@ -667,7 +664,7 @@ async function downloadExcelRelatorio() {
     const notaFiscal  = normalize(selectedNF.value?.value);
     const notaFiscalEntrega = normalize(selectedNFEntrega.value?.value);
     const guiaRemessa = normalize(selectedGuiaRemessa.value?.value);
-    const codPedido   = normalize(selectedNumPedido.value?.value);
+    const codPedido   = normalize(selectedNumPedido.value?.cNome);
     const tramite     = normalize(selectedTramite.value?.value);
     const cliente     = normalize(selectedCliente.value?.cNome);
     const transp      = normalize(selectedTranspFiltro.value?.cNome);
