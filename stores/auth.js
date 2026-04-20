@@ -8,9 +8,6 @@ export const useAuthStore = defineStore('auth', {
     idFuncao: null
   }),
 
-  // persistência automática opcional via plugin (ou manual abaixo)
-  persist: process.dev, 
-
   actions: {
     setAuth(response) {
       if (!response || !response.usuario) return

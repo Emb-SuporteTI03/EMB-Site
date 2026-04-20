@@ -299,7 +299,7 @@ async function getPedidosParaRelatorio() {
 
         ck: selectedCKRelatorio.value?.value || null,
         cliente: selectedClienteRelatorio.value?.value || null,
-        pedidoId: selectedPedidoRelatorio.value?.value || null,
+        pedidoId: selectedPedidoRelatorio.value || null,
         nf: selectedNFRelatorio.value || null,
         nfTransp: selectedNFTranspRelatorio.value || null,
         status: selectedStatusPedidoRelatorio.value?.value || null,
@@ -343,19 +343,25 @@ async function downloadExcelRelatorio() {
 
   try {
     const url = `${urlProd}/consultas-sla/excel-relatorio-pedidos`;
-console.log(selectedUFRelatorio.value)
-    const response = await axios.post(url,
-      {
-        IDTransportadora: ID_Carteira.value,
-        ck: selectedCKRelatorio.value?.value || null,
-        cliente: selectedClienteRelatorio.value?.value || null,
-        pedidoId: selectedPedidoRelatorio.value?.value || null,
-        nf: selectedNFRelatorio.value || null,
-        nfTransp: selectedNFTranspRelatorio.value || null,
-        status: selectedStatusPedidoRelatorio.value?.value || null,
-        destinatario: selectedDestinatarioRelatorio.value?.value || null,
-        uf: selectedUFRelatorio.value?.value || null
-      },
+
+    const body = {
+      IDTransportadora: ID_Carteira.value,
+      ck: selectedCKRelatorio.value?.value || null,
+      cliente: selectedClienteRelatorio.value?.value || null,
+      pedidoId: selectedPedidoRelatorio.value || null,
+      nf: selectedNFRelatorio.value || null,
+      nfTransp: selectedNFTranspRelatorio.value || null,
+      status: selectedStatusPedidoRelatorio.value?.value || null,
+      destinatario: selectedDestinatarioRelatorio.value?.value || null,
+      uf: selectedUFRelatorio.value?.value || null
+    };
+
+    console.log("URL:", url);
+    console.log("BODY:", body);
+
+    const response = await axios.post(
+      url,
+      body,
       {
         headers: {
           Authorization: `Bearer ${token.value}`
@@ -363,7 +369,7 @@ console.log(selectedUFRelatorio.value)
         responseType: 'blob'
       }
     );
-
+    
     // 🔽 Criar download do arquivo
     const blob = new Blob([response.data], {
       type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
@@ -378,7 +384,7 @@ console.log(selectedUFRelatorio.value)
     link.click();
     document.body.removeChild(link);
 
-    ToastWarning("Relatório gerado com sucesso!")
+    ToastSuccess("Relatório gerado com sucesso!")
 
   } catch (err) {
     console.error('Erro ao baixar Excel:', err);

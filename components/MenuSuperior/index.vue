@@ -613,7 +613,7 @@ import { ref, reactive, onMounted, onUnmounted } from 'vue'
 import { createPinia } from 'pinia'
 import { useRouter } from 'vue-router'
 import { ToastError, ToastWarning } from '~/composables/toasts'
-import { useAuthStore } from '~/stores/auth'
+import { useAuthStore } from '@/stores/auth'
 // import { useAuthStore } from '~/stores/auth'
 // import { createApp } from 'vue'
 // import App from '../../app.vue'
@@ -1039,6 +1039,12 @@ function downloadPop1810() {
 
 .ul-header li {
   margin: 0 2vh;
+  position: relative;
+  z-index: 1;
+}
+
+.ul-header li:hover {
+  z-index: 10; /* o item ativo sobe */
 }
 
 .textos, .icones {
@@ -1071,6 +1077,7 @@ function downloadPop1810() {
   width: 25vh;
   box-shadow: 0px 4px 8px rgba(0,0,0,0.2);
   background-color: #ececec;
+  z-index: 9999;
 }
 
 .drop a {
@@ -1099,6 +1106,7 @@ function downloadPop1810() {
   top: 0;
   z-index: 2;
   width: 80%; /* Defina uma largura para o sub-dropdown */
+  z-index: 10000;
 }
 
 #subDrop2 {
