@@ -1110,7 +1110,6 @@ function downloadPop1810() {
 }
 
 #subDrop2 {
-  margin-top: 30%;  
   width: 100%; /* Defina uma largura para o sub-dropdown */
 
 }
