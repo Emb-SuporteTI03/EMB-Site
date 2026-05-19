@@ -76,6 +76,7 @@ const infoPedidosItensTabelaAreaClienteStatic = ref([]);
 const infoPedidoItens = ref([]);
 const linhaExpandidaDaTabelaPedidos = ref(null);
 const idPedidoPDF = ref(0);
+const pedidoSelecionadoCorreios = ref({});
 
 // PARA A BARRA DE TOTAL FICAR CORRETAMENTE ALINHADA ===========================\
 const compensacaoScroll = ref('17');
@@ -791,6 +792,80 @@ const IrParaRota = (rota) => {
 
   };
 
+  // código rastreio
+  const OnClickAlterarCodigoRastreio = async (pedido) => {
+    // Aqui deve abrir o modal, buscar as informações e ter uma maneira de inserir o código de rastreio
+    showModal('codigoRastreioModal', true);
+
+    pedidoSelecionadoCorreios.value.iD_Pedido = pedido.iD_Pedido; 
+    pedidoSelecionadoCorreios.value.guiaRemessa = pedido.guiaRemessa; 
+    pedidoSelecionadoCorreios.value.cNumPedido = pedido.cNumPedido; 
+    pedidoSelecionadoCorreios.value.codigoRastreio = ''; 
+
+    setTimeout(() => {
+      FocusInputById('codigo-rastreio-input');
+    }, 600);
+  };
+
+  const OnClickFecharModalInformarCodigoRastreio = () => {
+    showModal('codigoRastreioModal', false);
+
+    clearInfoModalcCodRastreio();
+  };
+
+  const OnClickConfirmarCodigoRastreioButton = async () => {
+    DisableButtonById('confirmar-informar-codigo-rastreio-button', true);
+
+    const deuCerto = await InformaCodigoRastreioDB();
+
+    if (deuCerto) {
+      // Fecha o modal e limpa as variaveis:
+      showModal('codigoRastreioModal', false);
+      
+      MetodosAposInserirClickEmConfirmarCodigoRastreio();
+    } else {
+      // Não fecha o modal:
+      
+    }
+  };
+
+  const MetodosAposInserirClickEmConfirmarCodigoRastreio = async () => {
+    clearInfoModalcCodRastreio();
+
+    await getInfosSaidasSLA();
+    await nextTick(() => {
+      ajustarCompensacaoScrollSaidas();
+    });
+  };
+
+  const clearInfoModalcCodRastreio = () => {
+    pedidoSelecionadoCorreios.value.iD_Pedido = 0;
+    pedidoSelecionadoCorreios.value.guiaRemessa = '';
+    pedidoSelecionadoCorreios.value.cNumPedido = '';
+    pedidoSelecionadoCorreios.value.codigoRastreio = '';
+  };
+
+  const InformaCodigoRastreioDB = async () => {
+    const { iD_Pedido, codigoRastreio } = pedidoSelecionadoCorreios.value;
+    try {
+      await axios.post(
+        `${urlProd}/sla/pedido-entrega/informar-codigo-rastreio/${iD_Pedido}/${codigoRastreio.toUpperCase()}`,
+        {},
+        { headers: { Authorization: `Bearer ${token.value}` } }
+      );
+
+      ToastSuccess('CÓDIGO RASTREIO INFORMADO COM SUCESSO');
+      return true;
+    } catch (error) {
+      if (error?.response?.status === 400) {
+        ToastWarning(error.response.data);
+      } else {
+        ToastError('ERRO AO INFORMAR CÓDIGO RASTREIO.\nCONSULTE A TI.');
+      }
+      return false;
+    } finally { }
+  };
+
 // MOUNTED DA PÁGINA
 onMounted(async () => {
   await getTransportadorasApenasSLA();
@@ -1242,7 +1317,15 @@ onMounted(async () => {
                         <td class="HEIGHT-5px no-wrap-text WIDTH-7 TEXTALI-center TableElipsis" scope="row" :title="saida.tramite" >{{ saida.tramite }}</td>
                         <td class="HEIGHT-5px no-wrap-text WIDTH-10 TEXTALI-center no-wrap-text" scope="row" :title="saida.guiaRemessa" >{{ saida.guiaRemessa }}</td>
                         <td class="HEIGHT-5px no-wrap-text WIDTH-8 TEXTALI-center no-wrap-text" scope="row" :title="saida.cNumPedido" >{{ saida.cNumPedido }}</td>
-                        <td class="HEIGHT-5px no-wrap-text WIDTH-7 TEXTALI-center no-wrap-text" scope="row" :title="saida.codigoRastreio" >{{ saida.codigoRastreio }}</td>
+                        <td class="HEIGHT-5px no-wrap-text WIDTH-7 TEXTALI-center no-wrap-text" scope="row"
+                        ><button
+                          :title="`Alterar código rastreio (${saida.codigoRastreio ?? 'N/C'})`"
+                          v-if="saida.transportadora.split(' ')[0] === 'CORREIOS'"
+                          class="WIDTH-90 HEIGHT-90 btn BOX-SHADOW-H-black-2  BGC-azul-5 PADDING-2 FSIZE-12px D-flex JC-center ALITEM-center"
+                          @click="OnClickAlterarCodigoRastreio(saida)">
+                          {{ saida.codigoRastreio }}
+                          </button>
+                        </td>
                         <!-- <td class="HEIGHT-5px no-wrap-text WIDTH-6 TEXTALI-center TableElipsis" scope="row" :title="saida.ov" >{{ saida.ov }}</td> -->
                         <td class="HEIGHT-5px no-wrap-text WIDTH-8 TEXTALI-center TableElipsis" scope="row" :title="saida.nFe" >{{ saida.nFe }}</td>
                         <td class="HEIGHT-5px no-wrap-text WIDTH-9 TEXTALI-center TableElipsis" scope="row" :title="saida.status" :class="['TEXTALI-center', getStatusClass(saida.status)]" >{{ saida.status }}</td>
@@ -1668,6 +1751,70 @@ onMounted(async () => {
     </div>
   </div>
 
+  <!-- MODAL DE INFORMAR CÓDIGO RASTREIO -->
+  <div class="modal fade" id="codigoRastreioModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="codigoRastreioModalLabel">
+    <div class="modal-dialog modal-xl WIDTH-35">
+      <div class="modal-content" id="modalTableClick">
+
+        <!-- CABEÇALHO  -->
+        <div class="MAX-HEIGHT-8vh PADDING-T5-R10-B5-L10 D-flex JC-space-between ALITEM-center BOR-B-grey-5">
+        
+          <img src="assets\images\Logo-E-azul-enhanced.png" alt="Logo Grupo Embalarte" class="WIDTH-4 HEIGHT-4" title="Grupo Embalarte">
+      
+          <h1 class="modal-title fs-5 WIDTH-58 D-flex JC-center ALITEM-center" id="PDFsModalLabel">INFORMAR</h1>
+
+          <!-- Botão de Fechar a modal -->
+          <button id="insert-modal-close-button" @click="OnClickFecharModalInformarCodigoRastreio()"
+            data-bs-dismiss="modal" type="button" class="btn-close" aria-label="Close">
+          </button>
+
+        </div>
+
+        <!-- CORPO -->
+        <div class="BOR-B-grey-2 D-flex FD-column PADDING-15" style="height: 20vh;">
+    
+          <!-- INFOS PEDIDOS -->
+          <div class="D-flex HEIGHT-35 WIDTH-100 JC-center ALITEM-center">
+            <span class="">Guia Remessa: <strong>{{ pedidoSelecionadoCorreios.guiaRemessa }}</strong> • Pedido: <strong>{{ pedidoSelecionadoCorreios.cNumPedido }}</strong></span>
+          </div>
+
+          <!-- CÓDIGO RASTREIO -->
+          <div class="D-flex HEIGHT-35 WIDTH-100 JC-center ALITEM-center">
+            <div class="WIDTH-60">
+              <label
+                id="codigo-rastreio-label"
+                for="codigo-rastreio-input"
+                class="form-label BORRAD-5 BGC-branco red-asterisk FSIZE-11px FWEIGHT-bold MARGIN-T-15-L7 PADDING-R5-L5"
+              >NOVO CÓDIGO RASTREIO
+              </label>
+              <input
+                id="codigo-rastreio-input"
+                type="text"
+                class="form-control BOR-grey MARGIN-T-10 FSIZE-12px InputUPPERCASE"
+                v-model="pedidoSelecionadoCorreios.codigoRastreio"
+                maxlength="20"
+                >
+
+            </div>
+          </div>
+
+          <!-- RODAPÉ -->
+          <div class="HEIGHT-30 WIDTH-100 D-flex ALITEM-flex-end JC-flex-end ">
+            <button 
+              :disabled="!pedidoSelecionadoCorreios.codigoRastreio"
+              type="button"
+              id="confirmar-informar-codigo-rastreio-button" 
+              class="btn btn-success FSIZE-12px PADDING-4"  
+              @click="OnClickConfirmarCodigoRastreioButton()"> CONFIRMAR CÓDIGO RASTREIO
+
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
 
 
 </template>
