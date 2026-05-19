@@ -1319,8 +1319,8 @@ onMounted(async () => {
                         <td class="HEIGHT-5px no-wrap-text WIDTH-8 TEXTALI-center no-wrap-text" scope="row" :title="saida.cNumPedido" >{{ saida.cNumPedido }}</td>
                         <td class="HEIGHT-5px no-wrap-text WIDTH-7 TEXTALI-center no-wrap-text" scope="row"
                         ><button
-                          :title="`Alterar código rastreio (${saida.codigoRastreio ?? 'N/C'})`"
-                          v-if="saida.transportadora.split(' ')[0] === 'CORREIOS'"
+                        :title="`Alterar código rastreio (${saida.codigoRastreio ?? 'N/C'})`"
+                        v-if="saida.codigoRastreio"
                           class="WIDTH-90 HEIGHT-90 btn BOX-SHADOW-H-black-2  BGC-azul-5 PADDING-2 FSIZE-12px D-flex JC-center ALITEM-center"
                           @click="OnClickAlterarCodigoRastreio(saida)">
                           {{ saida.codigoRastreio }}
