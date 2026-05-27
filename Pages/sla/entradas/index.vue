@@ -421,11 +421,21 @@ const aplicarFiltrosSelect = async () => {
     // -----------------------------
     //   FILTRO DO BOTÃO LR
     // -----------------------------
+    // const codigo = comp.codigoComponente || "";
+ 
+    // const filtroLR = filtrarLR
+    //   ? true // Se botão LR estiver ativo → deixa passar tudo
+    //   : codigo !== "TE00000000000"; // Se não estiver ativo → remove TE00000000000
+
     const codigo = comp.codigoComponente || "";
+    const isInterno = comp.isInterno === true;
+
+    const isLR = codigo === "TE00000000000" || isInterno;
 
     const filtroLR = filtrarLR
-      ? true // Se botão LR estiver ativo → deixa passar tudo
-      : codigo !== "TE00000000000"; // Se não estiver ativo → remove TE00000000000
+      ? true
+      : !isLR;
+
 
     // -----------------------------
     //   RETORNO FINAL
