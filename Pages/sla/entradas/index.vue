@@ -1184,9 +1184,9 @@ onMounted(async () => {
                   </div>
 
                   <div class="HEIGHT-20 D-flex ALITEM-center JC-center">
-                  <button id="lr-button" class="BOR-grey BORRAD-5 WIDTH-40 BGC-branco"
+                  <button id="lr-button" class="BOR-grey BORRAD-5 WIDTH-65 BGC-branco"
                     @click="OnClicKLRButton()"
-                  >L.R.</button>
+                  >ENTRADAS GENÉRICAS</button>
                   </div>
                 </div>
 
