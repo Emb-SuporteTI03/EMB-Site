@@ -45,6 +45,7 @@ const selectedTransportadora = ref(null);
 const selectedNotaFiscal = ref(null);
 const selectedTramite = ref(null);
 const selectedCodProduto = ref(null);
+const selectedCodProdutoCliente = ref(null);
 const selectedDescProduto = ref(null);
 
 const familiaEscolhaFiltro = ref([]);
@@ -165,6 +166,20 @@ const descProdutoEscolhaFiltro = computed(() => {
     cNome: item
   }));
 });
+const codClienteEscolhaFiltro = computed(() => {
+  const unicos = new Set();
+
+    infosTableEntradasSLA.value.forEach(e => {
+    if (e.codigoComponenteCliente) {
+      unicos.add(e.codigoComponenteCliente);
+    }
+  });
+
+  return Array.from(unicos).map((item, index) => ({
+    id: index + 1,
+    cNome: item
+  }));
+});
 const remetentesUnicos = computed(() => {
   const mapa = new Map(); // chave = iD_Carteira, valor = objeto remetente
   (infosTableEntradasSLA.value || []).forEach(item => {
@@ -197,6 +212,7 @@ const totalQuantidadeVolumesSaidas = computed(() => {
   const notaFiscal     = selectedNotaFiscal.value?.cNome.toLowerCase() || "";
   const tramite        = selectedTramite.value?.cNome.toLowerCase() || "";
   const codProduto     = selectedCodProduto.value?.cNome.toLowerCase() || "";
+  const codProdutoCliente = selectedCodProdutoCliente.value?.cNome.toLowerCase() || ""; 
   const descProduto    = selectedDescProduto.value?.cNome.toLowerCase() || "";
 
   const query = queryInfAdc.value?.trim().toLowerCase();
@@ -219,6 +235,7 @@ const totalQuantidadeVolumesSaidas = computed(() => {
                             .toLowerCase()
                             .includes(tramite) : true) &&
         (codProduto     ? comp.codigoComponente?.toLowerCase().includes(codProduto) : true) &&
+        (codProdutoCliente ? comp.codigoComponenteCliente?.toLowerCase().includes(codProdutoCliente) : true) &&
         (descProduto    ? comp.descricaoComponente?.toLowerCase().includes(descProduto) : true);
 
       // -----------------------------
@@ -230,6 +247,7 @@ const totalQuantidadeVolumesSaidas = computed(() => {
             (comp.protocoloProduto    || "").toLowerCase().includes(query) ||
             (comp.numeroNFE           || "").toLowerCase().includes(query) ||
             (comp.codigoComponente    || "").toLowerCase().includes(query) ||
+            (comp.codigoComponenteCliente || "").toLowerCase().includes(query) ||
             (comp.descricaoComponente || "").toLowerCase().includes(query) ||
             (comp.familia             || "").toLowerCase().includes(query) ||
             (comp.adicionaisProduto   || "").toLowerCase().includes(query)
@@ -366,6 +384,7 @@ const aplicarFiltrosSelect = async () => {
   const notaFiscal     = selectedNotaFiscal.value?.cNome.toLowerCase() || "";
   const tramite        = selectedTramite.value?.cNome.toLowerCase() || "";
   const codProduto     = selectedCodProduto.value?.cNome.toLowerCase() || "";
+  const codProdutoCliente = selectedCodProdutoCliente.value?.cNome.toLowerCase() || "";
   const descProduto    = selectedDescProduto.value?.cNome.toLowerCase() || "";
   const filtrarLR      = isButtonLRSelecionado.value;
 
@@ -399,6 +418,9 @@ const aplicarFiltrosSelect = async () => {
       (codProduto
         ? comp.codigoComponente?.toLowerCase().includes(codProduto)
         : true) &&
+      (codProdutoCliente
+        ? comp.codigoComponenteCliente?.toLowerCase().includes(codProdutoCliente)
+        : true) &&
       (descProduto
         ? comp.descricaoComponente?.toLowerCase().includes(descProduto)
         : true);
@@ -412,6 +434,7 @@ const aplicarFiltrosSelect = async () => {
           (comp.protocoloProduto    || "").toLowerCase().includes(query) ||
           (comp.numeroNFE           || "").toLowerCase().includes(query) ||
           (comp.codigoComponente    || "").toLowerCase().includes(query) ||
+          (comp.codigoComponenteCliente    || "").toLowerCase().includes(query) ||
           (comp.descricaoComponente || "").toLowerCase().includes(query) ||
           (comp.familia             || "").toLowerCase().includes(query) ||
           (comp.adicionaisProduto   || "").toLowerCase().includes(query)
@@ -1190,8 +1213,27 @@ onMounted(async () => {
                   </div>
                 </div>
 
+                <div class="D-flex WIDTH-25 FD-column PADDING-T2-R5-B5-L10 BOR-L-solidgrey-1 JC-space-around">
+                  <!-- CÓDIGO PRODUTO CLIENTE-->
+                  <BasicElementVue3SelectPequeno
+                    :options="codClienteEscolhaFiltro"
+                    option-label="cNome"
+                    v-model="selectedCodProdutoCliente"
+
+                    @update:modelValue="aplicarFiltrosSelect"
+                    
+                    label="COD. COMP. CLIENTE:"
+                    :titulo="selectedCodProdutoCliente?.cNome"
+
+                    :divClass="'MARGIN-T10 WIDTH-100 HEIGHT-20'"
+                    :selectClass="''"
+                    :labelClass="'FSIZE-12px MARGIN-T-15'"
+                    :widthLista="''"
+                  />
+                </div>
+
                 <!-- Botões -->
-                 <div class="WIDTH-44 HEIGHT-100 D-flex JC-flex-end ALITEM-flex-end BOR-L-solidgrey-1">
+                 <div class="WIDTH-19 HEIGHT-100 D-flex JC-flex-end ALITEM-flex-end BOR-L-solidgrey-1">
                   <div style="margin-right: 10px; cursor: pointer;" @click="getInfosEntradasSLA()" title="Atualizar informações">
                     <IconsRefresh
                       corProp="rgb(24, 134, 84)"
@@ -1230,9 +1272,10 @@ onMounted(async () => {
                       <th class="WIDTH-9 TEXTALI-center" scope="col">Data</th>
                       <th class="WIDTH-5 TEXTALI-center" scope="col">Tramite</th>
                       <th class="WIDTH-8 TEXTALI-center" scope="col">NF</th>
-                      <th class="WIDTH-11 TEXTALI-center" scope="col">Adicionais</th>
+                      <th class="WIDTH-9 TEXTALI-center" scope="col">Adicionais</th>
                       <th class="WIDTH-10 TEXTALI-center" scope="col">Código</th>
-                      <th class="WIDTH-30 TEXTALI-center" scope="col">Descrição do Produto</th>
+                      <th class="WIDTH-10 TEXTALI-center" scope="col">Cód. Cliente</th>
+                      <th class="WIDTH-22 TEXTALI-center" scope="col">Descrição do Produto</th>
                       <th class="WIDTH-10 TEXTALI-center" scope="col">Família</th>
                       <th class="WIDTH-6 TEXTALI-center" scope="col">Quant.</th>
                       <th class="WIDTH-9 TEXTALI-center" scope="col">Protocolo</th>
@@ -1255,9 +1298,10 @@ onMounted(async () => {
                         <td class="HEIGHT-5px no-wrap-text WIDTH-9 TEXTALI-center" scope="row" :title="entrada.dataTramite" >{{ entrada.dataTramite }}</td>
                         <td class="HEIGHT-5px no-wrap-text WIDTH-5 TEXTALI-center" :title="entrada.idTramite" >{{ entrada.idTramite }}</td>
                         <td class="HEIGHT-5px no-wrap-text WIDTH-8 TEXTALI-center" :title="entrada.numeroNFE" >{{ entrada.numeroNFE }}</td>
-                        <td class="HEIGHT-5px no-wrap-text WIDTH-11 TEXTALI-left ellipsisTable" :title="entrada.adicionaisProduto" >{{ entrada.adicionaisProduto }}</td>
+                        <td class="HEIGHT-5px no-wrap-text WIDTH-9 TEXTALI-left ellipsisTable" :title="entrada.adicionaisProduto" >{{ entrada.adicionaisProduto }}</td>
                         <td class="HEIGHT-5px no-wrap-text WIDTH-10 TEXTALI-center" :title="entrada.codigoComponente" >{{ entrada.codigoComponente }}</td>
-                        <td class="HEIGHT-5px no-wrap-text WIDTH-30 TEXTALI-left ellipsisTable" :title="entrada.descricaoComponente" >{{ entrada.descricaoComponente }}</td>
+                        <td class="HEIGHT-5px no-wrap-text WIDTH-10 TEXTALI-center" :title="entrada.codigoComponenteCliente" >{{ entrada.codigoComponenteCliente }}</td>
+                        <td class="HEIGHT-5px no-wrap-text WIDTH-22 TEXTALI-left ellipsisTable" :title="entrada.descricaoComponente" >{{ entrada.descricaoComponente }}</td>
                         <td class="HEIGHT-5px no-wrap-text WIDTH-10 TEXTALI-left" :title="entrada.familia" >{{ entrada.familia }}</td>
                         <td class="HEIGHT-5px no-wrap-text WIDTH-6 TEXTALI-center">{{ entrada.quantidadeComponente }}</td>
                         <td class="HEIGHT-5px no-wrap-text WIDTH-9 TEXTALI-left" :title="entrada.protocoloProduto" >{{ entrada.protocoloProduto }}</td>
@@ -1696,7 +1740,7 @@ onMounted(async () => {
               :style="tableContainerItemTramiteStyle"
             >
 
-            <table class="table-responsive table-sm table-striped WIDTH-100 BORRAD-5">
+            <table class="table-responsive table-sm table-striped WIDTH-100 BORRAD-5 FSIZE-PADRAO-TABLE">
               <thead class="BGC-cinza-secondary POSITION-sticky TOP-0">
                 <tr>
                   <th class="TEXTALI-left CTTABLEELPIS WIDTH-5">
@@ -1708,7 +1752,10 @@ onMounted(async () => {
                   <th class="TEXTALI-center CTTABLEELPIS WIDTH-5">
                     N° COMP.
                   </th>
-                  <th class="TEXTALI-left CTTABLEELPIS WIDTH-30">
+                  <th class="TEXTALI-center CTTABLEELPIS WIDTH-7">
+                    COD. COMP. CLIENTE
+                  </th>
+                  <th class="TEXTALI-left CTTABLEELPIS WIDTH-23">
                     COMPONENTE
                   </th>
                   <th class="TEXTALI-center CTTABLEELPIS WIDTH-3">
@@ -1745,10 +1792,13 @@ onMounted(async () => {
                   <td class="TEXTALI-center CTTABLEELPIS WIDTH-5" :title="item.cCodComponente">
                     {{ item.cCodComponente }}
                   </td>
-                  <td v-if="!item.cTipoOperacao" class="TEXTALI-left CTTABLEELPIS WIDTH-30" :title="item.cNomeComponente">
+                  <td class="TEXTALI-center CTTABLEELPIS WIDTH-7" :title="item.cCodComponente">
+                    {{ item.cCodComponenteCliente }}
+                  </td>
+                  <td v-if="!item.cTipoOperacao" class="TEXTALI-left CTTABLEELPIS WIDTH-23" :title="item.cNomeComponente">
                     {{ item.cNomeComponente }}
                   </td>
-                  <td v-else class="TEXTALI-left CTTABLEELPIS WIDTH-30" :title="`${item.cNomeComponente} | ${item.cTipoOperacao} | ${item.cInfoGenerica}` ">
+                  <td v-else class="TEXTALI-left CTTABLEELPIS WIDTH-23" :title="`${item.cNomeComponente} | ${item.cTipoOperacao} | ${item.cInfoGenerica}` ">
                     {{ `${item.cNomeComponente} | ${item.cTipoOperacao} | ${item.cInfoGenerica}` }}
                   </td>
                   <td class="TEXTALI-center CTTABLEELPIS WIDTH-3" :title="item.iQtdeComponente">

@@ -33,6 +33,7 @@ const infosTableConsumoSLA = ref([]);
 const staticInfosTableConsumoSLA = ref([]); // Para manter os dados originais e poder limpar os filtros
 
 const selectedCodProduto = ref(null);
+const selectedCodCompCliente = ref(null);
 const selectedDescProduto = ref(null);
 const selectedComplementoSaida = ref(null);
 const selectedMotivo = ref(null);
@@ -77,7 +78,20 @@ const ajustarCompensacaoScrollConsumo = () => {
       cNome: item
     }));
   });
+  const codCompClienteEscolhaFiltro = computed(() => {
+    const unicos = new Set();
 
+    infosTableConsumoSLA.value.forEach(e => {
+      if (e.codigoComponenteCliente) {
+        unicos.add(e.codigoComponenteCliente);
+      }
+    });
+
+    return Array.from(unicos).map((item, index) => ({
+      id: index + 1,
+      cNome: item
+    }));
+  });
   const descProdutoEscolhaFiltro = computed(() => {
     const unicos = new Set();
 
@@ -154,17 +168,19 @@ const hexToRgba = (hex, alpha) => {
 
 // FUNÇÕES DO FILTRO
 const aplicarFiltros = async () => {
-  const codProduto     = selectedCodProduto.value?.cNome.toLowerCase() || "";
-  const descProduto    = selectedDescProduto.value?.cNome.toLowerCase() || "";
-  const complementoSaida = selectedComplementoSaida.value?.cNome.toLowerCase() || "";
-  const motivo    = selectedMotivo.value?.cNome.toLowerCase() || "";
+  const codProduto        = selectedCodProduto.value?.cNome.toLowerCase() || "";
+  const codProdutoCliente = selectedCodCompCliente.value?.cNome.toLowerCase() || "";
+  const descProduto       = selectedDescProduto.value?.cNome.toLowerCase() || "";
+  const complementoSaida  = selectedComplementoSaida.value?.cNome.toLowerCase() || "";
+  const motivo            = selectedMotivo.value?.cNome.toLowerCase() || "";
 
   infosTableConsumoSLA.value = staticInfosTableConsumoSLA.value.filter(comp => {
     return (
-      (codProduto       ? comp.codigoComponente?.toLowerCase().includes(codProduto) : true) &&
-      (descProduto      ? comp.descricaoComponente?.toLowerCase().includes(descProduto) : true) &&
-      (complementoSaida ? comp.complementoSaida?.toLowerCase().includes(complementoSaida) : true) &&
-      (motivo           ? comp.motivo?.toLowerCase().includes(motivo) : true)
+      (codProduto        ? comp.codigoComponente?.toLowerCase().includes(codProduto) : true) &&
+      (codProdutoCliente ? comp.codigoComponenteCliente?.toLowerCase().includes(codProdutoCliente) : true) &&
+      (descProduto       ? comp.descricaoComponente?.toLowerCase().includes(descProduto) : true) &&
+      (complementoSaida  ? comp.complementoSaida?.toLowerCase().includes(complementoSaida) : true) &&
+      (motivo            ? comp.motivo?.toLowerCase().includes(motivo) : true)
     );
   });
 
@@ -639,6 +655,23 @@ onMounted(async () => {
 
               <!-- DIV CENTRAL 2 -->
               <div class="D-flex WIDTH-25 BOR-L-solidgrey-1 FD-column PADDING-T5-R5-B5-L10">
+                
+                <!-- CÓDIGO PRODUTO CLIENTE -->
+                <BasicElementVue3SelectPequeno
+                  :options="codCompClienteEscolhaFiltro"
+                  optionLabel="cNome"
+                  v-model="selectedCodCompCliente"
+
+                  @update:modelValue="aplicarFiltros"
+                  
+                  label="COD. COMP. CLIENTE:"
+                  :titulo="selectedCodCompCliente?.cNome"
+
+                  :divClass="'MARGIN-T21 WIDTH-100'"
+                  :selectClass="''"
+                  :labelClass="'FSIZE-12px MARGIN-T-15'"
+                  :widthLista="''"
+                />
 
                 <!-- COMPLEMENTO -->
                 <BasicElementVue3SelectPequeno
@@ -718,7 +751,8 @@ onMounted(async () => {
                     <th class="WIDTH-12 TEXTALI-center" scope="col">Data</th>
                     <th class="WIDTH-15 TEXTALI-center" scope="col">Motivo Saída</th>
                     <th class="WIDTH-10 TEXTALI-center" scope="col">Código</th>
-                    <th class="WIDTH-40 TEXTALI-center" scope="col">Descrição do Produto</th>
+                    <th class="WIDTH-10 TEXTALI-center" scope="col">Cód Comp. Cliente</th>
+                    <th class="WIDTH-30 TEXTALI-center" scope="col">Descrição do Produto</th>
                     <th class="WIDTH-6 TEXTALI-center" scope="col">Qtd.</th>
                     <th class="WIDTH-15 TEXTALI-center" scope="col">Complemento</th>
                   </tr>
@@ -755,7 +789,8 @@ onMounted(async () => {
                       <td class="HEIGHT-5px WIDTH-12 TEXTALI-center TableElipsis" scope="row" :title="consumo.dataConsumo" >{{ consumo.dataConsumo }}</td>
                       <td class="HEIGHT-5px WIDTH-15 TEXTALI-center TableElipsis" :title="consumo.complementoSaida" >{{ consumo.complementoSaida }}</td>
                       <td class="HEIGHT-5px WIDTH-10 TEXTALI-left TableElipsis" :title="consumo.codigoComponente" >{{ consumo.codigoComponente }}</td>
-                      <td class="HEIGHT-5px WIDTH-40 TEXTALI-left TableElipsis" :title="consumo.descricaoComponente" >{{ consumo.descricaoComponente }}</td>
+                      <td class="HEIGHT-5px WIDTH-10 TEXTALI-left TableElipsis" :title="consumo.codigoComponenteCliente" >{{ consumo.codigoComponenteCliente }}</td>
+                      <td class="HEIGHT-5px WIDTH-30 TEXTALI-left TableElipsis" :title="consumo.descricaoComponente" >{{ consumo.descricaoComponente }}</td>
                       <td class="HEIGHT-5px WIDTH-6 TEXTALI-center TableElipsis" :title="consumo.quantidade" >{{ consumo.quantidade }}</td>
                       <td class="HEIGHT-5px WIDTH-15 TEXTALI-center TableElipsis" :title="consumo.motivo" >{{ consumo.motivo }}</td>
                   </tr>
