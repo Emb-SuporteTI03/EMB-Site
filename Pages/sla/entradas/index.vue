@@ -1282,7 +1282,7 @@ onMounted(async () => {
                     </tr>
                   </thead>
                   <LayoutTabelaCarregarEsqueleto v-if="!tabelaENTRADASCarregada"
-                  :Linhas="infosTableEntradasSLASlice.length === 0 ? 15 : infosTableEntradasSLASlice.length" :Colunas="10" />
+                  :Linhas="infosTableEntradasSLASlice.length === 0 ? 15 : infosTableEntradasSLASlice.length" :Colunas="11" />
                   
                     <tbody v-if="tabelaENTRADASCarregada" class="BORRAD-5">
                     <tr

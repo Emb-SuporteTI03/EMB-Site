@@ -35,6 +35,7 @@ const selectedFamilia = ref(null);
 const selectedLote = ref(null);
 const selectedEdicao = ref(null);
 const selectedCodProduto = ref(null);
+const selectedCodProdutoCliente = ref(null);
 const selectedDescProduto = ref(null);
 const selectedEstadoMaterial = ref(null);
 
@@ -77,6 +78,20 @@ const produtoEscolhaFiltro = computed(() => {
   infosTableAbastecimentoSLA.value.forEach(e => {
     if (e.codigoComponente) {
       unicos.add(e.codigoComponente);
+    }
+  });
+
+  return Array.from(unicos).map((item, index) => ({
+    id: index + 1,
+    cNome: item
+  }));
+});
+const codCompClienteEscolhaFiltro = computed(() => {
+  const unicos = new Set();
+
+  infosTableAbastecimentoSLA.value.forEach(e => {
+    if (e.codigoComponenteCliente) {
+      unicos.add(e.codigoComponenteCliente);
     }
   });
 
@@ -156,12 +171,13 @@ const infosTableAbastecimentoSLASlice = computed(() => {
     : infosTableAbastecimentoSLA.value.slice(0, 50)
 });
 const totalQuantidadeAbastecimentos = computed(() => {
-  const codProduto     = selectedCodProduto.value?.cNome.toLowerCase() || "";
-  const descProduto    = selectedDescProduto.value?.cNome.toLowerCase() || "";
-  const familia        = selectedFamilia.value?.cNome.toLowerCase() || "";
-  const lote           = selectedLote.value?.cNome.toLowerCase() || "";
-  const edicao         = selectedEdicao.value?.cNome.toLowerCase() || "";
-  const estadoMaterial = selectedEstadoMaterial.value?.cNome.toLowerCase() || "";
+  const codProduto        = selectedCodProduto.value?.cNome.toLowerCase() || "";
+  const codProdutoCliente = selectedCodProdutoCliente.value?.cNome.toLowerCase() || "";
+  const descProduto       = selectedDescProduto.value?.cNome.toLowerCase() || "";
+  const familia           = selectedFamilia.value?.cNome.toLowerCase() || "";
+  const lote              = selectedLote.value?.cNome.toLowerCase() || "";
+  const edicao            = selectedEdicao.value?.cNome.toLowerCase() || "";
+  const estadoMaterial    = selectedEstadoMaterial.value?.cNome.toLowerCase() || "";
 
   return staticInfosTableAbastecimentoSLA.value
     .filter(comp => {
@@ -178,7 +194,8 @@ const totalQuantidadeAbastecimentos = computed(() => {
       }
 
       return (
-        (codProduto     ? comp.codigoComponente?.toLowerCase().includes(codProduto) : true) &&
+        (codProduto        ? comp.codigoComponente?.toLowerCase().includes(codProduto) : true) &&
+        (codProdutoCliente ? comp.codigoComponenteCliente?.toLowerCase().includes(codProdutoCliente) : true) &&
         (descProduto    ? comp.descricaoComponente?.toLowerCase().includes(descProduto) : true) &&
         (familia        ? comp.familia?.toLowerCase().includes(familia) : true) &&
         (lote           ? comp.lote?.toLowerCase().includes(lote) : true) &&
@@ -197,6 +214,7 @@ const totalQuantidadeAbastecimentos = computed(() => {
 // FUNÇÕES DO FILTRO
 const aplicarFiltros = async () => {
   const codProduto     = selectedCodProduto.value?.cNome.toLowerCase() || "";
+  const codProdutoCliente = selectedCodProdutoCliente.value?.cNome.toLowerCase() || "";
   const descProduto    = selectedDescProduto.value?.cNome.toLowerCase() || "";
   const familia        = selectedFamilia.value?.cNome.toLowerCase() || "";
   const lote           = selectedLote.value?.cNome.toLowerCase() || "";
@@ -216,7 +234,8 @@ const aplicarFiltros = async () => {
     }
 
     return (
-      (codProduto     ? comp.codigoComponente?.toLowerCase().includes(codProduto) : true) &&
+      (codProduto        ? comp.codigoComponente?.toLowerCase().includes(codProduto) : true) &&
+      (codProdutoCliente ? comp.codigoComponenteCliente?.toLowerCase().includes(codProdutoCliente) : true) &&
       (descProduto    ? comp.descricaoComponente?.toLowerCase().includes(descProduto) : true) &&
       (familia        ? comp.familia?.toLowerCase().includes(familia) : true) &&
       (lote           ? comp.lote?.toLowerCase().includes(lote) : true) &&
@@ -669,6 +688,23 @@ onMounted(async () => {
                   :labelClass="'FSIZE-12px MARGIN-T-15'"
                   :widthLista="''"
                 /> 
+                
+                <!-- CÓDIGO COMPONENTE CLIENTE -->
+                <BasicElementVue3SelectPequeno
+                  :options="codCompClienteEscolhaFiltro"
+                  optionLabel="cNome"
+                  v-model="selectedCodProdutoCliente"
+
+                  @update:modelValue="aplicarFiltros"
+                  
+                  label="CÓD. COMP. CLIENTE:"
+                  :titulo="selectedCodProdutoCliente?.cNome"
+
+                  :divClass="'MARGIN-T21 WIDTH-100'"
+                  :selectClass="''"
+                  :labelClass="'FSIZE-12px MARGIN-T-15'"
+                  :widthLista="''"
+                /> 
               </div>
 
 
@@ -713,7 +749,8 @@ onMounted(async () => {
                   <tr>
                     <th class="WIDTH-12 TEXTALI-center" scope="col">Data</th>
                     <th class="WIDTH-9 TEXTALI-center" scope="col">Código</th>
-                    <th class="WIDTH-30 TEXTALI-center" scope="col">Descrição do Produto</th>
+                    <th class="WIDTH-9 no-wrap-text TEXTALI-center" scope="col">Cód Comp. Cliente</th>
+                    <th class="WIDTH-21 TEXTALI-center" scope="col">Descrição do Produto</th>
                     <th class="WIDTH-10 TEXTALI-center" scope="col">Família</th>
                     <th class="WIDTH-8 TEXTALI-center" scope="col">Lote</th>
                     <th class="WIDTH-8 TEXTALI-center" scope="col">Edição</th>
@@ -733,7 +770,8 @@ onMounted(async () => {
                     >
                       <td class="HEIGHT-5px WIDTH-12 TEXTALI-center TableElipsis" :title="entrada.dataHoraEntrada" >{{ entrada.dataHoraEntrada }}</td>
                       <td class="HEIGHT-5px WIDTH-9 TEXTALI-center TableElipsis" :title="entrada.codigoComponente" >{{ entrada.codigoComponente }}</td>
-                      <td class="HEIGHT-5px WIDTH-30 TEXTALI-left TableElipsis" :title="entrada.descricaoComponente" >{{ entrada.descricaoComponente }}</td>
+                      <td class="HEIGHT-5px WIDTH-9 TEXTALI-center TableElipsis" :title="entrada.codigoComponenteCliente" >{{ entrada.codigoComponenteCliente }}</td>
+                      <td class="HEIGHT-5px WIDTH-21 TEXTALI-left TableElipsis" :title="entrada.descricaoComponente" >{{ entrada.descricaoComponente }}</td>
                       <td class="HEIGHT-5px WIDTH-10 TEXTALI-center TableElipsis" :title="entrada.familia" >{{ entrada.familia }}</td>
                       <td class="HEIGHT-5px WIDTH-8 TEXTALI-center TableElipsis" :title="entrada.lote" >{{ entrada.lote }}</td>
                       <td class="HEIGHT-5px WIDTH-8 TEXTALI-center TableElipsis" :title="entrada.edicao" >{{ entrada.edicao }}</td>

@@ -49,6 +49,7 @@ export default {
       isButtonRuimSelecionado: false,
       querieProcuraFiltroCliente: '',
       querieProcuraFiltroCodigo: '',
+      querieProcuraFiltroCodigoCompCliente: '',
       querieProcuraFiltroDescricao: '',
       querieProcuraFiltroEdicao: '',
       querieProcuraFiltroVao: '',
@@ -116,6 +117,7 @@ export default {
 
       // this.querieProcuraFiltroCliente = '';
       this.querieProcuraFiltroCodigo = '';
+      this.querieProcuraFiltroCodigoCompCliente = '';
       this.querieProcuraFiltroDescricao = '';
       this.querieProcuraFiltroEdicao = '';
       this.querieProcuraFiltroVao = '';
@@ -215,7 +217,10 @@ export default {
       this.querieProcuraFiltroCodigo = document.getElementById('filtro-codigo-input').value;
       this.aplicarFiltros();
     },
-
+    onKeyupFiltroCodigoCompCliente() {
+      this.querieProcuraFiltroCodigoCompCliente = document.getElementById('filtro-codigo-comp-cliente-input').value;
+      this.aplicarFiltros();
+    },
     onKeyupFiltroDescricao() {
       this.querieProcuraFiltroDescricao = document.getElementById('filtro-descricao-input').value;
       this.aplicarFiltros();
@@ -244,6 +249,7 @@ export default {
     aplicarFiltros() {
       const cliente = this.querieProcuraFiltroCliente.toLowerCase();
       const codigo = this.querieProcuraFiltroCodigo.toLowerCase();
+      const codigoCompCliente = this.querieProcuraFiltroCodigoCompCliente.toLowerCase();
       const descricao = this.querieProcuraFiltroDescricao.toLowerCase();
       const edicao = this.querieProcuraFiltroEdicao.toLowerCase();
       const vao = this.querieProcuraFiltroVao.toUpperCase().replace(/-/g, "").trim();
@@ -261,6 +267,7 @@ export default {
         return (
           (cliente ? comp.cNmFantasia.toLowerCase().includes(cliente) : true) &&
           (codigo ? comp.cCodComponente.toLowerCase().includes(codigo) : true) &&
+          (codigoCompCliente ? (comp.cCodComponenteCliente || '').toLowerCase().includes(codigoCompCliente) : true) &&
           (descricao ? comp.cDescricao.toLowerCase().includes(descricao) : true) &&
           (edicao ? comp.cEdicao?.toLowerCase().includes(edicao) : true) &&
           (vao ? vaoNormalizado.includes(vao) : true) &&
@@ -879,6 +886,21 @@ async getTransportadorasApenasSLA(idCliente) {
                         class="form-control BOR-grey MARGIN-T-10"
                         @keyup="this.onKeyupFiltroEdicao()">
                     </div>
+                    <!-- Cód Comp Cliente -->
+                    <div class="col-6 input-group-sm" style="margin-top: -2px;">
+                      <label
+                        id="filtro-codigo-comp-cliente-label"
+                        for="filtro-codigo-comp-cliente-input"
+                        class="form-label BGC-branco BORRAD-5 FWEIGHT-bold FSIZE-14px MARGIN-T-15-L7 PADDING-R2-L2"
+                      >Cód. Comp. Cliente</label>
+                      <input
+                        id="filtro-codigo-comp-cliente-input"
+                        type="text"
+                        autocomplete="off"
+                        style="text-transform: uppercase;"
+                        class="form-control BOR-grey MARGIN-T-10"
+                        @keyup="this.onKeyupFiltroCodigoCompCliente()">
+                    </div>
                   </div>
 
                 </div>
@@ -945,19 +967,20 @@ async getTransportadorasApenasSLA(idCliente) {
             <table class="table-responsive table-sm table-striped WIDTH-100 BORRAD-5 FSIZE-PADRAO-TABLE" v-if="this.isEstoqueAnalitico">
               <thead class="BGC-cinza-secondary POSITION-sticky TOP-0">
                 <tr>
-                  <th class="WIDTH-8 TEXTALI-center" scope="col">Cliente</th>
-                  <th class="WIDTH-10 TEXTALI-center" scope="col">Código</th>
-                  <th class="WIDTH-30 TEXTALI-center" scope="col">Descrição do Produto</th>
-                  <th class="WIDTH-9 TEXTALI-center" scope="col">Família</th>
-                  <th class="WIDTH-9 TEXTALI-center" scope="col">Comp.</th>
-                  <th class="WIDTH-10 TEXTALI-center" scope="col">Lote</th>
-                  <th class="WIDTH-8 TEXTALI-center" scope="col">Total</th>
-                  <th class="WIDTH-6 TEXTALI-center" scope="col">Estado</th>
-                  <th class="WIDTH-10 TEXTALI-center" scope="col">Vão</th>
+                  <th class="WIDTH-8  TEXTALI-center no-wrap-text" scope="col">Cliente</th>
+                  <th class="WIDTH-10 TEXTALI-center no-wrap-text" scope="col">Código</th>
+                  <th class="WIDTH-10 TEXTALI-center no-wrap-text" scope="col">Cód Comp. Cliente</th>
+                  <th class="WIDTH-20 TEXTALI-center no-wrap-text" scope="col">Descrição do Produto</th>
+                  <th class="WIDTH-9  TEXTALI-center no-wrap-text" scope="col">Família</th>
+                  <th class="WIDTH-9  TEXTALI-center no-wrap-text" scope="col">Comp.</th>
+                  <th class="WIDTH-10 TEXTALI-center no-wrap-text" scope="col">Lote</th>
+                  <th class="WIDTH-8  TEXTALI-center no-wrap-text" scope="col">Total</th>
+                  <th class="WIDTH-6  TEXTALI-center no-wrap-text" scope="col">Estado</th>
+                  <th class="WIDTH-10 TEXTALI-center no-wrap-text" scope="col">Vão</th>
                 </tr>
               </thead>
               <LayoutTabelaCarregarEsqueleto v-if="!this.tabelaCOMPONENTEsCarregada"
-                :Linhas="infoEstoqueSlice.length === 0 ? 12 : infoEstoqueSlice.length" :Colunas=9 />
+                :Linhas="infoEstoqueSlice.length === 0 ? 12 : infoEstoqueSlice.length" :Colunas=10 />
               <tbody v-if="this.tabelaCOMPONENTEsCarregada" class="BORRAD-5">
                 <tr
                   v-for="(comp, i) in this.infoEstoqueSlice" :key="i"
@@ -970,7 +993,8 @@ async getTransportadorasApenasSLA(idCliente) {
                   <!-- @click="this.clickComponentOnTheList(comp.iD_Componente)" -->
                   <td class="WIDTH-8  TEXTALI-center CTTABLEELPIS" scope="row" :title="comp.cNmFantasia" >{{ comp.cNmFantasia }}</td>
                   <td class="WIDTH-10 TEXTALI-center CTTABLEELPIS" :title="comp.cCodComponente" >{{ comp.cCodComponente }}</td>
-                  <td class="WIDTH-30 TEXTALI-left   CTTABLEELPIS" :title="comp.cDescricao" >{{ comp.cDescricao }}</td>
+                  <td class="WIDTH-10 TEXTALI-center CTTABLEELPIS" :title="comp.cCodComponenteCliente" >{{ comp.cCodComponenteCliente }}</td>
+                  <td class="WIDTH-20 TEXTALI-left   CTTABLEELPIS" :title="comp.cDescricao" >{{ comp.cDescricao }}</td>
                   <td class="WIDTH-9  TEXTALI-center CTTABLEELPIS" :title="comp.cFamilia" >{{ comp.cFamilia }}</td>
                   <td class="WIDTH-9  TEXTALI-center CTTABLEELPIS" :title="comp.cEdicao" >{{ comp.cEdicao }}</td>
                   <td class="WIDTH-10 TEXTALI-center CTTABLEELPIS" :title="comp.cLote" >{{ comp.cLote }}</td>
@@ -987,7 +1011,8 @@ async getTransportadorasApenasSLA(idCliente) {
                 <tr>
                   <th class="WIDTH-8 TEXTALI-center" scope="col">Cliente</th>
                   <th class="WIDTH-10 TEXTALI-center" scope="col">Código</th>
-                  <th class="WIDTH-40 TEXTALI-center" scope="col">Descrição do Produto</th>
+                  <th class="WIDTH-10 TEXTALI-center" scope="col">Cód. Comp. Cliente</th>
+                  <th class="WIDTH-30 TEXTALI-center" scope="col">Descrição do Produto</th>
                   <th class="WIDTH-9 TEXTALI-center" scope="col">Família</th>
                   <th class="WIDTH-9 TEXTALI-center" scope="col">Comp.</th>
                   <th class="WIDTH-10 TEXTALI-center" scope="col">Lote</th>
@@ -1008,7 +1033,8 @@ async getTransportadorasApenasSLA(idCliente) {
                   <!-- @click="this.clickComponentOnTheList(comp.iD_Componente)" -->
                   <td class="HEIGHT-5px WIDTH-8 TEXTALI-center" scope="row" >{{ comp.cNmFantasia }}</td>
                   <td class="HEIGHT-5px WIDTH-10 TEXTALI-center" :title="comp.cCodComponente" >{{ comp.cCodComponente }}</td>
-                  <td class="HEIGHT-5px WIDTH-40 TEXTALI-left" :title="comp.cDescricao" >{{ shortenInfo(comp.cDescricao, 45) }}</td>
+                  <td class="HEIGHT-5px WIDTH-10 TEXTALI-center" :title="comp.cCodComponenteCliente" >{{ comp.cCodComponenteCliente }}</td>
+                  <td class="HEIGHT-5px WIDTH-30 TEXTALI-left" :title="comp.cDescricao" >{{ shortenInfo(comp.cDescricao, 45) }}</td>
                   <td class="HEIGHT-5px WIDTH-9 TEXTALI-center" :title="comp.cFamilia" >{{ shortenInfo(comp.cFamilia, 10) }}</td>
                   <td class="HEIGHT-5px WIDTH-9 TEXTALI-center" :title="comp.cEdicao" >{{ shortenInfo(comp.cEdicao, 10) }}</td>
                   <td class="HEIGHT-5px WIDTH-10 TEXTALI-center" :title="comp.cLote" >{{ shortenInfo(comp.cLote, 10) }}</td>
@@ -1187,7 +1213,7 @@ async getTransportadorasApenasSLA(idCliente) {
 									</div>
 
 										<!-- Descrição -->
-									<div class="col-9 input-group-sm">
+									<div class="col-6 input-group-sm">
 										<label
 											id="update-descricao-componente-label"
 											for="update-descricao-componente-input"
@@ -1203,6 +1229,23 @@ async getTransportadorasApenasSLA(idCliente) {
 											:title="componenteAtual.descricao"
 											v-model="componenteAtual.descricao"
 											@keyup="this.confereCampoTemInformacaoEAplicaBordaVermelha('update-descricao-componente-input', componenteAtual.descricao)">
+									</div>
+                  
+                  <!-- Código Componente -->
+									<div class="col-3 input-group-sm">
+										<label
+											id="update-codigo-componente-label"
+											for="update-codigo-componente-input"
+											class="form-label BGC-input-disabled BORRAD-5 FWEIGHT-bold MARGIN-T-15-L7 FSIZE-14px PADDING-R5-L5 update-label-OS-dataCriacao"
+										>CÓDIGO CLIENTE</label>
+										<input
+											id="update-codigo-componente-input"
+											class="form-control BOR-grey MARGIN-T-10 no-calendar-date-input input-OS-dataCriacao"
+											type="text"
+											disabled
+											:title="componenteAtual.codComponenteCliente"
+											v-model="componenteAtual.codComponenteCliente"
+											@keyup="this.confereCampoTemInformacaoEAplicaBordaVermelha('update-codigo-componente-input', componenteAtual.codComponente)">
 									</div>
 
 								</div>
