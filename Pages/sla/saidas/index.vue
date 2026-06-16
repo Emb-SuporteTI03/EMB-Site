@@ -1256,23 +1256,23 @@ onMounted(async () => {
                     <th class="WIDTH-2 TEXTALI-center no-wrap-text" scope="col"></th>
                     <th class="WIDTH-2 TEXTALI-center no-wrap-text" scope="col"></th>
                     <th class="WIDTH-7 TEXTALI-center no-wrap-text" scope="col">Data</th>
-                    <th class="WIDTH-7 TEXTALI-center no-wrap-text" scope="col">C.K.</th>
-                    <th class="WIDTH-7 TEXTALI-center no-wrap-text" scope="col">Trâmite</th>
-                    <th class="WIDTH-10 TEXTALI-center no-wrap-text" scope="col">G. Remessa</th>
+                    <th class="WIDTH-6 TEXTALI-center no-wrap-text" scope="col">C.K.</th>
+                    <th class="WIDTH-6 TEXTALI-center no-wrap-text" scope="col">Trâmite</th>
+                    <th class="WIDTH-9 TEXTALI-center no-wrap-text" scope="col">G. Remessa</th>
                     <th class="WIDTH-8 TEXTALI-center no-wrap-text" scope="col">Pedido</th>
                     <th class="WIDTH-7 TEXTALI-center no-wrap-text" scope="col">Cod. Rastreio</th>
-                    <!-- <th class="WIDTH-6 TEXTALI-center no-wrap-text" scope="col">O.V</th> -->
                     <th class="WIDTH-8 TEXTALI-center no-wrap-text" scope="col">NFe</th>
-                    <th class="WIDTH-9 TEXTALI-center no-wrap-text" scope="col">Status</th>
+                    <th class="WIDTH-6 TEXTALI-center no-wrap-text" scope="col">Tipo ped.</th>
+                    <th class="WIDTH-8 TEXTALI-center no-wrap-text" scope="col">Status</th>
                     <th class="WIDTH-5 TEXTALI-center no-wrap-text" scope="col">Vol.</th>
                     <!-- <th class="WIDTH-5 TEXTALI-center no-wrap-text" scope="col">Itens</th> -->
-                    <th class="WIDTH-11 TEXTALI-center no-wrap-text" scope="col">Destinatário</th>
-                    <th class="WIDTH-11 TEXTALI-center no-wrap-text" scope="col">Transportadora</th>
+                    <th class="WIDTH-10 TEXTALI-center no-wrap-text" scope="col">Destinatário</th>
+                    <th class="WIDTH-10 TEXTALI-center no-wrap-text" scope="col">Transportadora</th>
 
                   </tr>
                 </thead>
                 <LayoutTabelaCarregarEsqueleto v-if="!tabelaSaidasCarregada"
-                  :Linhas="infosTableSaidasSLASlice.length === 0 ? 15 : infosTableSaidasSLASlice.length" :Colunas="16" />
+                  :Linhas="infosTableSaidasSLASlice.length === 0 ? 15 : infosTableSaidasSLASlice.length" :Colunas="17" />
                 
                   <tbody v-if="tabelaSaidasCarregada" class="BORRAD-5">
                     <template v-for="(saida, i) in infosTableSaidasSLASlice" :key="i">
@@ -1313,9 +1313,9 @@ onMounted(async () => {
                           </button>
                         </td>
                         <td class="HEIGHT-5px no-wrap-text WIDTH-7 TEXTALI-center TableElipsis" scope="row" :title="saida.dataSaida" >{{ saida.dataSaida }}</td>
-                        <td class="HEIGHT-5px no-wrap-text WIDTH-7 TEXTALI-center TableElipsis" scope="row" :title="saida.idCk" >{{ saida.idCk }}</td>
-                        <td class="HEIGHT-5px no-wrap-text WIDTH-7 TEXTALI-center TableElipsis" scope="row" :title="saida.tramite" >{{ saida.tramite }}</td>
-                        <td class="HEIGHT-5px no-wrap-text WIDTH-10 TEXTALI-center no-wrap-text" scope="row" :title="saida.guiaRemessa" >{{ saida.guiaRemessa }}</td>
+                        <td class="HEIGHT-5px no-wrap-text WIDTH-6 TEXTALI-center TableElipsis" scope="row" :title="saida.idCk" >{{ saida.idCk }}</td>
+                        <td class="HEIGHT-5px no-wrap-text WIDTH-6 TEXTALI-center TableElipsis" scope="row" :title="saida.tramite" >{{ saida.tramite }}</td>
+                        <td class="HEIGHT-5px no-wrap-text WIDTH-9 TEXTALI-center no-wrap-text" scope="row" :title="saida.guiaRemessa" >{{ saida.guiaRemessa }}</td>
                         <td class="HEIGHT-5px no-wrap-text WIDTH-8 TEXTALI-center no-wrap-text" scope="row" :title="saida.cNumPedido" >{{ saida.cNumPedido }}</td>
                         <td class="HEIGHT-5px no-wrap-text WIDTH-7 TEXTALI-center no-wrap-text" scope="row"
                         ><button
@@ -1328,11 +1328,12 @@ onMounted(async () => {
                         </td>
                         <!-- <td class="HEIGHT-5px no-wrap-text WIDTH-6 TEXTALI-center TableElipsis" scope="row" :title="saida.ov" >{{ saida.ov }}</td> -->
                         <td class="HEIGHT-5px no-wrap-text WIDTH-8 TEXTALI-center TableElipsis" scope="row" :title="saida.nFe" >{{ saida.nFe }}</td>
-                        <td class="HEIGHT-5px no-wrap-text WIDTH-9 TEXTALI-center TableElipsis" scope="row" :title="saida.status" :class="['TEXTALI-center', getStatusClass(saida.status)]" >{{ saida.status }}</td>
+                        <td class="HEIGHT-5px no-wrap-text WIDTH-6 TEXTALI-center TableElipsis" scope="row" :title="saida.tipoPedido" >{{ saida.tipoPedido }}</td>
+                        <td class="HEIGHT-5px no-wrap-text WIDTH-8 TEXTALI-center TableElipsis" scope="row" :title="saida.status" :class="['TEXTALI-center', getStatusClass(saida.status)]" >{{ saida.status }}</td>
                         <td class="HEIGHT-5px no-wrap-text WIDTH-5 TEXTALI-right TableElipsis" scope="row" :title="saida.volume" >{{ saida.volume }}</td>
                         <!-- <td class="HEIGHT-5px no-wrap-text WIDTH-5 TEXTALI-center TableElipsis" scope="row" :title="saida.itens" >{{ saida.itens }}</td> -->
-                        <td class="HEIGHT-5px no-wrap-text WIDTH-11 TEXTALI-left TableElipsis" scope="row" :title="saida.destino" >{{ saida.destino }}</td>
-                        <td class="HEIGHT-5px no-wrap-text WIDTH-11 TEXTALI-left TableElipsis" scope="row" :title="saida.transportadora" >{{ saida.transportadora }}</td>
+                        <td class="HEIGHT-5px no-wrap-text WIDTH-10 TEXTALI-left TableElipsis" scope="row" :title="saida.destino" >{{ saida.destino }}</td>
+                        <td class="HEIGHT-5px no-wrap-text WIDTH-10 TEXTALI-left TableElipsis" scope="row" :title="saida.transportadora" >{{ saida.transportadora }}</td>
                       </tr>
 
                       <!-- LINHA EXPANDIDA -->
@@ -1399,7 +1400,7 @@ onMounted(async () => {
                 </button>
               </div>
 
-              <div class="WIDTH-11"></div>
+              <div class="WIDTH-15"></div>
 
               <div class="WIDTH-5 FWEIGHT-bold FSIZE-PADRAO-TABLE"
                 :style="{
@@ -1423,7 +1424,7 @@ onMounted(async () => {
                 <span v-else>{{ totalQuantidadeItensSaidas  }}</span>
               </div> -->
 
-              <div class="WIDTH-24"></div>
+              <div class="WIDTH-20"></div>
 
             </div>
 
