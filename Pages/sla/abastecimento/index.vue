@@ -36,6 +36,8 @@ const selectedLote = ref(null);
 const selectedEdicao = ref(null);
 const selectedCodProduto = ref(null);
 const selectedCodProdutoCliente = ref(null);
+const selectedCompMotv = ref(null);
+const selectedMotivoEntrada = ref(null);
 const selectedDescProduto = ref(null);
 const selectedEstadoMaterial = ref(null);
 
@@ -92,6 +94,34 @@ const codCompClienteEscolhaFiltro = computed(() => {
   infosTableAbastecimentoSLA.value.forEach(e => {
     if (e.codigoComponenteCliente) {
       unicos.add(e.codigoComponenteCliente);
+    }
+  });
+
+  return Array.from(unicos).map((item, index) => ({
+    id: index + 1,
+    cNome: item
+  }));
+});
+const codCompMotvEscolhaFiltro = computed(() => {
+  const unicos = new Set();
+
+  infosTableAbastecimentoSLA.value.forEach(e => {
+    if (e.complementoMotivo) {
+      unicos.add(e.complementoMotivo);
+    }
+  });
+
+  return Array.from(unicos).map((item, index) => ({
+    id: index + 1,
+    cNome: item
+  }));
+});
+const motivoEntradaEscolhaFiltro = computed(() => {
+  const unicos = new Set();
+
+  infosTableAbastecimentoSLA.value.forEach(e => {
+    if (e.motivoEntrada) {
+      unicos.add(e.motivoEntrada);
     }
   });
 
@@ -213,13 +243,15 @@ const totalQuantidadeAbastecimentos = computed(() => {
 
 // FUNÇÕES DO FILTRO
 const aplicarFiltros = async () => {
-  const codProduto     = selectedCodProduto.value?.cNome.toLowerCase() || "";
+  const codProduto        = selectedCodProduto.value?.cNome.toLowerCase() || "";
   const codProdutoCliente = selectedCodProdutoCliente.value?.cNome.toLowerCase() || "";
-  const descProduto    = selectedDescProduto.value?.cNome.toLowerCase() || "";
-  const familia        = selectedFamilia.value?.cNome.toLowerCase() || "";
-  const lote           = selectedLote.value?.cNome.toLowerCase() || "";
-  const edicao         = selectedEdicao.value?.cNome.toLowerCase() || "";
-  const estadoMaterial = selectedEstadoMaterial.value?.cNome.toLowerCase() || ""; 
+  const descProduto       = selectedDescProduto.value?.cNome.toLowerCase() || "";
+  const familia           = selectedFamilia.value?.cNome.toLowerCase() || "";
+  const lote              = selectedLote.value?.cNome.toLowerCase() || "";
+  const edicao            = selectedEdicao.value?.cNome.toLowerCase() || "";
+  const estadoMaterial    = selectedEstadoMaterial.value?.cNome.toLowerCase() || ""; 
+  const compMotivoMov     = selectedCompMotv.value?.cNome.toLowerCase() || ""; 
+  const motivoEntrada     = selectedMotivoEntrada.value?.cNome.toLowerCase() || ""; 
 
   infosTableAbastecimentoSLA.value = staticInfosTableAbastecimentoSLA.value.filter(comp => {
     // Validação de datas (comp.dataEntrada vem como dd/MM/yyyy)
@@ -236,11 +268,13 @@ const aplicarFiltros = async () => {
     return (
       (codProduto        ? comp.codigoComponente?.toLowerCase().includes(codProduto) : true) &&
       (codProdutoCliente ? comp.codigoComponenteCliente?.toLowerCase().includes(codProdutoCliente) : true) &&
-      (descProduto    ? comp.descricaoComponente?.toLowerCase().includes(descProduto) : true) &&
-      (familia        ? comp.familia?.toLowerCase().includes(familia) : true) &&
-      (lote           ? comp.lote?.toLowerCase().includes(lote) : true) &&
-      (edicao         ? comp.edicao?.toLowerCase().includes(edicao) : true) &&
-      (estadoMaterial ? comp.estadoEntrada?.toLowerCase().includes(estadoMaterial) : true) &&
+      (descProduto       ? comp.descricaoComponente?.toLowerCase().includes(descProduto) : true) &&
+      (familia           ? comp.familia?.toLowerCase().includes(familia) : true) &&
+      (lote              ? comp.lote?.toLowerCase().includes(lote) : true) &&
+      (edicao            ? comp.edicao?.toLowerCase().includes(edicao) : true) &&
+      (estadoMaterial    ? comp.estadoEntrada?.toLowerCase().includes(estadoMaterial) : true) &&
+      (compMotivoMov     ? comp.complementoMotivo?.toLowerCase().includes(compMotivoMov) : true) &&
+      (motivoEntrada     ? comp.motivoEntrada?.toLowerCase().includes(motivoEntrada) : true) &&
       dentroIntervalo
     );
   });
@@ -579,22 +613,44 @@ onMounted(async () => {
 
                 </div>
 
-                <!-- CÓDIGO PRODUTO -->
-                <BasicElementVue3SelectPequeno
-                  :options="produtoEscolhaFiltro"
-                  optionLabel="cNome"
-                  v-model="selectedCodProduto"
+                <div class="WIDTH-100 D-flex">
 
-                  @update:modelValue="aplicarFiltros"
+                  <!-- CÓDIGO PRODUTO -->
+                  <BasicElementVue3SelectPequeno
+                    :options="produtoEscolhaFiltro"
+                    optionLabel="cNome"
+                    v-model="selectedCodProduto"
+
+                    @update:modelValue="aplicarFiltros"
+                    
+                    label="COD. PRODUTO:"
+                    :titulo="selectedCodProduto?.cnome"
+
+                    :divClass="'MARGIN-T21 WIDTH-50'"
+                    :selectClass="''"
+                    :labelClass="'FSIZE-12px MARGIN-T-15'"
+                    :widthLista="''"
+                  />
+
+                                  
+                  <!-- CÓDIGO COMPONENTE CLIENTE -->
+                  <BasicElementVue3SelectPequeno
+                    :options="codCompClienteEscolhaFiltro"
+                    optionLabel="cNome"
+                    v-model="selectedCodProdutoCliente"
+
+                    @update:modelValue="aplicarFiltros"
+                    
+                    label="CÓD. COMP. CLIENTE:"
+                    :titulo="selectedCodProdutoCliente?.cNome"
+
+                    :divClass="'MARGIN-T21 WIDTH-50'"
+                    :selectClass="''"
+                    :labelClass="'FSIZE-12px MARGIN-T-15'"
+                    :widthLista="''"
+                  /> 
                   
-                  label="COD. PRODUTO:"
-                  :titulo="selectedCodProduto?.cnome"
-
-                  :divClass="'MARGIN-T21 WIDTH-100'"
-                  :selectClass="''"
-                  :labelClass="'FSIZE-12px MARGIN-T-15'"
-                  :widthLista="''"
-                />
+                </div>
 
                 <!-- DESCRIÇÃO PRODUTO -->
                 <BasicElementVue3SelectPequeno
@@ -688,24 +744,44 @@ onMounted(async () => {
                   :labelClass="'FSIZE-12px MARGIN-T-15'"
                   :widthLista="''"
                 /> 
-                
-                <!-- CÓDIGO COMPONENTE CLIENTE -->
+
+                <!-- MOTIVO ENTRADA -->
                 <BasicElementVue3SelectPequeno
-                  :options="codCompClienteEscolhaFiltro"
+                  :options="motivoEntradaEscolhaFiltro"
                   optionLabel="cNome"
-                  v-model="selectedCodProdutoCliente"
+                  v-model="selectedMotivoEntrada"
 
                   @update:modelValue="aplicarFiltros"
                   
-                  label="CÓD. COMP. CLIENTE:"
-                  :titulo="selectedCodProdutoCliente?.cNome"
+                  label="TIPO ENTRADA:"
+                  :titulo="selectedMotivoEntrada?.cNome"
 
                   :divClass="'MARGIN-T21 WIDTH-100'"
                   :selectClass="''"
                   :labelClass="'FSIZE-12px MARGIN-T-15'"
                   :widthLista="''"
                 /> 
+
+
+                <!-- COMPLEMENTO DO MOTIVO DO MOVIMENTO -->
+                <BasicElementVue3SelectPequeno
+                  :options="codCompMotvEscolhaFiltro"
+                  optionLabel="cNome"
+                  v-model="selectedCompMotv"
+
+                  @update:modelValue="aplicarFiltros"
+                  
+                  label="COMPLEMENTO:"
+                  :titulo="selectedCompMotv?.cNome"
+
+                  :divClass="'MARGIN-T21 WIDTH-100'"
+                  :selectClass="''"
+                  :labelClass="'FSIZE-12px MARGIN-T-15'"
+                  :widthLista="''"
+                /> 
+
               </div>
+
 
 
               <!-- BOTÕES -->
@@ -749,18 +825,19 @@ onMounted(async () => {
                   <tr>
                     <th class="WIDTH-12 TEXTALI-center" scope="col">Data</th>
                     <th class="WIDTH-9 TEXTALI-center" scope="col">Código</th>
-                    <th class="WIDTH-9 no-wrap-text TEXTALI-center" scope="col">Cód Comp. Cliente</th>
-                    <th class="WIDTH-21 TEXTALI-center" scope="col">Descrição do Produto</th>
+                    <th class="WIDTH-9 TEXTALI-center" scope="col">Cód Comp. Cliente</th>
+                    <th class="WIDTH-15 TEXTALI-center" scope="col">Descrição do Produto</th>
                     <th class="WIDTH-10 TEXTALI-center" scope="col">Família</th>
                     <th class="WIDTH-8 TEXTALI-center" scope="col">Lote</th>
                     <th class="WIDTH-8 TEXTALI-center" scope="col">Edição</th>
                     <th class="WIDTH-5 TEXTALI-center" scope="col">Qtd.</th>
                     <th class="WIDTH-5 TEXTALI-center" scope="col">Estado</th>
-                    <th class="WIDTH-13 TEXTALI-center" scope="col">Motivo Entrada</th>
+                    <th class="WIDTH-11 TEXTALI-center" scope="col">Tipo Entrada</th>
+                    <th class="WIDTH-8 TEXTALI-center" title="Complemento do motivo da movimentação" scope="col">Complemento</th>
                   </tr>
                 </thead>
                 <LayoutTabelaCarregarEsqueleto v-if="!tabelaAbastecimentoCarregada"
-                  :Linhas="infosTableAbastecimentoSLASlice.length === 0 ? 15 : infosTableAbastecimentoSLASlice.length" :Colunas="10" />
+                  :Linhas="infosTableAbastecimentoSLASlice.length === 0 ? 15 : infosTableAbastecimentoSLASlice.length" :Colunas="11" />
                 
                   <tbody v-if="tabelaAbastecimentoCarregada" class="BORRAD-5">
                   <tr
@@ -771,13 +848,14 @@ onMounted(async () => {
                       <td class="HEIGHT-5px WIDTH-12 TEXTALI-center TableElipsis" :title="entrada.dataHoraEntrada" >{{ entrada.dataHoraEntrada }}</td>
                       <td class="HEIGHT-5px WIDTH-9 TEXTALI-center TableElipsis" :title="entrada.codigoComponente" >{{ entrada.codigoComponente }}</td>
                       <td class="HEIGHT-5px WIDTH-9 TEXTALI-center TableElipsis" :title="entrada.codigoComponenteCliente" >{{ entrada.codigoComponenteCliente }}</td>
-                      <td class="HEIGHT-5px WIDTH-21 TEXTALI-left TableElipsis" :title="entrada.descricaoComponente" >{{ entrada.descricaoComponente }}</td>
+                      <td class="HEIGHT-5px WIDTH-15 TEXTALI-left TableElipsis" :title="entrada.descricaoComponente" >{{ entrada.descricaoComponente }}</td>
                       <td class="HEIGHT-5px WIDTH-10 TEXTALI-center TableElipsis" :title="entrada.familia" >{{ entrada.familia }}</td>
                       <td class="HEIGHT-5px WIDTH-8 TEXTALI-center TableElipsis" :title="entrada.lote" >{{ entrada.lote }}</td>
                       <td class="HEIGHT-5px WIDTH-8 TEXTALI-center TableElipsis" :title="entrada.edicao" >{{ entrada.edicao }}</td>
                       <td class="HEIGHT-5px WIDTH-5 TEXTALI-center TableElipsis">{{ entrada.quantidade }}</td>
                       <td class="HEIGHT-5px WIDTH-5 TEXTALI-center TableElipsis" :class="aplicaCorAoEstado(entrada.estadoEntrada)">{{ entrada.estadoEntrada }}</td>
-                      <td class="HEIGHT-5px WIDTH-13 TEXTALI-left TableElipsis" :title="entrada.motivoEntrada" >{{ entrada.motivoEntrada }}</td>
+                      <td class="HEIGHT-5px WIDTH-11 TEXTALI-center TableElipsis" :title="entrada.motivoEntrada" >{{ entrada.motivoEntrada }}</td>
+                      <td class="HEIGHT-5px WIDTH-8 TEXTALI-center TableElipsis":title="entrada.complementoMotivo" >{{ entrada.complementoMotivo }}</td>
                   </tr>
                 </tbody>
               </table>
@@ -802,7 +880,7 @@ onMounted(async () => {
                   </button>
                 </div>
 
-                <div class="WIDTH-17"></div>
+                <div class="WIDTH-11"></div>
 
                 <div class="WIDTH-5 FWEIGHT-bold FSIZE-14px"
                   :style="{
@@ -815,7 +893,7 @@ onMounted(async () => {
                   <span v-else>{{ totalQuantidadeAbastecimentos }}</span>
                 </div>
 
-                <div class="WIDTH-18"></div>
+                <div class="WIDTH-24"></div>
 
               </div>
 

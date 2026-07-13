@@ -92,6 +92,7 @@ const ajustarCompensacaoScrollConsumo = () => {
       cNome: item
     }));
   });
+
   const descProdutoEscolhaFiltro = computed(() => {
     const unicos = new Set();
 
@@ -132,6 +133,7 @@ const ajustarCompensacaoScrollConsumo = () => {
       cNome: item
     }));
   });
+
 
 const infosTableConsumoSLASlice = computed(() => {
   return mostrarTodos.value
@@ -618,22 +620,44 @@ onMounted(async () => {
 
                 </div>
 
-                <!-- CÓDIGO PRODUTO -->
-                <BasicElementVue3SelectPequeno
-                  :options="produtoEscolhaFiltro"
-                  optionLabel="cNome"
-                  v-model="selectedCodProduto"
 
-                  @update:modelValue="aplicarFiltros"
+                <div class="WIDTH-100 D-flex">
+
+                  <!-- CÓDIGO PRODUTO -->
+                  <BasicElementVue3SelectPequeno
+                    :options="produtoEscolhaFiltro"
+                    optionLabel="cNome"
+                    v-model="selectedCodProduto"
+
+                    @update:modelValue="aplicarFiltros"
+                    
+                    label="COD. PRODUTO:"
+                    :titulo="selectedCodProduto?.cNome"
+
+                    :divClass="'MARGIN-T21 WIDTH-50'"
+                    :selectClass="''"
+                    :labelClass="'FSIZE-12px MARGIN-T-15'"
+                    :widthLista="''"
+                  />
                   
-                  label="COD. PRODUTO:"
-                  :titulo="selectedCodProduto?.cNome"
+                  <!-- CÓDIGO PRODUTO CLIENTE -->
+                  <BasicElementVue3SelectPequeno
+                    :options="codCompClienteEscolhaFiltro"
+                    optionLabel="cNome"
+                    v-model="selectedCodCompCliente"
 
-                  :divClass="'MARGIN-T21 WIDTH-100'"
-                  :selectClass="''"
-                  :labelClass="'FSIZE-12px MARGIN-T-15'"
-                  :widthLista="''"
-                />
+                    @update:modelValue="aplicarFiltros"
+                    
+                    label="COD. COMP. CLIENTE:"
+                    :titulo="selectedCodCompCliente?.cNome"
+
+                    :divClass="'MARGIN-T21 WIDTH-50'"
+                    :selectClass="''"
+                    :labelClass="'FSIZE-12px MARGIN-T-15'"
+                    :widthLista="''"
+                  />
+
+                </div>
 
                 <BasicElementVue3SelectPequeno
                   :options="descProdutoEscolhaFiltro"
@@ -655,24 +679,24 @@ onMounted(async () => {
 
               <!-- DIV CENTRAL 2 -->
               <div class="D-flex WIDTH-25 BOR-L-solidgrey-1 FD-column PADDING-T5-R5-B5-L10">
-                
-                <!-- CÓDIGO PRODUTO CLIENTE -->
+
+                <!-- MOTIVO SAÍDA -->
                 <BasicElementVue3SelectPequeno
-                  :options="codCompClienteEscolhaFiltro"
+                  :options="motivosSaidaEscolhaFiltro"
                   optionLabel="cNome"
-                  v-model="selectedCodCompCliente"
+                  v-model="selectedMotivo"
 
                   @update:modelValue="aplicarFiltros"
                   
-                  label="COD. COMP. CLIENTE:"
-                  :titulo="selectedCodCompCliente?.cNome"
+                  label="TIPO SAÍDA:"
+                  :titulo="selectedMotivo?.cNome"
 
                   :divClass="'MARGIN-T21 WIDTH-100'"
                   :selectClass="''"
                   :labelClass="'FSIZE-12px MARGIN-T-15'"
                   :widthLista="''"
                 />
-
+ 
                 <!-- COMPLEMENTO -->
                 <BasicElementVue3SelectPequeno
                   :options="complementosSaidaEscolhaFiltro"
@@ -683,23 +707,6 @@ onMounted(async () => {
                   
                   label="COMPLEMENTO SAÍDA:"
                   :titulo="selectedComplementoSaida?.cNome"
-
-                  :divClass="'MARGIN-T21 WIDTH-100'"
-                  :selectClass="''"
-                  :labelClass="'FSIZE-12px MARGIN-T-15'"
-                  :widthLista="''"
-                />
-
-                <!-- MOTIVO SAÍDA -->
-                <BasicElementVue3SelectPequeno
-                  :options="motivosSaidaEscolhaFiltro"
-                  optionLabel="cNome"
-                  v-model="selectedMotivo"
-
-                  @update:modelValue="aplicarFiltros"
-                  
-                  label="MOTIVO SAÍDA:"
-                  :titulo="selectedMotivo?.cNome"
 
                   :divClass="'MARGIN-T21 WIDTH-100'"
                   :selectClass="''"
@@ -748,17 +755,17 @@ onMounted(async () => {
                   <tr>
                     <!-- <th class="WIDTH-2 TEXTALI-center" scope="col"></th> -->
                     <th class="WIDTH-2 TEXTALI-center" scope="col"></th>
-                    <th class="WIDTH-12 TEXTALI-center" scope="col">Data</th>
-                    <th class="WIDTH-15 TEXTALI-center" scope="col">Motivo Saída</th>
-                    <th class="WIDTH-10 TEXTALI-center" scope="col">Código</th>
+                    <th class="WIDTH-10 TEXTALI-center" scope="col">Data</th>
+                    <th class="WIDTH-9 TEXTALI-center" scope="col">Código</th>
                     <th class="WIDTH-10 TEXTALI-center" scope="col">Cód Comp. Cliente</th>
-                    <th class="WIDTH-30 TEXTALI-center" scope="col">Descrição do Produto</th>
+                    <th class="WIDTH-39 TEXTALI-center" scope="col">Descrição do Produto</th>
                     <th class="WIDTH-6 TEXTALI-center" scope="col">Qtd.</th>
-                    <th class="WIDTH-15 TEXTALI-center" scope="col">Complemento</th>
+                    <th class="WIDTH-12 TEXTALI-center" scope="col">Tipo Saída</th>
+                    <th class="WIDTH-12 TEXTALI-center" scope="col">Complemento</th>
                   </tr>
                 </thead>
                 <LayoutTabelaCarregarEsqueleto v-if="!tabelaConsumoCarregada"
-                  :Linhas="12" :Colunas="7" />
+                  :Linhas="12" :Colunas="8" />
                 
                   <tbody v-if="tabelaConsumoCarregada" class="BORRAD-5">
                   <tr
@@ -786,13 +793,13 @@ onMounted(async () => {
                           <IconsConsulta  corProp="currentColor" alturaProp="1" larguraProp="1"/>  
                         </button>
                       </td>
-                      <td class="HEIGHT-5px WIDTH-12 TEXTALI-center TableElipsis" scope="row" :title="consumo.dataConsumo" >{{ consumo.dataConsumo }}</td>
-                      <td class="HEIGHT-5px WIDTH-15 TEXTALI-center TableElipsis" :title="consumo.complementoSaida" >{{ consumo.complementoSaida }}</td>
-                      <td class="HEIGHT-5px WIDTH-10 TEXTALI-left TableElipsis" :title="consumo.codigoComponente" >{{ consumo.codigoComponente }}</td>
-                      <td class="HEIGHT-5px WIDTH-10 TEXTALI-left TableElipsis" :title="consumo.codigoComponenteCliente" >{{ consumo.codigoComponenteCliente }}</td>
-                      <td class="HEIGHT-5px WIDTH-30 TEXTALI-left TableElipsis" :title="consumo.descricaoComponente" >{{ consumo.descricaoComponente }}</td>
+                      <td class="HEIGHT-5px WIDTH-10 TEXTALI-center TableElipsis" scope="row" :title="consumo.dataConsumo" >{{ consumo.dataConsumo }}</td>
+                      <td class="HEIGHT-5px WIDTH-9 TEXTALI-center TableElipsis" :title="consumo.codigoComponente" >{{ consumo.codigoComponente }}</td>
+                      <td class="HEIGHT-5px WIDTH-10 TEXTALI-center TableElipsis" :title="consumo.codigoComponenteCliente" >{{ consumo.codigoComponenteCliente }}</td>
+                      <td class="HEIGHT-5px WIDTH-39 TEXTALI-left TableElipsis" :title="consumo.descricaoComponente" >{{ consumo.descricaoComponente }}</td>
                       <td class="HEIGHT-5px WIDTH-6 TEXTALI-center TableElipsis" :title="consumo.quantidade" >{{ consumo.quantidade }}</td>
-                      <td class="HEIGHT-5px WIDTH-15 TEXTALI-center TableElipsis" :title="consumo.motivo" >{{ consumo.motivo }}</td>
+                      <td class="HEIGHT-5px WIDTH-12 TEXTALI-center TableElipsis" :title="consumo.motivo" >{{ consumo.motivo }}</td>
+                      <td class="HEIGHT-5px WIDTH-12 TEXTALI-center TableElipsis" :title="consumo.complementoSaida" >{{ consumo.complementoSaida }}</td>
                   </tr>
                 </tbody>
               </table>
@@ -818,7 +825,7 @@ onMounted(async () => {
                 </button>
               </div>
 
-              <div class="WIDTH-19"></div>
+              <div class="WIDTH-10"></div>
 
               <div class="WIDTH-6 FWEIGHT-bold FSIZE-14px"
                 :style="{
@@ -831,7 +838,7 @@ onMounted(async () => {
                 <span v-else>{{ totalQuantidadeConsumo }}</span>
               </div>
 
-              <div class="WIDTH-15"></div>
+              <div class="WIDTH-24"></div>
 
 
             </div>
