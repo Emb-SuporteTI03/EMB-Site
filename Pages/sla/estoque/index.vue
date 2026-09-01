@@ -38,6 +38,7 @@ export default {
       userNome: useAuthStore().nome,
       clienteSigla: {},
       cliente: '',
+			router: useRouter(),
       // //////////////////////////////////////////////////
 
       infoEstoque: [],
@@ -312,6 +313,9 @@ export default {
       botao.classList.remove('BGC-amarelo-0', 'COLOR-white', 'BOR-amarelo');
       botao.classList.add('BGC-branco', 'COLOR-black', 'BOR-grey');
     },
+    IrParaRota(rota) {
+    	this.router.push(rota);
+  	},
     // -------------------------------------------------------------------------------------------/
 
     // Botões que alternam entre os estoques: ----------------------------------------------------\
@@ -962,7 +966,7 @@ async getTransportadorasApenasSLA(idCliente) {
           </div>
 
           <!-- Tabela -->
-          <div class="OFLOW-auto WIDTH-98 HEIGHT-70 BOR-SensacaoAfundado mb-1">
+          <div class="OFLOW-auto WIDTH-98 HEIGHT-60 BOR-SensacaoAfundado ">
             <!-- Analítico -->
             <table class="table-responsive table-sm table-striped WIDTH-100 BORRAD-5 FSIZE-PADRAO-TABLE" v-if="this.isEstoqueAnalitico">
               <thead class="BGC-cinza-secondary POSITION-sticky TOP-0">
@@ -1046,11 +1050,26 @@ async getTransportadorasApenasSLA(idCliente) {
 
           </div>
 
-          <div class="WIDTH-98">
+          <div class="WIDTH-98 MARGIN-B10">
 						<button @click="toggleVerMais" class="btn btn-secondary WIDTH-100 FSIZE-11px">
 							{{ mostrarTodos ? `Ver menos...` : `Ver mais... (${this.infoEstoque.length})` }}
 						</button>
 					</div>
+
+            <!-- Botões -->
+          <div class="D-flex HEIGHT-7 WIDTH-98 BOR-SensacaoAfundado BGC-cinza-7 PADDING-10">
+            <div class="PADDING-L5 WIDTH-100 D-flex ALITEM-center JC-flex-end">
+              <!-- SOLICITAT -->
+              <button
+                type="button"
+                class="btn btn-azul-claro FSIZE-14px D-flex JC-center ALITEM-center"
+                @click="IrParaRota(`estoque/inventarioCiclico`)"
+              >
+                INVENTÁRIO CÍCLICO
+              </button>
+
+            </div>
+          </div>
 
         </div>
 

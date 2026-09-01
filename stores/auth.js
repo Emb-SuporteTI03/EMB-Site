@@ -7,6 +7,8 @@ export const useAuthStore = defineStore('auth', {
     idCarteira: null,
     idFuncao: null
   }),
+  
+  persist: process.dev, // só persiste em desenvolvimento
 
   actions: {
     setAuth(response) {
