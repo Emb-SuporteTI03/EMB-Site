@@ -438,18 +438,14 @@
       isTabelaInventarioCarregada.value = false;
 
       const response = await axios.get<InventarioResponseDTO[]>(
-        `${urlProd}/estoque/inventario/get-all-inventarios/${dataInicio.value}/${dataFim.value}`,
+        `${urlProd}/estoque/inventario/get-inventarios-validacao-cliente/${ID_Carteira.value}/${dataInicio.value}/${dataFim.value}`,
         { headers: { Authorization: `Bearer ${token.value}` }, }
       );
 
-      // Filtra pela carteira do próprio cliente logado, assim que os dados chegam.
-      const somenteDoCliente = response.data.filter(i => i.iD_Carteira === ID_Carteira.value);
-
-      infoInventarios.value = somenteDoCliente;
-      infoInventariosStatic.value = somenteDoCliente;
+      infoInventarios.value = response.data;
+      infoInventariosStatic.value = response.data;
 
       linhaExpandidaDaTabelaInventario.value = null;
-      linhaExpandidaDaTabelaInventarioContagem.value = null;
 
       AplicarFiltros();
 
@@ -514,6 +510,25 @@
     }
   };
   // ===============================================================/
+
+  // ITENS DIVERGENTES (somente leitura — é o que o cliente pode ver) =========\
+  const infoItensDivergentes = ref<InventarioAnaliseItemDTO[]>([]);
+
+  const FetchItensDivergentesInventario = async (ID_Inventario: number) => {
+    try {
+      const url = `${urlProd}/estoque/inventario/get-itens-divergentes/${ID_Inventario}`;
+      const response = await axios.get<InventarioAnaliseItemDTO[]>(
+        url,
+        { headers: { Authorization: `Bearer ${token.value}` }, }
+      );
+
+      infoItensDivergentes.value = response.data;
+
+    } catch (error) {
+      infoItensDivergentes.value = [];
+    }
+  };
+  // ===========================================================================/
 
   // INVENTÁRIO CONTAGEM (somente leitura): ========================\
   const infoContagens = ref<ContagemResponseDTO[]>([]);
@@ -790,20 +805,15 @@
     return `rgba(${r}, ${g}, ${b}, ${alpha})`;
   };
 
-  const ativarSubLinhaInventario = async (ID_Inventario: number): Promise<void> => {
-    linhaExpandidaDaTabelaInventarioContagem.value = null;
-
-    if (linhaExpandidaDaTabelaInventario.value === ID_Inventario) {
-      linhaExpandidaDaTabelaInventario.value = null;
-
-      infoContagens.value = [];
-      infoContagensStatic.value = [];
-    } else {
-      linhaExpandidaDaTabelaInventario.value = ID_Inventario;
-
-      await FetchInventarioContagens(ID_Inventario);
-    }
-  };
+const ativarSubLinhaInventario = async (ID_Inventario: number): Promise<void> => {
+  if (linhaExpandidaDaTabelaInventario.value === ID_Inventario) {
+    linhaExpandidaDaTabelaInventario.value = null;
+    infoItensDivergentes.value = [];
+  } else {
+    linhaExpandidaDaTabelaInventario.value = ID_Inventario;
+    await FetchItensDivergentesInventario(ID_Inventario);
+  }
+};
   // ===============================================================/
 
   onMounted(async () => {
@@ -1161,12 +1171,27 @@
                 :Linhas="infoInventariosSlice.length === 0 ? 15 : infoInventariosSlice.length"
                 :Colunas=14 v-if="!isTabelaInventarioCarregada" />
 
-              <tbody v-if="isTabelaInventarioCarregada" class="BORRAD-5">
+              <!-- CAPA — nenhum inventário encontrado no período -->
+              <tbody v-if="isTabelaInventarioCarregada && !infoInventariosSlice.length">
+                <tr>
+                  <td colspan="14" class="TEXTALI-center" style="padding: 60px 20px;">
+                    <div class="D-flex FD-column ALITEM-center JC-center GAP-10">
+                      <span style="font-size: 42px; line-height: 1;">📦</span>
+                      <strong class="FSIZE-14px" style="color: #555;">Nenhum inventário encontrado</strong>
+                      <span class="FSIZE-12px text-muted">
+                        Não há inventários aguardando ou que precisaram da sua validação neste período.
+                      </span>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+
+              <tbody v-if="isTabelaInventarioCarregada && infoInventariosSlice.length" class="BORRAD-5">
                 <template v-for="(inventario, i) in infoInventariosSlice" :key="i">
 
                   <!-- LINHA PRINCIPAL -->
                   <tr class="CURSOR-default BGC-H-cinza-8" :class="applyTableStipedRows(i)" :id="`${i}`" >
-                    <!-- BOTÃO EXPANDIR (só leitura, mostra as contagens) -->
+                    <!-- BOTÃO EXPANDIR (só leitura, mostra os itens divergentes) -->
                     <td class="WIDTH-2 TEXTALI-center ALITEM-center">
                       <button
                         title="Mais informações"
@@ -1219,7 +1244,7 @@
                       }"
                     >{{ inventario.nXReal }}</td>
 
-                    <!-- SITUAÇÃO — prioriza o status intermediário do crivo interno (4182) quando existir -->
+                    <!-- SITUAÇÃO — prioriza o status intermediário de validação do cliente quando existir -->
                     <td class="WIDTH-9  FSIZE-12px TEXTALI-center no-wrap-text BORRAD-2 COLOR-white  BGC-transparent"
                       :title="`${inventario.cStatusValidacaoInterna || (inventario.cStatusAprovado === referenciaBlack ? '' : inventario.cStatusAprovado)}`"
                       :style="{
@@ -1230,200 +1255,47 @@
                     >{{ inventario.cStatusValidacaoInterna || (inventario.cStatusAprovado === referenciaBlack ? '' : inventario.cStatusAprovado) }}</td>
                   </tr>
 
-                  <!-- Linha expandida (contagens — só leitura) -->
+                  <!-- Linha expandida — só os itens que divergiram (é o que o cliente pode ver) -->
                   <tr v-if="linhaExpandidaDaTabelaInventario === inventario.iD_Inventario">
                     <td colspan="14" class="expanded-row" style="background-color: #fff0f0;">
-                      <div class="expanded-content PADDING-2" style="display: flex">
-                        <table class="table table-sm" style="overflow-x: hidden; width: 100%;  border-collapse: collapse; z-index: 1">
+                      <div class="expanded-content PADDING-10" style="display: flex; flex-direction: column; gap: 10px;">
 
-                          <thead>
-                            <tr style="text-align: center" class="FSIZE-13px">
-                              <th style="background-color: #97b6b8" class="WIDTH-2 TEXTALI-center CTTABLEELPIS" scope="col"></th>
-                              <th style="background-color: #97b6b8" class="WIDTH-6 TEXTALI-center CTTABLEELPIS" scope="col">CONTAGEM</th>
-                              <th style="background-color: #97b6b8" class="WIDTH-30 TEXTALI-center  CTTABLEELPIS" scope="col">AUDITOR</th>
-                              <th style="background-color: #97b6b8" class="WIDTH-9 TEXTALI-center CTTABLEELPIS" scope="col">INÍCIO</th>
-                              <th style="background-color: #97b6b8" class="WIDTH-9 TEXTALI-center CTTABLEELPIS" scope="col">FIM</th>
-                              <th style="background-color: #97b6b8" class="WIDTH-9 TEXTALI-center CTTABLEELPIS" scope="col">STATUS</th>
-                              <th style="background-color: #97b6b8" class="WIDTH-6 TEXTALI-center CTTABLEELPIS" scope="col">X REAL</th>
-                              <th style="background-color: #97b6b8" class="WIDTH-8 TEXTALI-center CTTABLEELPIS" scope="col">SITUAÇÃO</th>
-                            </tr>
-                          </thead>
+                        <div
+                          v-for="(item, i) in infoItensDivergentes" :key="i"
+                          class="card shadow-sm BORDER-RADIUS-10 PADDING-10"
+                          :style="{ backgroundColor: item.cCorAcao || '#ffffff' }"
+                        >
+                          <div class="D-flex ALITEM-center MARGIN-B5">
+                            <strong>{{ item.cCodComponente }}</strong>
+                            <span>&nbsp;&nbsp;&nbsp;</span>
+                            <div class="FSIZE-13px">{{ item.cDescComponente }}</div>
+                          </div>
 
-                          <tbody>
-                            <template v-for="contagem in infoContagens" :key="i">
+                          <div class="D-flex flex-wrap GAP-10 FSIZE-13px MARGIN-B5">
+                            <span><b>Vão:</b> {{ item.cVao }}</span>
+                            <span>&nbsp;&nbsp;&nbsp;</span>
+                            <span><b>Lote:</b> {{ item.cLote }}</span>
+                            <span>&nbsp;&nbsp;&nbsp;</span>
+                            <span><b>Estado:</b> {{ item.cEstadoMaterial }}</span>
+                          </div>
 
-                              <tr class="FSIZE-12px">
-                                <td style="background-color: #e0e0e0;" class="WIDTH-2 BOR-B-grey-4 TEXTALI-left no-wrap-text BORRAD-2">
-                                  <button
-                                    title="Mais informações"
-                                    class="custom-button"
-                                    style="height: 15px; width: 15px;"
-                                    @click.stop.prevent="ativarSubLinhaInventarioContagem(contagem)"
-                                    >{{ linhaExpandidaDaTabelaInventarioContagem === contagem.iD_Inventario_Contagem ? '-' : '+' }}
-                                  </button>
-                                </td>
+                          <div class="D-flex align-items-center flex-wrap GAP-6 FSIZE-13px MARGIN-B5">
+                            <b>Quantidade:</b>
+                            <span>&nbsp;</span>
+                            <span class="FSIZE-12px">(Sistema: <b>{{ item.iQuantidadeSistema }}</b>)</span>
+                            <span>&nbsp;&nbsp;&nbsp;</span>
+                            <span class="badge bg-dark FSIZE-12px">Diferença: {{ item.iDiferenca }}</span>
+                          </div>
 
-                                <td class="HEIGHT-5px BOR-B-grey-4 WIDTH-6  TEXTALI-center CTTABLEELPIS BORRAD-2"
-                                  :title="`${contagem.iTipoContagem === 1 ? '' : contagem.cNumeroContagem}`"
-                                  :style="{
-                                    backgroundColor: contagem.iTipoContagem === 1
-                                      ? hexToRgba(referenciaBlack, 0.4)
-                                      : '#e0e0e0'
-                                  }"
-                                >{{ contagem.iTipoContagem === 1 ? '' : contagem.cNumeroContagem }}</td>
+                          <div class="D-flex JC-between ALITEM-center FSIZE-13px">
+                            <span class="fw-bold text-primary">{{ item.cAcaoSugerida }}</span>
+                          </div>
+                        </div>
 
-                                <td style="background-color: #e0e0e0;" class="HEIGHT-5px BOR-B-grey-4 WIDTH-30 TEXTALI-left   CTTABLEELPIS BORRAD-2"
-                                  :title="``" >{{ contagem.cNmUsuario }}</td>
+                        <div v-if="!infoItensDivergentes.length" class="text-center text-muted">
+                          Nenhum item divergente encontrado
+                        </div>
 
-                                <td class="HEIGHT-5px BOR-B-grey-4 WIDTH-6  TEXTALI-center CTTABLEELPIS BORRAD-2"
-                                  :title="`${contagem.iTipoContagem === 1 ? '' : contagem.dInicio}`"
-                                  :style="{
-                                    backgroundColor: contagem.iTipoContagem === 1
-                                      ? hexToRgba(referenciaBlack, 0.4)
-                                      : '#e0e0e0'
-                                  }"
-                                >{{ contagem.iTipoContagem === 1 ? '' : contagem.dInicio }}</td>
-
-                                <td class="HEIGHT-5px BOR-B-grey-4 WIDTH-6  TEXTALI-center CTTABLEELPIS BORRAD-2"
-                                  :title="`${contagem.iTipoContagem === 1 ? '' : contagem.dFim}`"
-                                  :style="{
-                                    backgroundColor: contagem.iTipoContagem === 1
-                                      ? hexToRgba(referenciaBlack, 0.4)
-                                      : '#e0e0e0'
-                                  }"
-                                >{{ contagem.iTipoContagem === 1 ? '' : contagem.dFim }}</td>
-
-                                <td class="HEIGHT-5px BOR-B-grey-4 WIDTH-6 TEXTALI-center CTTABLEELPIS BORRAD-2"
-                                  :title="`${contagem.cAuditoriaStatus}`"
-                                  style="color: white;"
-                                  :style="{
-                                    backgroundColor: contagem.iTipoContagem === 1 ?
-                                      hexToRgba(referenciaBlack, 0.4) :
-                                      contagem.cCorStatusAuditoria ?
-                                      hexToRgba(contagem.cCorStatusAuditoria, 0.75)
-                                      : ''
-                                  }"
-                                >{{ contagem.cAuditoriaStatus }}</td>
-
-                                <td class="HEIGHT-5px BOR-B-grey-4 WIDTH-6  TEXTALI-center CTTABLEELPIS BORRAD-2"
-                                  :title="`${contagem.nXReal}`"
-                                  :style="{
-                                    backgroundColor: contagem.iTipoContagem === 1 ?
-                                      hexToRgba(referenciaBlack, 0.4) :
-                                      (contagem.nXReal != 0) ?
-                                      hexToRgba(contagem.cCorXReal, 0.75) : '#e0e0e0',
-                                    color: (contagem.nXReal != 0)
-                                      ? ''
-                                      : '#000000'
-                                  }"
-                                >{{ contagem.iTipoContagem === 1 ? '' : contagem.nXReal }}</td>
-
-                                <td class="HEIGHT-5px BOR-B-grey-4 WIDTH-6 TEXTALI-center CTTABLEELPIS BORRAD-2  BGC-transparent"
-                                  :title="`${contagem.cStatusAprovado === referenciaBlack ? '' : contagem.cStatusAprovado}`"
-                                  style="color: white;"
-                                  :style="{
-                                    backgroundColor: contagem.iTipoContagem === 1 ?
-                                      hexToRgba(referenciaBlack, 0.4) :
-                                      contagem.cCorStatusAprovado != referenciaBlack ?
-                                        hexToRgba(contagem.cCorStatusAprovado, 0.75)
-                                        : hexToRgba(contagem.cCorStatusAprovado, 0.4)
-                                  }"
-                                >{{ contagem.cStatusAprovado === referenciaBlack ? '' : contagem.cStatusAprovado }}</td>
-                              </tr>
-
-                              <!-- Linha expandida 2 -->
-                              <tr v-if="linhaExpandidaDaTabelaInventarioContagem === contagem.iD_Inventario_Contagem">
-                                <td colspan="8" class="expanded-row" style="background-color: #fff4f4;">
-                                  <div class="expanded-content" style="display: flex;">
-                                    <table class="table table-sm" style="overflow-x: hidden; border: 2px 0px 0px 0px solid #000; width: 100%; border-collapse: collapse; z-index: 1">
-
-                                      <thead>
-                                        <tr style="text-align: center" class="FSIZE-12px">
-                                          <th style="background-color: #d4e6e7" class="WIDTH-10 TEXTALI-center CTTABLEELPIS" scope="col">CÓDIGO</th>
-                                          <th style="background-color: #d4e6e7" class="WIDTH-25 TEXTALI-center  CTTABLEELPIS" scope="col">DESCRIÇÃO</th>
-                                          <th style="background-color: #d4e6e7" class="WIDTH-6 TEXTALI-center CTTABLEELPIS" scope="col">VÃO</th>
-                                          <th style="background-color: #d4e6e7" class="WIDTH-6 TEXTALI-center CTTABLEELPIS" scope="col">RUA</th>
-                                          <th style="background-color: #d4e6e7" class="WIDTH-6 TEXTALI-center CTTABLEELPIS" scope="col">LOTE</th>
-                                          <th style="background-color: #d4e6e7" class="WIDTH-6 TEXTALI-center CTTABLEELPIS" scope="col">ESTADO</th>
-                                          <th style="background-color: #d4e6e7" class="WIDTH-8 TEXTALI-center CTTABLEELPIS" scope="col">QTDE. ANTERIOR</th>
-                                          <th style="background-color: #d4e6e7" class="WIDTH-8 TEXTALI-center CTTABLEELPIS" scope="col">
-                                            {{ contagem.iTipoContagem === 1 ? 'QTDE. SOLICITADA' : 'QTDE. ENCONTRADA' }}
-                                          </th>
-                                          <th style="background-color: #d4e6e7" class="WIDTH-7 TEXTALI-center CTTABLEELPIS" scope="col">DIVERGÊNCIA</th>
-                                          <th style="background-color: #d4e6e7" class="WIDTH-7 TEXTALI-center CTTABLEELPIS" scope="col">SITUAÇÃO</th>
-                                        </tr>
-                                      </thead>
-
-                                      <tbody class="FSIZE-11px">
-                                        <template v-for="item in infoContagemItens" :key="i">
-
-                                          <tr class="">
-                                            <td style="background-color: #efefef;" class="HEIGHT-5px WIDTH-10  TEXTALI-center CTTABLEELPIS BORRAD-2"
-                                            >{{ item.cCodComponente }}</td>
-                                            <td style="background-color: #efefef;" class="HEIGHT-5px WIDTH-25  TEXTALI-left CTTABLEELPIS BORRAD-2"
-                                            >{{ item.cDescricao }}</td>
-                                            <td style="background-color: #efefef;" class="HEIGHT-5px WIDTH-6  TEXTALI-center CTTABLEELPIS BORRAD-2"
-                                            >{{ item.cVao }}</td>
-                                            <td style="background-color: #efefef;" class="HEIGHT-5px WIDTH-6  TEXTALI-center CTTABLEELPIS BORRAD-2"
-                                            >{{ item.cRua }}</td>
-                                            <td style="background-color: #efefef;" class="HEIGHT-5px WIDTH-6  TEXTALI-center CTTABLEELPIS BORRAD-2"
-                                            >{{ item.cLote }}</td>
-                                            <td class="HEIGHT-5px WIDTH-6  TEXTALI-center CTTABLEELPIS BORRAD-2"
-                                              :style="{
-                                                backgroundColor: item.cEstadoMaterial === 'BOM' ? 'rgba(0, 177, 64, 0.1)' : 'rgba(228, 28, 56, 0.1)',
-                                                color: item.cEstadoMaterial === 'BOM' ? 'green' : 'red'
-                                              }"
-                                            >{{ item.cEstadoMaterial }}</td>
-
-                                            <td style="background-color: #efefef;" class="HEIGHT-5px WIDTH-8  TEXTALI-center CTTABLEELPIS BORRAD-2"
-                                              :title="`${contagem.iTipoContagem === 1 ? '' : item.iQuantidadeAnterior}`"
-                                              :style="{
-                                                backgroundColor: contagem.iTipoContagem === 1
-                                                  ? hexToRgba(referenciaBlack, 0.4)
-                                                  : '#efefef'
-                                              }"
-                                            >{{ contagem.iTipoContagem === 1 ? '' : item.iQuantidadeAnterior }}</td>
-
-                                            <td style="background-color: #efefef;" class="HEIGHT-5px WIDTH-8  TEXTALI-center CTTABLEELPIS BORRAD-2"
-                                              :title="`${contagem.iTipoContagem === 1 ? item.iQuantidadeSolicitada : item.iQuantidadeEncontrada}`"
-                                            >{{ contagem.iTipoContagem === 1 ? item.iQuantidadeSolicitada : item.iQuantidadeEncontrada }}</td>
-
-                                            <td class="HEIGHT-5px WIDTH-7 TEXTALI-center CTTABLEELPIS BORRAD-2  BGC-transparent"
-                                              :title="`${item.cStatusDivergente === referenciaBlack ? '' : item.cStatusDivergente}`"
-                                              style="color: white;"
-                                              :style="{
-                                                backgroundColor: contagem.iTipoContagem === 1 ?
-                                                  hexToRgba(referenciaBlack, 0.4) :
-                                                    item.cCorStatusDivergente != referenciaBlack ?
-                                                      hexToRgba(item.cCorStatusDivergente, 0.75)
-                                                      : hexToRgba(item.cCorStatusDivergente, 0.4)
-                                              }"
-                                            >{{ item.cStatusDivergente === referenciaBlack ? '' : item.cStatusDivergente }}</td>
-
-                                            <td class="HEIGHT-5px WIDTH-7 TEXTALI-center CTTABLEELPIS BORRAD-2  BGC-transparent"
-                                              :title="`${item.cStatusAprovado === referenciaBlack ? '' : item.cStatusAprovado}`"
-                                              style="color: white;"
-                                              :style="{
-                                                  backgroundColor:
-                                                    item.cCorStatusAprovado != referenciaBlack ?
-                                                      hexToRgba(item.cCorStatusAprovado, 0.75)
-                                                      : hexToRgba(item.cCorStatusAprovado, 0.4)
-                                              }"
-                                            >{{ item.cStatusAprovado === referenciaBlack ? '' : item.cStatusAprovado }}</td>
-                                          </tr>
-
-                                        </template>
-                                      </tbody>
-
-                                    </table>
-                                  </div>
-                                </td>
-                              </tr>
-
-                            </template>
-                          </tbody>
-
-                        </table>
                       </div>
                     </td>
                   </tr>
