@@ -1003,7 +1003,7 @@ const ativarSubLinhaInventario = async (ID_Inventario: number): Promise<void> =>
 
               <div class="D-flex HEIGHT-100 FD-column JC-space-between WIDTH-85 BORRAD-5 mb-1">
 
-                <div class="D-flex WIDTH-100 FD-column HEIGHT-100 PADDING-T5-L10 MARGIN-T2 JC-flex-start">
+                <div class="D-flex WIDTH-100 FD-column HEIGHT-100 PADDING-T5-L10 MARGIN-T2 JC-flex-between">
                   <div class="WIDTH-98 MARGIN-T-13 HEIGHT-35" >
                     <label
                       id="data-inicio-ck-label"
