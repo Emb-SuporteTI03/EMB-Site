@@ -945,7 +945,7 @@ const ativarSubLinhaInventario = async (ID_Inventario: number): Promise<void> =>
               <span class="FSIZE-13px">
                 {{
                   tipoConfirmacao === 'APROVAR'
-                    ? 'Ao aprovar o inventário, o sistema poderá gerar movimentações de entrada e saída automaticamente para ajustar os saldos.'
+                    ? 'Ao aprovar o inventário, o sistema irá gerar movimentações de entrada e saída automaticamente para ajustar os saldos.'
                     : 'Ao reprovar o inventário, todas as quantidades serão revertidas para os valores originais do sistema.'
                 }}
               </span>
