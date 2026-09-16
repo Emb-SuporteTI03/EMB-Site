@@ -176,6 +176,7 @@
   const ID_Carteira = ref(authStore.idCarteira ?? 0);
   const token = ref(authStore.token ?? "");
   const logoPath = `/CLIENTES/${ID_Carteira.value}.png`
+  const userID = ref(authStore.idUsuario ?? 0);
 
   // ===============================================================/
 
@@ -415,6 +416,108 @@
   };
   // ===============================================================/
 
+  const infoItensDivergentesAgrupados = computed<InventarioAnaliseItemAgrupadoDTO[]>(() => {
+    const grupos = new Map<string, InventarioAnaliseItemAgrupadoDTO>();
+
+    infoItensDivergentes.value.forEach(item => {
+      // Agrupa por Componente + Estado do Material + Lote — não considera o Vão
+      const chave = `${item.iD_Componente}_${item.iD_Estado_Material}_${item.iD_Lote}`;
+      const existente = grupos.get(chave);
+
+      if (existente) {
+        existente.iQuantidadeSistema += item.iQuantidadeSistema ?? 0;
+        existente.iDiferenca += item.iDiferenca ?? 0;
+      } else {
+        grupos.set(chave, {
+          cCodComponente: item.cCodComponente,
+          cDescComponente: item.cDescComponente,
+          cLote: item.cLote,
+          cEstadoMaterial: item.cEstadoMaterial,
+          iQuantidadeSistema: item.iQuantidadeSistema ?? 0,
+          iDiferenca: item.iDiferenca ?? 0,
+          cAcaoSugerida: '',
+          cCorAcao: '',
+          bAprovado: null
+        });
+      }
+    });
+
+    // Recalcula a ação/cor já com a diferença somada
+    return Array.from(grupos.values()).map(grupo => {
+      if (grupo.iDiferenca > 0) {
+        grupo.cAcaoSugerida = 'ENTRADA';
+        grupo.cCorAcao = '#FFD966';
+      } else if (grupo.iDiferenca < 0) {
+        grupo.cAcaoSugerida = 'SAIDA';
+        grupo.cCorAcao = '#FFD966';
+      } else {
+        grupo.cAcaoSugerida = 'OK';
+        grupo.cCorAcao = '#ffffff';
+      }
+      return grupo;
+    });
+  });
+
+  interface InventarioAnaliseItemAgrupadoDTO {
+    cCodComponente: string | null;
+    cDescComponente: string | null;
+    cLote: string | null;
+    cEstadoMaterial: string | null;
+    iQuantidadeSistema: number;
+    iDiferenca: number;
+    cAcaoSugerida: string;
+    cCorAcao: string;
+    bAprovado: boolean | null;
+  };
+
+  // Só para EXIBIÇÃO no modal — não altera validarInventarioRequest.listaItens
+  const infoAnaliseItensAgrupados = computed<InventarioAnaliseItemAgrupadoDTO[]>(() => {
+    const grupos = new Map<string, InventarioAnaliseItemAgrupadoDTO>();
+
+    infoAnaliseItens.value.forEach(item => {
+      // Agrupa por Componente + Estado do Material + Lote — não considera o Vão
+      const chave = `${item.iD_Componente}_${item.iD_Estado_Material}_${item.iD_Lote}`;
+      const existente = grupos.get(chave);
+
+      if (existente) {
+        existente.iQuantidadeSistema += item.iQuantidadeSistema ?? 0;
+        existente.iDiferenca += item.iDiferenca ?? 0;
+
+        if (item.bAprovado === false || existente.bAprovado === false) {
+          existente.bAprovado = false;
+        } else if (item.bAprovado === null || existente.bAprovado === null) {
+          existente.bAprovado = null;
+        }
+      } else {
+        grupos.set(chave, {
+          cCodComponente: item.cCodComponente,
+          cDescComponente: item.cDescComponente,
+          cLote: item.cLote,
+          cEstadoMaterial: item.cEstadoMaterial,
+          iQuantidadeSistema: item.iQuantidadeSistema ?? 0,
+          iDiferenca: item.iDiferenca ?? 0,
+          cAcaoSugerida: '',
+          cCorAcao: '',
+          bAprovado: item.bAprovado
+        });
+      }
+    });
+
+    return Array.from(grupos.values()).map(grupo => {
+      if (grupo.iDiferenca > 0) {
+        grupo.cAcaoSugerida = 'ENTRADA';
+        grupo.cCorAcao = '#FFD966';
+      } else if (grupo.iDiferenca < 0) {
+        grupo.cAcaoSugerida = 'SAIDA';
+        grupo.cCorAcao = '#FFD966';
+      } else {
+        grupo.cAcaoSugerida = 'OK';
+        grupo.cCorAcao = '#ffffff';
+      }
+      return grupo;
+    });
+  });
+
   // INVENTARIO (leitura) ==========================================\
   const mostrarTodosInventario = ref<boolean>(false);
   const isTabelaInventarioCarregada = ref<boolean>(false);
@@ -601,11 +704,15 @@
 
   interface ValidarInventarioRequestDTO {
     iD_Inventario: number;
+    iD_Usuario: number;
+    iD_PARAM_Validador: number;
     listaItens: ValidarInventarioItensRequestDTO[] | null;
   };
 
   const validarInventarioRequest = ref<ValidarInventarioRequestDTO>({
     iD_Inventario: 0,
+    iD_Usuario: userID.value,
+    iD_PARAM_Validador: 2,
     listaItens: null
   });
 
@@ -629,6 +736,8 @@
   const clearInfoValidarInventario = () => {
     validarInventarioRequest.value = {
       iD_Inventario: 0,
+      iD_Usuario: userID.value,
+      iD_PARAM_Validador: 2,
       listaItens: null
     };
 
@@ -670,6 +779,8 @@
 
     // Abastece o DTO:
     validarInventarioRequest.value.iD_Inventario = ID_Inventario ?? 0;
+    validarInventarioRequest.value.iD_Usuario = userID.value;
+    validarInventarioRequest.value.iD_PARAM_Validador = 2;
 
     // Busca os itens:
     await FetchAnaliseItens(ID_Inventario);
@@ -695,17 +806,23 @@
   interface reprovarCancelarInventarioRequestDTO {
     iD_Inventario: number;
     cMotivoReprovacao: string | null;
-  }
+    iD_Usuario: number;
+    iD_PARAM_Validador: number;
+  };
 
   const reprovarCancelarInventarioRequest = ref<reprovarCancelarInventarioRequestDTO>({
     iD_Inventario: 0,
-    cMotivoReprovacao: null
+    cMotivoReprovacao: null,
+    iD_Usuario: userID.value,
+    iD_PARAM_Validador: 2
   });
 
   const clearInfoCancelarReprovarInventario = () => {
     reprovarCancelarInventarioRequest.value = {
       iD_Inventario: 0,
-      cMotivoReprovacao: null
+      cMotivoReprovacao: null,
+      iD_Usuario: userID.value,
+      iD_PARAM_Validador: 2
     };
   };
 
@@ -734,6 +851,8 @@
   const OnClickConfirmarValidarReprovarInventario = async () => {
     reprovarCancelarInventarioRequest.value.iD_Inventario = validarInventarioRequest.value.iD_Inventario;
     reprovarCancelarInventarioRequest.value.cMotivoReprovacao = 'VALIDAÇÃO REPROVADA';
+    reprovarCancelarInventarioRequest.value.iD_Usuario = userID.value;
+    reprovarCancelarInventarioRequest.value.iD_PARAM_Validador = 2;
 
     await CancelarReprovarInventarioDB();
 
@@ -853,7 +972,7 @@ const ativarSubLinhaInventario = async (ID_Inventario: number): Promise<void> =>
           <div class="WIDTH-100 PADDING-10 OFLOW-auto D-flex flex-column GAP-10 HEIGHT-100 BOR-SensacaoAfundadoCompleto BGC-branco">
 
             <div
-              v-for="(item, i) in infoAnaliseItens" :key="i"
+              v-for="(item, i) in infoAnaliseItensAgrupados" :key="i"
               class="card shadow-sm BORDER-RADIUS-10 PADDING-10 MARGIN-B5"
               :style="{ backgroundColor: item.cCorAcao || '#ffffff' }"
             >
@@ -884,8 +1003,6 @@ const ativarSubLinhaInventario = async (ID_Inventario: number): Promise<void> =>
               </div>
 
               <div class="D-flex flex-wrap GAP-10 FSIZE-13px MARGIN-B5">
-                <span><b>Vão:</b> {{ item.cVao }}</span>
-                <span>&nbsp;&nbsp;&nbsp;</span>
                 <span><b>Lote:</b> {{ item.cLote }}</span>
                 <span>&nbsp;&nbsp;&nbsp;</span>
                 <span><b>Estado:</b> {{ item.cEstadoMaterial }}</span>
@@ -894,20 +1011,10 @@ const ativarSubLinhaInventario = async (ID_Inventario: number): Promise<void> =>
               <div class="D-flex align-items-center flex-wrap GAP-6 FSIZE-13px MARGIN-B5">
                 <b>Quantidade:</b>
                 <span>&nbsp;</span>
-
-                <span class="FSIZE-12px">
-                  (Sistema: <b>{{ item.iQuantidadeSistema }}</b>)
-                </span>
-
+                <span class="FSIZE-12px">(Inicial: <b>{{ item.iQuantidadeSistema }}</b>)</span>
                 <span>&nbsp;&nbsp;&nbsp;</span>
-
-                <span v-for="(contagem, i) in item.contagens" :key="i" class="FSIZE-12px">
-                  <span :style="contagem.bAprovado ? 'color: #198754; font-weight: bold;' : ''">
-                    (Contagem{{ contagem.iNumeroContagem }}: {{ contagem.iQuantidadeEncontrada }}{{ contagem.bAprovado ? ' ✓' : '' }})
-                  </span>
-                  <span>&nbsp;&nbsp;&nbsp;</span>
-                </span>
-
+                <span class="FSIZE-12px">(Final: <b>{{ item.iQuantidadeSistema + item.iDiferenca }}</b>)</span>
+                <span>&nbsp;&nbsp;&nbsp;</span>
                 <span class="badge bg-dark FSIZE-12px">
                   Diferença: {{ item.iDiferenca }}
                 </span>
@@ -920,7 +1027,7 @@ const ativarSubLinhaInventario = async (ID_Inventario: number): Promise<void> =>
               </div>
             </div>
 
-            <div v-if="!infoAnaliseItens.length" class="text-center text-muted">
+            <div v-if="!infoAnaliseItensAgrupados.length" class="text-center text-muted">
               Nenhum item encontrado
             </div>
 
@@ -1261,7 +1368,7 @@ const ativarSubLinhaInventario = async (ID_Inventario: number): Promise<void> =>
                       <div class="expanded-content PADDING-10" style="display: flex; flex-direction: column; gap: 10px;">
 
                         <div
-                          v-for="(item, i) in infoItensDivergentes" :key="i"
+                          v-for="(item, i) in infoItensDivergentesAgrupados" :key="i"
                           class="card shadow-sm BORDER-RADIUS-10 PADDING-10"
                           :style="{ backgroundColor: item.cCorAcao || '#ffffff' }"
                         >
@@ -1272,8 +1379,6 @@ const ativarSubLinhaInventario = async (ID_Inventario: number): Promise<void> =>
                           </div>
 
                           <div class="D-flex flex-wrap GAP-10 FSIZE-13px MARGIN-B5">
-                            <span><b>Vão:</b> {{ item.cVao }}</span>
-                            <span>&nbsp;&nbsp;&nbsp;</span>
                             <span><b>Lote:</b> {{ item.cLote }}</span>
                             <span>&nbsp;&nbsp;&nbsp;</span>
                             <span><b>Estado:</b> {{ item.cEstadoMaterial }}</span>
@@ -1282,7 +1387,9 @@ const ativarSubLinhaInventario = async (ID_Inventario: number): Promise<void> =>
                           <div class="D-flex align-items-center flex-wrap GAP-6 FSIZE-13px MARGIN-B5">
                             <b>Quantidade:</b>
                             <span>&nbsp;</span>
-                            <span class="FSIZE-12px">(Sistema: <b>{{ item.iQuantidadeSistema }}</b>)</span>
+                            <span class="FSIZE-12px">(Inicial: <b>{{ item.iQuantidadeSistema }}</b>)</span>
+                            <span>&nbsp;&nbsp;&nbsp;</span>
+                            <span class="FSIZE-12px">(Final: <b>{{ item.iQuantidadeSistema + item.iDiferenca }}</b>)</span>
                             <span>&nbsp;&nbsp;&nbsp;</span>
                             <span class="badge bg-dark FSIZE-12px">Diferença: {{ item.iDiferenca }}</span>
                           </div>
@@ -1292,7 +1399,7 @@ const ativarSubLinhaInventario = async (ID_Inventario: number): Promise<void> =>
                           </div>
                         </div>
 
-                        <div v-if="!infoItensDivergentes.length" class="text-center text-muted">
+                        <div v-if="!infoItensDivergentesAgrupados.length" class="text-center text-muted">
                           Nenhum item divergente encontrado
                         </div>
 
