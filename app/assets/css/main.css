@@ -1,0 +1,39 @@
+@import "tailwindcss";
+@import "@nuxt/ui";
+
+@theme static {
+  --font-sans: 'Outfit', sans-serif;
+
+  /* Azul Embalarte: 500 = cor do logo antigo (#3a6a8d), 900 = azul dos títulos (#01385c) */
+  --color-embalarte-50: #EFF5F9;
+  --color-embalarte-100: #D9E7F0;
+  --color-embalarte-200: #B6CFE2;
+  --color-embalarte-300: #87B0CD;
+  --color-embalarte-400: #588EB5;
+  --color-embalarte-500: #3A6A8D;
+  --color-embalarte-600: #2F5876;
+  --color-embalarte-700: #244863;
+  --color-embalarte-800: #1A4565;
+  --color-embalarte-900: #01385C;
+  --color-embalarte-950: #01223A;
+}
+
+/* Animação de entrada usada pela diretiva v-reveal (plugins/reveal.ts) */
+[data-reveal] {
+  opacity: 0;
+  translate: 0 2rem;
+  transition: opacity 0.7s ease-out, translate 0.7s ease-out;
+}
+
+[data-reveal="visible"] {
+  opacity: 1;
+  translate: 0 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] {
+    opacity: 1;
+    translate: 0 0;
+    transition: none;
+  }
+}

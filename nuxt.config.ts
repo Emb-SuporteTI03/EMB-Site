@@ -1,56 +1,65 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  app: {
-    head: {
-      title: "Grupo Embalarte",
-      link: [
-        // Bootstrap
-        {
-          href: "https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css",
-          rel: "stylesheet",
-          integrity: "sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH",
-          crossorigin: "anonymous"
-        },
-        // Bootstrap Icons CSS
-        {
-          href: "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.3/font/bootstrap-icons.min.css",
-          rel: "stylesheet"
-        }
-      ],
-      script: [
-        // Plotly
-        {
-          // src: "plotly-2.32.0.min.js",
-        },
-        {
-          src: "https://cdn.plot.ly/plotly-2.32.0.min.js"
-        },
-        // Bootstrap
-        {
-          src: "https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        }
-      ]
+  modules: [
+    '@nuxt/eslint',
+    '@nuxt/ui',
+    '@pinia/nuxt',
+    'pinia-plugin-persistedstate/nuxt'
+  ],
+
+  // Páginas do SLA copiadas do site antigo (EMB-Site): componentes e composables
+  // ficam separados em app/legado, com os mesmos nomes que tinham lá
+  components: [
+    '~/components',
+    '~/legado/components'
+  ],
+
+  imports: {
+    dirs: ['legado/composables', 'legado/composables/*/index.{ts,js}']
+  },
+
+  devtools: {
+    enabled: true
+  },
+
+  css: ['~/assets/css/main.css'],
+
+  // O site é só em tema claro (o logo tem fundo branco)
+  ui: {
+    colorMode: false
+  },
+
+  // API do sistema (EMB-API-Sistema). Pode ser trocada sem mexer no código
+  // com a variável de ambiente NUXT_PUBLIC_API_URL (ex.: https://localhost:7116/api)
+  runtimeConfig: {
+    public: {
+      apiUrl: 'https://erp-api.grupoembalarte.com.br/api'
+      // apiUrl: "https://localhost:7116/api"
     }
   },
-  // Adiciona o arquivo CSS global à configuração.
-  // css:['~/assets/main.css'],
-  css:['~/assets/main.css'],
-  devtools: { enabled: true },
-  modules: [
-    '@vueuse/motion/nuxt',
-    '@pinia/nuxt',
-  ],
-  // Eu obrigo a funcionar como uma aplicação normal
-  // de 'Client Side Rendering'. Mas seria legal aprender
-  // a usar o 'Server Side Rendering'.
-  ssr: false,
-  nitro: {
-    // IIS options default
-    iis: {
-      // merges in a pre-existing web.config file to the nitro default file
-      mergeConfig: true,
-      // overrides the default nitro web.config file all together
-      overrideConfig: false,
-    },
+
+  routeRules: {
+    '/': { prerender: true },
+    // Página antiga sem link no menu; o conteúdo dela está na home
+    '/quemSomos': { redirect: '/' },
+    // Área do acesso externo: só no navegador, igual ao EMB-FRONT-Sistema
+    '/sla': { ssr: false },
+    '/sla/**': { ssr: false }
   },
-});
+
+  compatibilityDate: '2026-06-30',
+
+  eslint: {
+    config: {
+      stylistic: {
+        commaDangle: 'never',
+        braceStyle: '1tbs'
+      }
+    }
+  },
+
+  // Só é usado em desenvolvimento (a store de login só persiste com import.meta.dev)
+  piniaPluginPersistedstate: {
+    storage: 'localStorage'
+  }
+})
